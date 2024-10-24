@@ -398,12 +398,14 @@ nav ul li a:hover {
     text-decoration: none;
 }
 
-.social-icons {
+.footersocial-icons {
     margin-top: 20px;
+    color: white;
 }
 
-.social-icons a {
+.footersocial-icons a {
     margin-right: 10px;
+    color: white;
 }
 
 .contact-form {
