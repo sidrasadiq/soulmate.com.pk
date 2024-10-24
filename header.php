@@ -28,15 +28,15 @@
             <img src="assest/logo.png">
         </div>
         <ul class="nav-links">
-            <li color="black"><a href="http://localhost/shadi/">Home</a></li>
-            <li><a href="http://localhost/shadi/about.php">About</a></li>
-            <li><a href="http://localhost/shadi/contact.php">Contact Us</a></li>
+            <li color="black"><a href="https://soulmate.com.pk/">Home</a></li>
+            <li><a href="about.php">About</a></li>
+            <li><a href="contact.php">Contact Us</a></li>
         </ul>
       
       <div> 
          
-            <a href="http://localhost/shadi/login.php"> <button class="Login">Log In</button></a>
-             <a href="http://localhost/shadi/signup.php"> <button class="Signup">Sign Up</button></a>
+            <a href="login.php"> <button class="Login">Log In</button></a>
+             <a href="signup.php"> <button class="Signup">Sign Up</button></a>
 
         </div> 
 
