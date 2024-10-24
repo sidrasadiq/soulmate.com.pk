@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>About - Logan Academy of Basketball</title>
     <link rel="stylesheet" href="styles.css">
+    
 </head>
 <body>
     <main>
