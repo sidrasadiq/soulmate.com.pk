@@ -8,25 +8,25 @@
                 <button class="know-more-btn">Know More</button>
             </div>
             <div class="footer-links">
-                <h3>Categories</h3>
+                <h3>Resources</h3>
                 <ul>
-                    <li><a href="#"></a></li>
-                    <li><a href="#">Dresses</a></li>
-                    <li><a href="#">Florist</a></li>
-                    <li><a href="#">Cake</a></li>
-                    <li><a href="#">Photographer</a></li>
-                    <li><a href="#">Music DJ</a></li>
+                    <li><a href="#">Matrimony Tips</a></li>
+                    <li><a href="#">Relationship Advice</a></li>
+                    <li><a href="#">Safety Guidelines</a></li>
+                    <li><a href="#">Online Payment Help</a></li>
+                    <li><a href="#">Event Calendar</a></li>
+                    <li><a href="#">Partner with Us</a></li>
                 </ul>
             </div>
             <div class="footer-links">
-                <h3>Locations</h3>
+                <h3>Legal & Security</h3>
                 <ul>
-                    <li><a href="#">Ahmedabad</a></li>
-                    <li><a href="#">Goa</a></li>
-                    <li><a href="#">Agra</a></li>
-                    <li><a href="#">Jaipur</a></li>
-                    <li><a href="#">Kerala</a></li>
-                    <li><a href="#">Mumbai</a></li>
+                    <li><a href="#">User Agreement</a></li>
+                    <li><a href="#">Anti-Fraud Policy</a></li>
+                    <li><a href="#">Report Abuse</a></li>
+                    <li><a href="#">Dispute Resolution</a></li>
+                    <li><a href="#">Account Security Tips</a></li>
+                    <li><a href="#">Refund Policy</a></li>
                 </ul>
             </div>
             <div class="contact">

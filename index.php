@@ -97,6 +97,58 @@
 
 
 
+    <section class="testimonials">
+        <h2>Read what our customers say</h2>
+        <div class="testimonial-container">
+            <div class="testimonial highlighted">
+                <div class="customer-info">
+                    <img src="assest/testimonial 1.jpg" alt="Josh Almeida">
+                    <div class="customer-details">
+                        <h3>Josh Almeida</h3>
+                        <p>Founder & CEO</p>
+                    </div>
+                </div>
+                <p class="quote">"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse eu nisl lorem."</p>
+            </div>
+            <div class="testimonial">
+                <div class="customer-info">
+                    <img src="assest/testimonial 1.jpg" alt="Frank Kinney">
+                    <div class="customer-details">
+                        <h3>Frank Kinney</h3>
+                        <p>Financial Director</p>
+                    </div>
+                </div>
+                <p class="quote">"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse eu nisl lorem."</p>
+            </div>
+            <div class="testimonial">
+                <div class="customer-info">
+                    <img src="assest/testimonial 1.jpg" alt="Sheila Larson">
+                    <div class="customer-details">
+                        <h3>Sheila Larson</h3>
+                        <p>Secretary</p>
+                    </div>
+                </div>
+                <p class="quote">"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse eu nisl lorem."</p>
+            </div>
+            <div class="testimonial">
+                <div class="customer-info">
+                    <img src="assest/testimonial 1.jpg" alt="Paul Smith">
+                    <div class="customer-details">
+                        <h3>Paul Smith</h3>
+                        <p>Sales Manager</p>
+                    </div>
+                </div>
+                <p class="quote">"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse eu nisl lorem."</p>
+            </div>
+        </div>
+        <!-- <footer>Image from Freepik</footer> -->
+    </section>
+
+
+
+   
+
+
 
 
     <!-- Footer Section -->
