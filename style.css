@@ -783,7 +783,7 @@ nav ul li a:hover {
     font-family: "Playfair Display", serif;
 }
 
-h2 {
+.testimonials h2 {
     font-size: 2rem;
     margin-bottom: 20px;
 }
