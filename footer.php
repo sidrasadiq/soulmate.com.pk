@@ -35,9 +35,9 @@
                 <p>Call: +81 258 852 6699</p>
                 <p>Email: <a href="mailto:info@weddingdir.com">info@weddingdir.com</a></p>
                 <div class="footersocial-icons">
-                    <a href="#"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="https://www.facebook.com/soulmatemetrimony/"><i class="fa-brands fa-facebook"></i></a>
                     <a href="#"><i class="fa-brands fa-twitter"></i></a>
-                    <a href="#"><i class="fa-brands fa-instagram"></i></i></a>
+                    <a href="https://www.instagram.com/soulmatemetrimonypakistan/"><i class="fa-brands fa-instagram"></i></i></a>
                     <a href="#"><i class="fa-brands fa-linkedin"></i></a>
                 </div>
             </div>
