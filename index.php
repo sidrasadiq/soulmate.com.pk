@@ -48,8 +48,8 @@
     <div class="carousel-item active">
       <img src="assest/Slider new 1.jpg" class="d-block w-100" alt="...">
       <div class="carousel-caption  d-md-block">
-        <h5>Find the Perfect Life Partner</h5>
-        <p>Connect with your soul mate that can be nearby or within your city.</p>
+        <h1>Find the Perfect Life Partner</h1>
+        <h5>Connect with your soul mate that can be nearby or within your city.</h5>
 
         <form class="search-form">
             <label for="lookingFor">I'm looking for a</label>
@@ -101,8 +101,8 @@
     <div class="carousel-item">
       <img src="assest/SLIDERS SOULMATE 2.png" class="d-block w-100" alt="...">
       <div class="carousel-caption  d-md-block">
-        <h5>Find the Perfect Life Partner</h5>
-        <p>Connect with your soul mate that can be nearby or within your city.</p>
+      <h1>Find the Perfect Life Partner</h1>
+      <h5>Connect with your soul mate that can be nearby or within your city.</h5>
         <form class="search-form">
             <label for="lookingFor">I'm looking for a</label>
             <select id="lookingFor" name="lookingFor">
@@ -153,8 +153,8 @@
     <div class="carousel-item">
       <img src="assest/SLIDERS SOULMATE 3.png" class="d-block w-100" alt="...">
       <div class="carousel-caption  d-md-block">
-        <h5>Find the Perfect Life Partner</h5>
-        <p>Connect with your soul mate that can be nearby or within your city.</p>
+      <h1>Find the Perfect Life Partner</h1>
+      <h5>Connect with your soul mate that can be nearby or within your city.</h5>
         <form class="search-form">
             <label for="lookingFor">I'm looking for a</label>
             <select id="lookingFor" name="lookingFor">

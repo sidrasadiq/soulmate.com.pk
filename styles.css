@@ -19,17 +19,18 @@
 
 /* Ensure the slider image goes under the header */
 .carousel-item img {
-  height: 70vh; /* Full height to cover the viewport */
+  height: 80vh; /* Full height to cover the viewport */
   object-fit: cover;
+}
+
+.carousel-inner h1{
+  color:  #ce478b;
+  font-weight: 800;
+
 }
 
 .carousel-inner h5{
   color: #3987cc;
-
-}
-
-.carousel-inner p{
-  color: #000000;
 
 }
 .navbar-brand{
@@ -66,7 +67,7 @@
 }
 
 .log-in-button:hover{
-  background-color: #00b383;
+  background-color: #3987cc;
 
 }
 
@@ -118,7 +119,7 @@
 }
 
 .hero-section .container{
-  height: 70vh;
+  height: 80vh;
 
   z-index: 1;
   position: relative;
