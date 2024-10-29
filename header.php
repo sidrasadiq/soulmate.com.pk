@@ -15,7 +15,7 @@
 
 
 <header>
-    <div class="top-bar">
+    <!-- <div class="top-bar">
         <div class="location-email">
             <p><i class="fa-solid fa-location-dot"></i> 4998 Elk Creek Road State GA 30114</p>
             <p><i class="fa fa-envelope"></i> info@soulmate.com</p>
@@ -26,8 +26,8 @@
             <a href="https://www.instagram.com/soulmatemetrimonypakistan/"><i class="fa-brands fa-instagram"></i></a>
             <a href="#"><i class="fa-brands fa-youtube"></i></a>
         </div>
-    </div>
-    <nav class="main-nav">
+    </div> -->
+    <!-- <nav class="main-nav">
         <div class="logo">
             <img src="assest/logo.png">
         </div>
@@ -37,12 +37,7 @@
             <li><a href="http://soulmate.com.pk/contact.php">Contact Us</a></li>
         </ul>
       
-      <div> 
-         
-            <a href="http://soulmate.com.pk/login.php"> <button class="Login">Log In</button></a>
-             <a href="http://soulmate.com.pk/signup.php"> <button class="Signup">Sign Up</button></a>
+    
 
-        </div> 
-
-    </nav>
+    </nav> -->
 </header>

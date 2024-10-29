@@ -1,0 +1,173 @@
+/* // <uniquifier>: Use a unique and descriptive class name
+// <weight>: Use a value from 400 to 700 */
+
+ h1 {
+  font-family: "Dancing Script", cursive;
+  font-optical-sizing: auto;
+ 
+}
+ 
+.text-primary{
+  color: #ce478b;
+}
+
+/* Transparent background for header */
+/* header.navbar {
+  background-color: rgba(0, 0, 0, 0.5); 
+  z-index: 10;
+} */ 
+
+/* Ensure the slider image goes under the header */
+.carousel-item img {
+  height: 90vh; /* Full height to cover the viewport */
+  object-fit: cover;
+}
+
+.carousel-inner h5{
+  color: #3987cc;
+
+}
+
+.carousel-inner p{
+  color: #000000;
+
+}
+.navbar-brand{
+  font-weight: 500;
+  color: #ce478b;
+  font-size: 24px;
+  transition: 0.3s color;
+}
+
+
+
+.log-in-button{
+
+  background-color: #ce478b;
+  color: #fff;
+  font-size: 14px;
+  padding: 8px 20px;
+  border-radius: 50px;
+  text-decoration: none;
+  transition: 0.3s background-color;
+
+
+}
+
+.sign-up-button{
+    background-color: #3987cc;
+  color: #fff;
+  font-size: 14px;
+  padding: 8px 20px;
+  border-radius: 50px;
+  text-decoration: none;
+  transition: 0.3s background-color;
+
+}
+
+.log-in-button:hover{
+  background-color: #00b383;
+
+}
+
+.navbar-toggler{
+  border: none;
+  font-size:1.25rem;
+
+}
+
+.navbar-toggler:focus, .btn-close:focus{
+  box-shadow: none;
+  outline: none;
+}
+
+.nav-link{
+  color: #666777;
+  font-weight: 500;
+  position: relative;
+}
+
+.nav-link:hover, .nav-link.active{
+  color: #000;
+}
+
+/* @media(min-width: 991px) {
+.nav-link::before{
+  content:"";
+  position:absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 2px;
+  background-color: #009970;
+  visibility: hidden;
+  transition: 0.3s ease-in-out;
+
+}
+.nav-link:hover::before, .nav-link.active::before{
+  width: 100%;
+  visibility: visible;
+}
+} */
+
+.hero-section{
+  background: url('assest/Shaadiimg.PNG') no-repeat center;
+  background-size: cover;
+  width: 100%;
+}
+
+.hero-section .container{
+  height: 90vh;
+
+  z-index: 1;
+  position: relative;
+}
+
+.hero-section h4{
+  font-size: 1.5em;
+  margin-top: 200px;
+}
+
+.hero-section h1{
+  font-size: 1.2em;
+}
+
+.formrow{
+
+  margin-bottom: 300px;
+}
+
+
+.search-form {
+  display: flex;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 5px 5px;
+  border-radius: 8px;
+  gap: 10px;
+}
+
+label, span {
+  color: white;
+}
+
+select {
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+button {
+  padding: 8px 16px;
+  background-color: #008CBA;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #005f73;
+}
