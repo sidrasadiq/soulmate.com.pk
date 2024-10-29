@@ -1,11 +1,11 @@
 /* // <uniquifier>: Use a unique and descriptive class name
 // <weight>: Use a value from 400 to 700 */
 
- h1 {
+  h1 {
   font-family: "Dancing Script", cursive;
   font-optical-sizing: auto;
  
-}
+} 
  
 .text-primary{
   color: #ce478b;
@@ -140,7 +140,7 @@
 }
 
 
-.search-form {
+/* .search-form {
   display: flex;
   align-items: center;
   background-color: rgba(0, 0, 0, 0.6);
@@ -167,8 +167,103 @@ button {
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s;
-}
+} */
+
+ /* Form container styling */
+        .search-form {
+          /* align-items: center; */
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 2000px;
+            margin: 0 auto;
+        }
+        
+        /* Form controls */
+        .search-form .form-select,
+        .search-form .form-control,
+        .search-form button {
+            padding: 5px;
+            border-radius: 4px;
+            width: 155px;
+        }
+
+        .search-form .form-select,
+        .search-form .form-control {
+            background-color: white;
+        }
+
+        /* Button styling */
+        .search-form button {
+            background-color: #008CBA;
+            color: white;
+            border: none;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+        .search-form button:hover {
+            background-color: #007BA7;
+        }
+
+        /* Layout adjustments */
+        @media (min-width: 768px) {
+            .search-form .row > div {
+                flex: 0 0 auto;
+            }
+            .search-form .row .col-md-auto {
+                max-width: calc(100% / 5);
+            }
+            .search-form button {
+                max-width: 120px;
+            }
+        }
 
 /* button:hover {
   background-color: #005f73;
 } */
+
+/* .p-70{
+  padding: 70px;
+}
+.bg-gray{
+  background-color: #666777;
+}
+
+.py-6{
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+
+} */
+
+
+.footer {
+  background-color: #caddf0;
+  padding: 40px 0;
+}
+.footer h5 {
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+.footer a {
+  text-decoration: none;
+  color: #000;
+}
+.footer a:hover {
+  text-decoration: underline;
+}
+.footer .social-icons i {
+  font-size: 18px;
+  margin-right: 15px;
+  color: #333;
+}
+.footer .social-icons i:hover {
+  color: #007bff;
+}
+.footer-bottom {
+  text-align: center;
+  padding-top: 20px;
+  border-top: 1px solid #ddd;
+  margin-top: 20px;
+  font-size: 14px;
+  color: #1167b3;
+}

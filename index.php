@@ -51,51 +51,71 @@
         <h1>Find the Perfect Life Partner</h1>
         <h5>Connect with your soul mate that can be nearby or within your city.</h5>
 
-        <form class="search-form">
-            <label for="lookingFor">I'm looking for a</label>
-            <select id="lookingFor" name="lookingFor">
-                <option value="woman">Woman</option>
-                <option value="man">Man</option>
-            </select>
+        
 
-            <label for="ageFrom">aged</label>
-            <select id="ageFrom" name="ageFrom">
-                <option value="22">22</option>
-                <option value="23">23</option>
-                <option value="24">24</option>
-                <option value="25">25</option>
-                <option value="26">26</option>
-                <option value="27">27</option>
-            </select>
+        <form class="search-form mt-3">
+        <div class="row g-2">
+            <!-- I'm looking for a -->
+            <div class="col-12 col-md-auto">
+                <select id="lookingFor" name="lookingFor" class="form-select" aria-label="I'm looking for a">
+                    <option selected disabled>I'm looking for a</option>
+                    <option value="woman">Woman</option>
+                    <option value="man">Man</option>
+                </select>
+            </div>
 
-            <span>to</span>
+            <!-- Aged from -->
+            <div class="col-6 col-md-auto">
+                <select id="ageFrom" name="ageFrom" class="form-select" aria-label="Age from">
+                    <option selected disabled>Age from</option>
+                    <option value="22">22</option>
+                    <option value="23">23</option>
+                    <option value="24">24</option>
+                    <option value="25">25</option>
+                    <option value="26">26</option>
+                    <option value="27">27</option>
+                </select>
+            </div>
 
-            <select id="ageTo" name="ageTo">
-                <option value="27">27</option>
-                <option value="28">28</option>
-                <option value="29">29</option>
-                <option value="30">30</option>
-            </select>
+            <!-- To age -->
+            <div class="col-6 col-md-auto">
+                <select id="ageTo" name="ageTo" class="form-select" aria-label="Age to">
+                    <option selected disabled>Age to</option>
+                    <option value="27">27</option>
+                    <option value="28">28</option>
+                    <option value="29">29</option>
+                    <option value="30">30</option>
+                </select>
+            </div>
 
-            <label for="religion">of religion</label>
-            <select id="religion" name="religion">
-                <option value="select">Select</option>
-                <option value="islam">Islam</option>
-                <option value="christianity">Christianity</option>
-                <option value="hinduism">Hinduism</option>
-                <option value="other">Other</option>
-            </select>
+            <!-- Of religion -->
+            <div class="col-12 col-md-auto">
+                <select id="religion" name="religion" class="form-select" aria-label="Religion">
+                    <option selected disabled>Religion</option>
+                    <option value="islam">Islam</option>
+                    <option value="christianity">Christianity</option>
+                    <option value="hinduism">Hinduism</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
 
-            <label for="country">and living in</label>
-            <select id="country" name="country">
-                <option value="pakistan">Pakistan</option>
-                <option value="india">India</option>
-                <option value="usa">USA</option>
-                <option value="uk">UK</option>
-            </select>
+            <!-- And living in -->
+            <div class="col-12 col-md-auto">
+                <select id="country" name="country" class="form-select" aria-label="Country">
+                    <option selected disabled>Country</option>
+                    <option value="pakistan">Pakistan</option>
+                    <option value="india">India</option>
+                    <option value="usa">USA</option>
+                    <option value="uk">UK</option>
+                </select>
+            </div>
 
-            <button type="submit">Let's Begin</button>
-        </form>
+            <!-- Submit Button -->
+            <div class="col-12 col-md-auto d-flex justify-content-md-end">
+                <button type="submit" class="btn btn-primary w-200">Let's Begin</button>
+            </div>
+        </div>
+    </form>
       </div>
     </div>
     <div class="carousel-item">
@@ -103,51 +123,70 @@
       <div class="carousel-caption  d-md-block">
       <h1>Find the Perfect Life Partner</h1>
       <h5>Connect with your soul mate that can be nearby or within your city.</h5>
-        <form class="search-form">
-            <label for="lookingFor">I'm looking for a</label>
-            <select id="lookingFor" name="lookingFor">
-                <option value="woman">Woman</option>
-                <option value="man">Man</option>
-            </select>
+        
+      <form class="search-form mt-3">
+        <div class="row g-2">
+            <!-- I'm looking for a -->
+            <div class="col-12 col-md-auto">
+                <select id="lookingFor" name="lookingFor" class="form-select" aria-label="I'm looking for a">
+                    <option selected disabled>I'm looking for a</option>
+                    <option value="woman">Woman</option>
+                    <option value="man">Man</option>
+                </select>
+            </div>
 
-            <label for="ageFrom">aged</label>
-            <select id="ageFrom" name="ageFrom">
-                <option value="22">22</option>
-                <option value="23">23</option>
-                <option value="24">24</option>
-                <option value="25">25</option>
-                <option value="26">26</option>
-                <option value="27">27</option>
-            </select>
+            <!-- Aged from -->
+            <div class="col-6 col-md-auto">
+                <select id="ageFrom" name="ageFrom" class="form-select" aria-label="Age from">
+                    <option selected disabled>Age from</option>
+                    <option value="22">22</option>
+                    <option value="23">23</option>
+                    <option value="24">24</option>
+                    <option value="25">25</option>
+                    <option value="26">26</option>
+                    <option value="27">27</option>
+                </select>
+            </div>
 
-            <span>to</span>
+            <!-- To age -->
+            <div class="col-6 col-md-auto">
+                <select id="ageTo" name="ageTo" class="form-select" aria-label="Age to">
+                    <option selected disabled>Age to</option>
+                    <option value="27">27</option>
+                    <option value="28">28</option>
+                    <option value="29">29</option>
+                    <option value="30">30</option>
+                </select>
+            </div>
 
-            <select id="ageTo" name="ageTo">
-                <option value="27">27</option>
-                <option value="28">28</option>
-                <option value="29">29</option>
-                <option value="30">30</option>
-            </select>
+            <!-- Of religion -->
+            <div class="col-12 col-md-auto">
+                <select id="religion" name="religion" class="form-select" aria-label="Religion">
+                    <option selected disabled>Religion</option>
+                    <option value="islam">Islam</option>
+                    <option value="christianity">Christianity</option>
+                    <option value="hinduism">Hinduism</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
 
-            <label for="religion">of religion</label>
-            <select id="religion" name="religion">
-                <option value="select">Select</option>
-                <option value="islam">Islam</option>
-                <option value="christianity">Christianity</option>
-                <option value="hinduism">Hinduism</option>
-                <option value="other">Other</option>
-            </select>
+            <!-- And living in -->
+            <div class="col-12 col-md-auto">
+                <select id="country" name="country" class="form-select" aria-label="Country">
+                    <option selected disabled>Country</option>
+                    <option value="pakistan">Pakistan</option>
+                    <option value="india">India</option>
+                    <option value="usa">USA</option>
+                    <option value="uk">UK</option>
+                </select>
+            </div>
 
-            <label for="country">and living in</label>
-            <select id="country" name="country">
-                <option value="pakistan">Pakistan</option>
-                <option value="india">India</option>
-                <option value="usa">USA</option>
-                <option value="uk">UK</option>
-            </select>
-
-            <button type="submit">Let's Begin</button>
-        </form>
+            <!-- Submit Button -->
+            <div class="col-12 col-md-auto d-flex justify-content-md-end">
+                <button type="submit" class="btn btn-primary w-100">Let's Begin</button>
+            </div>
+        </div>
+    </form>
       </div>
     </div>
     <div class="carousel-item">
@@ -536,6 +575,77 @@
 </div>
 </section>
 
+    <!-- <section class="p-70">
+        <h2 class="text-center text-para"> Body  </h2>
+        <footer>
+            <div class="py-6 bg-gray">
+              <div></div>
+
+            </div>
+
+        </footer>
+    </section> -->
+
+
+
+    <!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="row text-center text-md-start">
+            <!-- About Us Section -->
+            <div class="col-md-3">
+                <h5>ABOUT US</h5>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </div>
+            <!-- Let Us Help Section -->
+            <div class="col-md-3">
+                <h5>LET US HELP</h5>
+                <ul class="list-unstyled">
+                    <li><a href="#">Your Account</a></li>
+                    <li><a href="#">Your Orders</a></li>
+                    <li><a href="#">Manage Your Content and Devices</a></li>
+                    <li><a href="#">Help</a></li>
+                </ul>
+            </div>
+            <!-- Make Money Section -->
+            <div class="col-md-3">
+                <h5>MAKE MONEY</h5>
+                <ul class="list-unstyled">
+                    <li><a href="#">Sell products on our Website</a></li>
+                    <li><a href="#">Advertise Your Products</a></li>
+                    <li><a href="#">Become an Affiliate</a></li>
+                    <li><a href="#">Self-Publish</a></li>
+                </ul>
+            </div>
+            <!-- Contact Section -->
+            <div class="col-md-3">
+                <h5>CONTACT</h5>
+                <ul class="list-unstyled">
+                    <li><i class="fa-solid fa-location-dot"></i> New York, NY 2333, US</li>
+                    <li><i class="fa-regular fa-envelope"></i> theproviders98@gmail.com</li>
+                    <li><i class="fa-brands fa-whatsapp"></i> +12 3456789</li>
+                    <li><i class="fa-solid fa-phone"></i> +12 3456789</li>
+                </ul>
+            </div>
+        </div>
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+            <p>Copyright ©2020 All rights reserved by <a href="#" class="text-decoration-none">The Providers</a></p>
+            <div class="social-icons">
+                <a href="#"><i class="fa-brands fa-facebook"></i></a>
+                <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+                <a href="#"><i class="fa-brands fa-youtube"></i></a>
+            </div>
+        </div>
+    </div>
+</footer> 
+
+
+
+
+
 <script>
     window.addEventListener('scroll', () => { 
         document.querySelector('.navbar').style.top = (window.pageYOffset === 0) ? '0' : '-56px';
@@ -543,11 +653,14 @@
 </script>
 
 
-
-<div class="container-fluid bg-primary text-white text-center p-1 fs-4"> Developed By The Millionaire Soft.   </div>
+<!-- <div class="container-fluid bg-primary text-white text-center p-1 fs-4"> Developed By The Millionaire Soft.   </div> -->
 <!-- Bootstrap Script -->
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
  <!-- Bootstrap Java Scripts -->
+ <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.js"></script>
+ 
+ 
  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script>
   AOS.init();
