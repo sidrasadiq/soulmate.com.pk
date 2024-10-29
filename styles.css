@@ -19,7 +19,7 @@
 
 /* Ensure the slider image goes under the header */
 .carousel-item img {
-  height: 90vh; /* Full height to cover the viewport */
+  height: 70vh; /* Full height to cover the viewport */
   object-fit: cover;
 }
 
@@ -118,7 +118,7 @@
 }
 
 .hero-section .container{
-  height: 90vh;
+  height: 70vh;
 
   z-index: 1;
   position: relative;
