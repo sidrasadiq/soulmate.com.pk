@@ -99,17 +99,107 @@
       </div>
     </div>
     <div class="carousel-item">
-      <img src="assest/banner1.jpg" class="d-block w-100" alt="...">
+      <img src="assest/SLIDERS SOULMATE 2.png" class="d-block w-100" alt="...">
       <div class="carousel-caption  d-md-block">
         <h5>Find the Perfect Life Partner</h5>
         <p>Connect with your soul mate that can be nearby or within your city.</p>
+        <form class="search-form">
+            <label for="lookingFor">I'm looking for a</label>
+            <select id="lookingFor" name="lookingFor">
+                <option value="woman">Woman</option>
+                <option value="man">Man</option>
+            </select>
+
+            <label for="ageFrom">aged</label>
+            <select id="ageFrom" name="ageFrom">
+                <option value="22">22</option>
+                <option value="23">23</option>
+                <option value="24">24</option>
+                <option value="25">25</option>
+                <option value="26">26</option>
+                <option value="27">27</option>
+            </select>
+
+            <span>to</span>
+
+            <select id="ageTo" name="ageTo">
+                <option value="27">27</option>
+                <option value="28">28</option>
+                <option value="29">29</option>
+                <option value="30">30</option>
+            </select>
+
+            <label for="religion">of religion</label>
+            <select id="religion" name="religion">
+                <option value="select">Select</option>
+                <option value="islam">Islam</option>
+                <option value="christianity">Christianity</option>
+                <option value="hinduism">Hinduism</option>
+                <option value="other">Other</option>
+            </select>
+
+            <label for="country">and living in</label>
+            <select id="country" name="country">
+                <option value="pakistan">Pakistan</option>
+                <option value="india">India</option>
+                <option value="usa">USA</option>
+                <option value="uk">UK</option>
+            </select>
+
+            <button type="submit">Let's Begin</button>
+        </form>
       </div>
     </div>
     <div class="carousel-item">
-      <img src="assest/Shaadiimg.PNG" class="d-block w-100" alt="...">
+      <img src="assest/SLIDERS SOULMATE 3.png" class="d-block w-100" alt="...">
       <div class="carousel-caption  d-md-block">
         <h5>Find the Perfect Life Partner</h5>
         <p>Connect with your soul mate that can be nearby or within your city.</p>
+        <form class="search-form">
+            <label for="lookingFor">I'm looking for a</label>
+            <select id="lookingFor" name="lookingFor">
+                <option value="woman">Woman</option>
+                <option value="man">Man</option>
+            </select>
+
+            <label for="ageFrom">aged</label>
+            <select id="ageFrom" name="ageFrom">
+                <option value="22">22</option>
+                <option value="23">23</option>
+                <option value="24">24</option>
+                <option value="25">25</option>
+                <option value="26">26</option>
+                <option value="27">27</option>
+            </select>
+
+            <span>to</span>
+
+            <select id="ageTo" name="ageTo">
+                <option value="27">27</option>
+                <option value="28">28</option>
+                <option value="29">29</option>
+                <option value="30">30</option>
+            </select>
+
+            <label for="religion">of religion</label>
+            <select id="religion" name="religion">
+                <option value="select">Select</option>
+                <option value="islam">Islam</option>
+                <option value="christianity">Christianity</option>
+                <option value="hinduism">Hinduism</option>
+                <option value="other">Other</option>
+            </select>
+
+            <label for="country">and living in</label>
+            <select id="country" name="country">
+                <option value="pakistan">Pakistan</option>
+                <option value="india">India</option>
+                <option value="usa">USA</option>
+                <option value="uk">UK</option>
+            </select>
+
+            <button type="submit">Let's Begin</button>
+        </form>
       </div>
     </div>
   </div>
@@ -454,7 +544,7 @@
 
 
 
-<div class="container-fluid bg-primary text-white text-center p-3 fs-4"> Developed By The Millionaire Soft.   </div>
+<div class="container-fluid bg-primary text-white text-center p-1 fs-4"> Developed By The Millionaire Soft.   </div>
 <!-- Bootstrap Script -->
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
  <!-- Bootstrap Java Scripts -->
