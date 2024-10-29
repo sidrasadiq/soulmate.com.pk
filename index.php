@@ -56,7 +56,7 @@
         <form class="search-form mt-3">
         <div class="row g-2">
             <!-- I'm looking for a -->
-            <div class="col-12 col-md-auto">
+            <div class="col-12 col-md-2">
                 <select id="lookingFor" name="lookingFor" class="form-select" aria-label="I'm looking for a">
                     <option selected disabled>I'm looking for a</option>
                     <option value="woman">Woman</option>
@@ -65,7 +65,7 @@
             </div>
 
             <!-- Aged from -->
-            <div class="col-6 col-md-auto">
+            <div class="col-6 col-md-2">
                 <select id="ageFrom" name="ageFrom" class="form-select" aria-label="Age from">
                     <option selected disabled>Age from</option>
                     <option value="22">22</option>
@@ -78,7 +78,7 @@
             </div>
 
             <!-- To age -->
-            <div class="col-6 col-md-auto">
+            <div class="col-6 col-md-2">
                 <select id="ageTo" name="ageTo" class="form-select" aria-label="Age to">
                     <option selected disabled>Age to</option>
                     <option value="27">27</option>
@@ -89,7 +89,7 @@
             </div>
 
             <!-- Of religion -->
-            <div class="col-12 col-md-auto">
+            <div class="col-12 col-md-2">
                 <select id="religion" name="religion" class="form-select" aria-label="Religion">
                     <option selected disabled>Religion</option>
                     <option value="islam">Islam</option>
@@ -100,7 +100,7 @@
             </div>
 
             <!-- And living in -->
-            <div class="col-12 col-md-auto">
+            <div class="col-12 col-md-2">
                 <select id="country" name="country" class="form-select" aria-label="Country">
                     <option selected disabled>Country</option>
                     <option value="pakistan">Pakistan</option>
@@ -111,8 +111,8 @@
             </div>
 
             <!-- Submit Button -->
-            <div class="col-12 col-md-auto d-flex justify-content-md-end">
-                <button type="submit" class="btn btn-primary w-200">Let's Begin</button>
+            <div class="col-12 col-md-2 d-flex justify-content-md-end">
+                <button type="submit" class="btn btn-primary w-100">Let's Begin</button>
             </div>
         </div>
     </form>
@@ -127,7 +127,7 @@
       <form class="search-form mt-3">
         <div class="row g-2">
             <!-- I'm looking for a -->
-            <div class="col-12 col-md-auto">
+            <div class="col-12 col-md-2">
                 <select id="lookingFor" name="lookingFor" class="form-select" aria-label="I'm looking for a">
                     <option selected disabled>I'm looking for a</option>
                     <option value="woman">Woman</option>
@@ -136,7 +136,7 @@
             </div>
 
             <!-- Aged from -->
-            <div class="col-6 col-md-auto">
+            <div class="col-6 col-md-2">
                 <select id="ageFrom" name="ageFrom" class="form-select" aria-label="Age from">
                     <option selected disabled>Age from</option>
                     <option value="22">22</option>
@@ -149,7 +149,7 @@
             </div>
 
             <!-- To age -->
-            <div class="col-6 col-md-auto">
+            <div class="col-6 col-md-2">
                 <select id="ageTo" name="ageTo" class="form-select" aria-label="Age to">
                     <option selected disabled>Age to</option>
                     <option value="27">27</option>
@@ -160,7 +160,7 @@
             </div>
 
             <!-- Of religion -->
-            <div class="col-12 col-md-auto">
+            <div class="col-12 col-md-2">
                 <select id="religion" name="religion" class="form-select" aria-label="Religion">
                     <option selected disabled>Religion</option>
                     <option value="islam">Islam</option>
@@ -171,7 +171,7 @@
             </div>
 
             <!-- And living in -->
-            <div class="col-12 col-md-auto">
+            <div class="col-12 col-md-2">
                 <select id="country" name="country" class="form-select" aria-label="Country">
                     <option selected disabled>Country</option>
                     <option value="pakistan">Pakistan</option>
@@ -182,7 +182,7 @@
             </div>
 
             <!-- Submit Button -->
-            <div class="col-12 col-md-auto d-flex justify-content-md-end">
+            <div class="col-12 col-md-2 d-flex justify-content-md-end">
                 <button type="submit" class="btn btn-primary w-100">Let's Begin</button>
             </div>
         </div>
@@ -194,51 +194,69 @@
       <div class="carousel-caption  d-md-block">
       <h1>Find the Perfect Life Partner</h1>
       <h5>Connect with your soul mate that can be nearby or within your city.</h5>
-        <form class="search-form">
-            <label for="lookingFor">I'm looking for a</label>
-            <select id="lookingFor" name="lookingFor">
-                <option value="woman">Woman</option>
-                <option value="man">Man</option>
-            </select>
+      <form class="search-form mt-3">
+        <div class="row g-2">
+            <!-- I'm looking for a -->
+            <div class="col-12 col-md-2">
+                <select id="lookingFor" name="lookingFor" class="form-select" aria-label="I'm looking for a">
+                    <option selected disabled>I'm looking for a</option>
+                    <option value="woman">Woman</option>
+                    <option value="man">Man</option>
+                </select>
+            </div>
 
-            <label for="ageFrom">aged</label>
-            <select id="ageFrom" name="ageFrom">
-                <option value="22">22</option>
-                <option value="23">23</option>
-                <option value="24">24</option>
-                <option value="25">25</option>
-                <option value="26">26</option>
-                <option value="27">27</option>
-            </select>
+            <!-- Aged from -->
+            <div class="col-6 col-md-2">
+                <select id="ageFrom" name="ageFrom" class="form-select" aria-label="Age from">
+                    <option selected disabled>Age from</option>
+                    <option value="22">22</option>
+                    <option value="23">23</option>
+                    <option value="24">24</option>
+                    <option value="25">25</option>
+                    <option value="26">26</option>
+                    <option value="27">27</option>
+                </select>
+            </div>
 
-            <span>to</span>
+            <!-- To age -->
+            <div class="col-6 col-md-2">
+                <select id="ageTo" name="ageTo" class="form-select" aria-label="Age to">
+                    <option selected disabled>Age to</option>
+                    <option value="27">27</option>
+                    <option value="28">28</option>
+                    <option value="29">29</option>
+                    <option value="30">30</option>
+                </select>
+            </div>
 
-            <select id="ageTo" name="ageTo">
-                <option value="27">27</option>
-                <option value="28">28</option>
-                <option value="29">29</option>
-                <option value="30">30</option>
-            </select>
+            <!-- Of religion -->
+            <div class="col-12 col-md-2">
+                <select id="religion" name="religion" class="form-select" aria-label="Religion">
+                    <option selected disabled>Religion</option>
+                    <option value="islam">Islam</option>
+                    <option value="christianity">Christianity</option>
+                    <option value="hinduism">Hinduism</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
 
-            <label for="religion">of religion</label>
-            <select id="religion" name="religion">
-                <option value="select">Select</option>
-                <option value="islam">Islam</option>
-                <option value="christianity">Christianity</option>
-                <option value="hinduism">Hinduism</option>
-                <option value="other">Other</option>
-            </select>
+            <!-- And living in -->
+            <div class="col-12 col-md-2">
+                <select id="country" name="country" class="form-select" aria-label="Country">
+                    <option selected disabled>Country</option>
+                    <option value="pakistan">Pakistan</option>
+                    <option value="india">India</option>
+                    <option value="usa">USA</option>
+                    <option value="uk">UK</option>
+                </select>
+            </div>
 
-            <label for="country">and living in</label>
-            <select id="country" name="country">
-                <option value="pakistan">Pakistan</option>
-                <option value="india">India</option>
-                <option value="usa">USA</option>
-                <option value="uk">UK</option>
-            </select>
-
-            <button type="submit">Let's Begin</button>
-        </form>
+            <!-- Submit Button -->
+            <div class="col-12 col-md-2 d-flex justify-content-md-end">
+                <button type="submit" class="btn btn-primary w-100">Let's Begin</button>
+            </div>
+        </div>
+    </form>
       </div>
     </div>
   </div>
