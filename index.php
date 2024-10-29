@@ -46,7 +46,7 @@
   </div>
   <div class="carousel-inner">
     <div class="carousel-item active">
-      <img src="assest/weddingdir-slider-1.jpg" class="d-block w-100" alt="...">
+      <img src="assest/Slider new 1.jpg" class="d-block w-100" alt="...">
       <div class="carousel-caption  d-md-block">
         <h5>Find the Perfect Life Partner</h5>
         <p>Connect with your soul mate that can be nearby or within your city.</p>
