@@ -21,18 +21,16 @@
 <link rel="icon" type="image/x-icon" href="assest/faviconicon.png">
   </head>
 
-
-
   <body>
     <!-- Navbar Start-->
     <nav class="navbar navbar-expand fixed-top">
-  <div class="container">
+    <div class="container">
     <a class="navbar-brand me-auto" href="#"><img src='assest/logo.png'></a>
-        <a href="#" class="log-in-button me-3">Log In </a>
+        <a href="#" class="log-in-button me-3">In </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <a href="#" class="sign-up-button">Sign Up </a>
+    <a href="#" class="sign-up-button">Up </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -312,36 +310,36 @@
   <div class="accordion-item">
     <h2 class="accordion-header" id="headingOne">
       <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-        Accordion Item #1
+      Is it safe to join Soulmate?
       </button>
     </h2>
     <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
       <div class="accordion-body">
-        <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+      Yes! We prioritize the safety and security of our members, with robust privacy measures to protect personal information.
       </div>
     </div>
   </div>
   <div class="accordion-item">
     <h2 class="accordion-header" id="headingTwo">
       <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-        Accordion Item #2
+      What makes Soulmate different?
       </button>
     </h2>
     <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
       <div class="accordion-body">
-        <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+      We use a unique algorithm and thorough profile verification to help you connect with the right matches for a genuine relationship.
       </div>
     </div>
   </div>
   <div class="accordion-item">
     <h2 class="accordion-header" id="headingThree">
       <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-        Accordion Item #3
+      How do I find a match on your platform?
       </button>
     </h2>
     <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
       <div class="accordion-body">
-        <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+      By completing a detailed profile, our platform matches you with individuals based on compatibility, shared interests, and values.
       </div>
     </div>
   </div>
@@ -377,9 +375,9 @@
                                     <div class="card">
                                             <div class="card-body">
                                                 <i class="fa fa-users bg-primary p-2 text-white rounded"></i>
-                                                <h5 class="card-title">Special title treatment</h5>
-                                                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                                                <a href="#" class="btn btn-primary">Go somewhere</a>
+                                                <h5 class="card-title">Profile Verification</h5>
+                                                <p class="card-text">Ensure authenticity with verified profiles, minimizing fake accounts and creating a safer environment for all.</p>
+                                                <a href="#" class="btn btn-primary">Join Us </a>
                                             </div>
                                     </div>
                             
@@ -392,9 +390,9 @@
                                     <div class="card bg-primary text-white">
                                             <div class="card-body">
                                             <i class="fa fa-users bg-white p-2 text-dark rounded mb-2"></i>
-                                                <h5 class="card-title">Special title treatment</h5>
-                                                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                                                <a href="#" class="btn btn-primary">Go somewhere</a>
+                                                <h5 class="card-title">Personalized Matchmaking</h5>
+                                                <p class="card-text">Our advanced algorithm pairs you with individuals who share your interests, goals, and values.</p>
+                                                <a href="#" class="btn btn-primary">Join Us </a>
                                             </div>
                                     </div>
                             
@@ -404,9 +402,9 @@
                                     <div class="card">
                                             <div class="card-body">
                                             <i class="fa fa-users bg-primary p-2 text-white rounded"></i>
-                                                <h5 class="card-title">Special title treatment</h5>
-                                                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                                                <a href="#" class="btn btn-primary">Go somewhere</a>
+                                                <h5 class="card-title">Communication Tools</h5>
+                                                <p class="card-text">Engage through private messages, video calls, and live chats, helping you get to know potential matches better.</p>
+                                                <a href="#" class="btn btn-primary">Join Us</a>
                                             </div>
                                     </div>
 
@@ -419,9 +417,9 @@
                                         <div class="card">
                                                 <div class="card-body">
                                                 <i class="fa fa-users bg-primary p-2 text-white rounded"></i>
-                                                    <h5 class="card-title">Special title treatment</h5>
-                                                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                                                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                                                    <h5 class="card-title">Event Invitations</h5>
+                                                    <p class="card-text">Receive invitations to exclusive matchmaking events where you can meet potential matches in a safe, comfortable setting.</p>
+                                                    <a href="#" class="btn btn-primary">Join us</a>
                                                 </div>
                                         </div>
 
@@ -433,9 +431,9 @@
                                         <div class="card bg-primary text-white">
                                                 <div class="card-body">
                                                 <i class="fa fa-users bg-white p-2 text-dark rounded mb-2"></i>
-                                                    <h5 class="card-title">Special title treatment</h5>
-                                                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                                                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                                                    <h5 class="card-title">Relationship Counseling</h5>
+                                                    <p class="card-text">Our experienced counselors provide guidance to help you make confident relationship choices and navigate the matchmaking process.</p>
+                                                    <a href="#" class="btn btn-primary">Join Us</a>
                                                 </div>
                                         </div>
 
@@ -446,9 +444,9 @@
                                         <div class="card">
                                                 <div class="card-body">
                                                 <i class="fa fa-users bg-primary p-2 text-white rounded"></i>
-                                                    <h5 class="card-title">Special title treatment</h5>
-                                                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                                                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                                                    <h5 class="card-title">Privacy Protection</h5>
+                                                    <p class="card-text">We maintain strict privacy controls, allowing you to control your information and decide when and with whom to share it.</p>
+                                                    <a href="#" class="btn btn-primary">Join Us</a>
                                                 </div>
                                         </div>
 
@@ -475,9 +473,9 @@
                                             <div class="card-body">
                                             <img src="assest/Singuppageimage.jpg" class= "img-fluid img-thumbnail">
                                                 
-                                                <h5 class="card-title">Special title treatment</h5>
-                                                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                                                <a href="#" class="btn btn-primary">Go somewhere</a>
+                                                <h5 class="card-title">Ahmed Khan</h5>
+                                                <p class="card-text">I found my partner on Soulmate within a few months of joining. The matching process was easy, and the profiles were genuine. Highly recommended!</p>
+                                                <a href="#" class="btn btn-primary">Join Now</a>
                                             </div>
                                     </div>
                             
@@ -489,11 +487,11 @@
 
                              <div class="card">
                                             <div class="card-body">
-                                            <img src="assest/Singuppageimage.jpg" class= "img-fluid img-thumbnail">
+                                            <img src="assest/Testimonials2.png" class= "img-fluid img-thumbnail">
                                                 
-                                                <h5 class="card-title">Special title treatment</h5>
-                                                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                                                <a href="#" class="btn btn-primary">Go somewhere</a>
+                                                <h5 class="card-title">Fatima Ali</h5>
+                                                <p class="card-text">Soulmate helped me connect with someone I wouldn’t have met otherwise. We bonded over shared values and now, we’re happily engaged!</p>
+                                                <a href="#" class="btn btn-primary">Join Now</a>
                                             </div>
                                     </div>
                             </div>
@@ -501,11 +499,11 @@
 
                                 <div class="card">
                                             <div class="card-body">
-                                            <img src="assest/Singuppageimage.jpg" class= "img-fluid img-thumbnail">
+                                            <img src="assest/Testimonials 3.png" class= "img-fluid img-thumbnail">
                                                 
-                                                <h5 class="card-title">Special title treatment</h5>
-                                                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                                                <a href="#" class="btn btn-primary">Go somewhere</a>
+                                                <h5 class="card-title">Sara Malik</h5>
+                                                <p class="card-text">I was skeptical initially, but [Matrimony Site Name] exceeded my expectations. The support and security features made me feel comfortable finding my life partner.</p>
+                                                <a href="#" class="btn btn-primary">Join Now</a>
                                             </div>
                                     </div>
                                     </div>
@@ -612,27 +610,27 @@
         <div class="row text-center text-md-start">
             <!-- About Us Section -->
             <div class="col-md-3">
-                <h5>ABOUT US</h5>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            <a class="navbar-brand me-auto" href="#"><img src='assest/logo.png'></a>
+                <p>Soulmate is a trusted platform dedicated to helping individuals find their life partners in a secure, respectful environment. </p>
             </div>
             <!-- Let Us Help Section -->
             <div class="col-md-3">
-                <h5>LET US HELP</h5>
+                <h5>Helpful Links</h5>
                 <ul class="list-unstyled">
-                    <li><a href="#">Your Account</a></li>
-                    <li><a href="#">Your Orders</a></li>
-                    <li><a href="#">Manage Your Content and Devices</a></li>
-                    <li><a href="#">Help</a></li>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms & Conditions</a></li>
                 </ul>
             </div>
             <!-- Make Money Section -->
             <div class="col-md-3">
-                <h5>MAKE MONEY</h5>
+                <h5>Quick Links</h5>
                 <ul class="list-unstyled">
-                    <li><a href="#">Sell products on our Website</a></li>
-                    <li><a href="#">Advertise Your Products</a></li>
-                    <li><a href="#">Become an Affiliate</a></li>
-                    <li><a href="#">Self-Publish</a></li>
+                    <li><a href="#">Success Stories</a></li>
+                    <li><a href="#">Events</a></li>
+                    <li><a href="#">Testimonials</a></li>
+                    <li><a href="#">Help & Support</a></li>
                 </ul>
             </div>
             <!-- Contact Section -->
