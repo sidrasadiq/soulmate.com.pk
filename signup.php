@@ -1,11 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php include 'includes/main.php'; ?>
+<?php include 'includes/functions.php'; ?>
 
 <head>
+    <title>Sign Up - Matrimony</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <title>Sign Up - Matrimony</title>
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"> -->
+    <?php include 'includes/head-css.php'; ?>
     <style>
         /* main container */
         .main-container {
@@ -131,7 +132,7 @@
         <div class="main-container">
             <!-- Welcome Section -->
             <div class="welcome-section">
-                <img src="assest/Singuppageimage.jpg" alt="Welcome Image">
+                <img src="assets/images/Singuppageimage.jpg" alt="Welcome Image">
                 <div class="welcome-text">
                     <h2>Join Us</h2>
                     <p>Your Perfect Match is Just a Click Away</p>

@@ -8,13 +8,11 @@
   <?php include 'includes/head-css.php'; ?>
 </head>
 
-
-
 <body>
   <!-- Navbar Start-->
   <nav class="navbar navbar-expand fixed-top">
     <div class="container">
-      <a class="navbar-brand me-auto" href="#"><img src='assets/images/logo.png'></a>
+      <a class="navbar-brand me-auto" href="<?php echo homeURL(); ?>"><img src='assets/images/logo.png'></a>
       <a href="login.php" class="log-in-button me-3">Log In</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -45,9 +43,7 @@
         <div class="carousel-caption  d-md-block">
           <h1>Find the Perfect Life Partner</h1>
           <h5>Connect with your soul mate that can be nearby or within your city.</h5>
-
           <?php include 'includes/slider-form.php'; ?>
-
         </div>
       </div>
       <div class="carousel-item">
@@ -56,7 +52,6 @@
           <h1>Find the Perfect Life Partner</h1>
           <h5>Connect with your soul mate that can be nearby or within your city.</h5>
           <?php include 'includes/slider-form.php'; ?>
-
         </div>
       </div>
     </div>
@@ -140,11 +135,8 @@
               </div>
             </div>
           </div>
-
         </div>
-
         <div class="col-sm-12 col-md-6 col-lg-6 col-12 m-auto text-end" data-aos="fade-left" data-aos-offset="200">
-
           <img src="assets/images/download (3).jpg" class="img-fluid img-thumbnail">
         </div>
       </div>

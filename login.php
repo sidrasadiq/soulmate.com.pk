@@ -4,9 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-
+    <?php include 'includes/head-css.php'; ?>
     <title>Login - Matrimony</title>
     <style>
         /* main container */
@@ -157,7 +155,7 @@
         <div class="main-container">
             <!-- Welcome Section -->
             <div class="welcome-section">
-                <img src="assest/Loginpageimage.webp" alt="Welcome Image">
+                <img src="assets/images/Login page image.webp" alt="Welcome Image">
                 <div class="welcome-text">
                     <h2>Welcome Back!</h2>
                     <p>Login to Continue Your Journey</p>

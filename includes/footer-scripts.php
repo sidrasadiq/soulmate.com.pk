@@ -1,6 +1,6 @@
 <script>
     window.addEventListener('scroll', () => {
-        document.querySelector('.navbar').style.top = (window.pageYOffset === 0) ? '0' : '-56px';
+        document.querySelector('.navbar').style.top = (window.pageYOffset === 0) ? '0' : '-58px';
     });
 </script>
 <!-- Bootstrap Script -->
