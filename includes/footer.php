@@ -3,7 +3,7 @@
         <div class="row text-center text-md-start">
             <!-- About Us Section -->
             <div class="col-md-3">
-                <a class="navbar-brand me-auto" href="#"><img src='assest/logo.png'></a>
+                <a class="navbar-brand me-auto" href="#"><img src="../assets/images/logo.png"></a>
                 <p>Soulmate is a trusted platform dedicated to helping individuals find their life partners in a secure, respectful environment. </p>
             </div>
             <!-- Let Us Help Section -->
