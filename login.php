@@ -104,16 +104,15 @@
                 background: transparent !important;
             }
 
-            .container {
-                display: block;
-            }
+
 
             .login-with-google-btn {
                 font-size: 18px;
                 padding-left: 40px;
             }
 
-            .container {
+            .cont-log {
+                display: block;
                 padding: 20px;
                 border: none;
                 border-style: none;
@@ -136,7 +135,7 @@
 <body>
 
 
-    <div class="container mt-5">
+    <div class="container mt-5 cont-log">
         <div class="welcome-section ">
             <img src="assest/Login page image.webp" alt="Welcome Image">
             <div class="welcome-text">
@@ -164,12 +163,12 @@
                 </div>
                 <!-- Social Icons Section -->
                 <div class="social-icons-lg text-center mt-3">
-                    <a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+                    <a href="https://www.facebook.com/soulmatemetrimony/" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
                     <a href="#" aria-label="Twitter"><i class="bi bi-twitter"></i></a>
-                    <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                    <a href="https://www.instagram.com/soulmatemetrimonypakistan/" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
                     <a href="#" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
-                </div
-                    </form>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -180,4 +179,4 @@
 
 
 
-<?php include("footer.php") ?> 
+<?php include("footer.php") ?>

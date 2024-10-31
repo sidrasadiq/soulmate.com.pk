@@ -1,8 +1,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <title>Complete Profile - Matrimony</title>
     <style>
         .step {
             display: none;
@@ -168,6 +170,15 @@
             .stp-main {
                 margin-right: 80px;
             }
+
+            .btn-nxt {
+                margin-right: 10px;
+                width: 100px;
+            }
+
+            .btn-pre {
+                margin-right: 40px;
+            }
         }
     </style>
 </head>
@@ -194,9 +205,7 @@
                     <!-- Placeholder for showing uploaded file name -->
                     <div id="fileName" class="file-name"></div>
                 </div>
-
                 <p class="text-center mt-5">How to choose the right photo from the gallery</p>
-
                 <div class="row justify-content-center">
                     <!-- Left-aligned list items -->
                     <div class="col-md-4">
@@ -206,7 +215,6 @@
                             <li>Good quality, Bright and clear</li>
                         </ul>
                     </div>
-
                     <!-- Right-aligned list items -->
                     <div class="col-md-4">
                         <ul>
@@ -219,10 +227,7 @@
 
                 <!-- Button positioned in the bottom-right corner -->
                 <div class="step-buttons stp-main position-absolute end-0 ">
-                    <button type="button" class="btn btn-lg btn-nxt" id="nextToStep2">Next <i class="bi bi-arrow-right"></i>
-                        </i>
-                        </span>
-                    </button>
+                    <button type="button" class="btn btn-lg btn-nxt" id="nextToStep2">Next <i class="bi bi-arrow-right"></i> </button>
                 </div>
             </div>
 
@@ -272,12 +277,8 @@
                     </div>
                     <div class="step-buttons  position-absolute end-0 ">
                         <button type="button" class="btn btn-secondary btn-lg btn-pre " id="prevToStep1">Back</button>
-                        <button type="button" class="btn btn-lg btn-nxt " id="nextToStep3">Next <i class="bi bi-arrow-right"></i>
-                            </i>
-                            </span>
-                        </button>
+                        <button type="button" class="btn btn-lg btn-nxt" id="nextToStep3">Next <i class="bi bi-arrow-right"></i></button>
                     </div>
-
                 </div>
             </div>
 
@@ -343,10 +344,7 @@
 
                     <div class="step-buttons  position-absolute end-0 ">
                         <button type="button" class="btn btn-secondary btn-lg btn-pre " id="prevToStep2">Back</button>
-                        <button type="button" class="btn btn-lg btn-nxt " id="nextToStep4">Next <i class="bi bi-arrow-right"></i>
-                            </i>
-                            </span>
-                        </button>
+                        <button type="button" class="btn btn-lg btn-nxt " id="nextToStep4">Next <i class="bi bi-arrow-right"></i></button>
                     </div>
                 </div>
             </div>
@@ -379,14 +377,9 @@
                         </div>
                     </div>
 
-
-
                     <div class="step-buttons  position-absolute end-0 ">
                         <button type="button" class="btn btn-secondary btn-lg btn-pre " id="prevToStep3">Back</button>
-                        <button type="button" class="btn btn-lg btn-nxt " id="nextToStep5">Next <i class="bi bi-arrow-right"></i>
-                            </i>
-                            </span>
-                        </button>
+                        <button type="button" class="btn btn-lg btn-nxt " id="nextToStep5">Next <i class="bi bi-arrow-right"></i></button>
                     </div>
                 </div>
             </div>
@@ -472,10 +465,7 @@
 
             <div class="step-buttons  position-absolute end-0 ">
                 <button type="button" class="btn btn-secondary btn-lg btn-pre " id="prevToStep4">Back</button>
-                <button type="button" class="btn btn-lg btn-nxt " id="nextToStep6">Next <i class="bi bi-arrow-right"></i>
-                    </i>
-                    </span>
-                </button>
+                <button type="button" class="btn btn-lg btn-nxt " id="nextToStep6">Next <i class="bi bi-arrow-right"></i></button>
             </div>
         </div>
     </div>
@@ -549,10 +539,7 @@
 
             <div class="step-buttons  position-absolute end-0 ">
                 <button type="button" class="btn btn-secondary btn-lg btn-pre " id="prevToStep5">Back</button>
-                <button type="button" class="btn btn-lg btn-nxt " id="nextToStep7">Next <i class="bi bi-arrow-right"></i>
-                    </i>
-                    </span>
-                </button>
+                <button type="button" class="btn btn-lg btn-nxt " id="nextToStep7">Next <i class="bi bi-arrow-right"></i></button>
             </div>
         </div>
     </div>
@@ -585,30 +572,20 @@
                                     Don't drink</label>
                             </div>
                             <hr>
-
-
-
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
                                 <label class="form-check-label" for="flexRadioDefault1">
                                     Prefre not to say </label>
                             </div>
                             <hr>
-
                             <!--  -->
                         </div>
                     </div>
                 </div>
             </div>
-
-
-
             <div class="step-buttons  position-absolute end-0 ">
                 <button type="button" class="btn btn-secondary btn-lg btn-pre " id="prevToStep6">Back</button>
-                <button type="button" class="btn btn-lg btn-nxt " id="nextToStep8">Next <i class="bi bi-arrow-right"></i>
-                    </i>
-                    </span>
-                </button>
+                <button type="button" class="btn btn-lg btn-nxt " id="nextToStep8">Next <i class="bi bi-arrow-right"></i></button>
             </div>
         </div>
     </div>
@@ -648,21 +625,14 @@
                                     Prefre not to say </label>
                             </div>
                             <hr>
-
                             <!--  -->
                         </div>
                     </div>
                 </div>
             </div>
-
-
-
             <div class="step-buttons  position-absolute end-0 ">
                 <button type="button" class="btn btn-secondary btn-lg btn-pre " id="prevToStep7">Back</button>
-                <button type="button" class="btn btn-lg btn-nxt " id="nextToStep9">Next <i class="bi bi-arrow-right"></i>
-                    </i>
-                    </span>
-                </button>
+                <button type="button" class="btn btn-lg btn-nxt " id="nextToStep9">Next <i class="bi bi-arrow-right"></i></button>
             </div>
         </div>
     </div>
@@ -695,23 +665,14 @@
                                     No</label>
                             </div>
                             <hr>
-
-
-
                             <!--  -->
                         </div>
                     </div>
                 </div>
             </div>
-
-
-
             <div class="step-buttons  position-absolute end-0 ">
                 <button type="button" class="btn btn-secondary btn-lg btn-pre " id="prevToStep8">Back</button>
-                <button type="button" class="btn btn-lg btn-nxt " id="nextToStep10">Next <i class="bi bi-arrow-right"></i>
-                    </i>
-                    </span>
-                </button>
+                <button type="button" class="btn btn-lg btn-nxt " id="nextToStep10">Next <i class="bi bi-arrow-right"></i></button>
             </div>
         </div>
     </div>
@@ -767,15 +728,9 @@
                     </div>
                 </div>
             </div>
-
-
-
             <div class="step-buttons  position-absolute end-0 ">
                 <button type="button" class="btn btn-secondary btn-lg btn-pre " id="prevToStep9">Back</button>
-                <button type="button" class="btn btn-lg btn-nxt " id="nextToStep11">Next <i class="bi bi-arrow-right"></i>
-                    </i>
-                    </span>
-                </button>
+                <button type="button" class="btn btn-lg btn-nxt " id="nextToStep11">Next <i class="bi bi-arrow-right"></i></button>
             </div>
         </div>
     </div>
@@ -814,21 +769,14 @@
                                     Very attractive</label>
                             </div>
                             <hr>
-
                             <!--  -->
                         </div>
                     </div>
                 </div>
             </div>
-
-
-
             <div class="step-buttons  position-absolute end-0 ">
                 <button type="button" class="btn btn-secondary btn-lg btn-pre " id="prevToStep10">Back</button>
-                <button type="button" class="btn btn-lg btn-nxt " id="nextToStep12">Next <i class="bi bi-arrow-right"></i>
-                    </i>
-                    </span>
-                </button>
+                <button type="button" class="btn btn-lg btn-nxt " id="nextToStep12">Next <i class="bi bi-arrow-right"></i></button>
             </div>
         </div>
     </div>
@@ -879,28 +827,18 @@
                                     Large and Lovely</label>
                             </div>
                             <hr>
-
-                            <!--  -->
                         </div>
                     </div>
                 </div>
             </div>
-
-
-
             <div class="step-buttons  position-absolute end-0 ">
                 <button type="button" class="btn btn-secondary btn-lg btn-pre " id="prevToStep11">Back</button>
-                <button type="button" class="btn btn-lg btn-nxt " id="">Next <i class="bi bi-arrow-right"></i>
-                    </i>
-                    </span>
-                </button>
+                <button type="button" class="btn btn-lg btn-nxt " id="">Next <i class="bi bi-arrow-right"></i></button>
             </div>
         </div>
     </div>
     </div>
     </form>
-
-
     </div>
     <div class="progress">
         <div id="progressBar" class="progress-bar progress-bar-striped prg" role="progressbar" style="width: 10%;" aria-valuenow="33" aria-valuemin="0" aria-valuemax="100"></div>
