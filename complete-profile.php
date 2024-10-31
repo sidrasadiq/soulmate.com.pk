@@ -6,15 +6,17 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <title>Complete Profile - Matrimony</title>
     <style>
+        /* not show all steps in one step */
         .step {
             display: none;
         }
 
+        /* display individually by click */
         .step.active {
             display: block;
         }
 
-
+        /* steps of all buttons  */
         .step-buttons {
             margin-top: 50px;
             margin-right: 490px;
@@ -22,17 +24,19 @@
 
         }
 
-        /* styling of input field fiel */
+        /* styling of input field field */
         .step-head {
             color: #E63A7A;
             font-size: 30px;
         }
 
+        /* step digit styling  */
         .step-num {
             color: #E63A7A;
             font-size: 80px;
         }
 
+        /* file upload styling contianer */
         .file-upload-wrapper {
             display: flex;
             align-items: center;
@@ -40,6 +44,7 @@
             flex-direction: column;
         }
 
+        /* file upload input */
         .file-upload-input {
             position: relative;
             display: inline-block;
@@ -52,6 +57,7 @@
             transition: border-color 0.3s ease, background-color 0.3s ease;
         }
 
+        /* hover of file upload */
         .file-upload-input:hover {
             border-color: #45a049;
             background-color: #f1f8f5;
@@ -67,12 +73,14 @@
             cursor: pointer;
         }
 
+        /* filed upload icons  */
         .file-upload-icon {
             font-size: 50px;
             color: #4CAF50;
             margin-bottom: 10px;
         }
 
+        /* test  */
         .file-upload-text {
             font-size: 16px;
             font-weight: 500;
@@ -92,7 +100,7 @@
             color: #4CAF50;
         }
 
-        /* step of buttpm */
+        /* step of button next  */
         .btn-nxt {
             background-color: #ff69b4;
             /* Pink color */
@@ -112,18 +120,14 @@
             /* Smooth color transition */
         }
 
+        /* button previous */
         .btn-pre {
             background-color: #3987cc;
-            /* Pink color */
             color: white;
             margin-right: 70px;
-            /* White text */
             width: 100px;
-            /* Larger width */
             border: none;
-            /* Remove border */
             border-radius: 5px;
-            /* Rounded corners */
             font-size: 18px;
             /* Increase font size */
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
@@ -138,6 +142,7 @@
             /* Darker pink on hover */
         }
 
+        /* progress bar */
         .progress {
             height: 20px;
             margin-bottom: 20px;
@@ -147,19 +152,22 @@
             /* Space between the progress bar and buttons */
         }
 
+        /* progressbar color */
         .prg {
             background: linear-gradient(135deg, #3987cc, #E63A7A);
             /* Custom red gradient */
         }
 
+        /* resonsive for mobile screen */
 
         @media screen and (max-width: 768px) {
+
+            /* forn conainer */
             .form-container {
                 width: 100%;
             }
 
             /* button responsive */
-
             .step-buttons {
                 padding: 10px;
                 margin-right: 30px;
@@ -167,15 +175,18 @@
 
             }
 
+            /* first step  button */
             .stp-main {
                 margin-right: 80px;
             }
 
+            /* next button */
             .btn-nxt {
                 margin-right: 10px;
                 width: 100px;
             }
 
+            /* previous button */
             .btn-pre {
                 margin-right: 40px;
             }
@@ -184,9 +195,11 @@
 </head>
 
 <body>
+    <!-- logo -->
     <div class="m-2">
         <img src="assest/logo.png">
     </div>
+    <!-- main contianer start -->
     <div class="container mt-5">
         <form id="loginForm">
             <!-- Step 1:  Add Photo -->
@@ -238,13 +251,12 @@
                 <p class="text-center ">Refine your search to find individuals who are within the age range that
                 </p>
                 <p class="text-center ">you find most compatible.</p>
-
                 <div class="container mt-5">
                     <div class="row justify-content-center">
                         <div class="col-sm-8 mb-3 mb-sm-0">
                             <div class="card text-center border-0"> <!-- Added border-0 class -->
                                 <div class="card-body card-body-st2 mb-5">
-                                    <!--  -->
+                                    <!-- age 1 -->
                                     <div class="row ">
                                         <div class="col-6">
                                             <div class="form-group mb-3">
@@ -257,9 +269,9 @@
                                                 </select>
                                             </div>
                                         </div>
+                                        <!-- age2 -->
                                         <div class="col-6">
                                             <div class="form-group mb-3">
-
                                                 <label for="option1"></label>
                                                 <select class="form-select" id="option1">
                                                     <option selected>18</option>
@@ -383,7 +395,7 @@
                     </div>
                 </div>
             </div>
-    </div>
+    </div> <!--main container end-->
     <!-- Step 5: Ethnicity -->
     <div class="step" id="step5">
         <h1 class="mt-5 text-center step-num st-1">5</h1>
@@ -470,7 +482,7 @@
         </div>
     </div>
     </div>
-    <!-- Step 6: Two-Factor Authentication (Optional) -->
+    <!-- Step 6:  describes your beliefs-->
     <div class="step" id="step6">
         <h1 class="mt-5 text-center step-num st-1">6</h1>
         <h3 class="text-center  ">Which of the following best describes your beliefs?</h3>
@@ -544,7 +556,7 @@
         </div>
     </div>
     </div>
-    <!-- Step 7: Two-Factor Authentication (Optional) -->
+    <!-- Step 7: Alcohol -->
     <div class="step" id="step7">
         <h1 class="mt-5 text-center step-num st-1">7</h1>
         <h3 class="text-center  ">How often do you drink alcohol?</h3>
@@ -590,7 +602,7 @@
         </div>
     </div>
     </div>
-    <!-- Step 8: Two-Factor Authentication (Optional) -->
+    <!-- Step 8: Smoking -->
     <div class="step" id="step8">
         <h1 class="mt-5 text-center step-num st-1">8</h1>
         <h3 class="text-center  ">Do you smoke?</h3>
@@ -637,7 +649,7 @@
         </div>
     </div>
     </div>
-    <!-- Step 9: Two-Factor Authentication (Optional) -->
+    <!-- Step 9: childeren -->
     <div class="step" id="step9">
         <h1 class="mt-5 text-center step-num st-1">9</h1>
         <h3 class="text-center  ">Do you want (more) children?</h3>
@@ -677,7 +689,7 @@
         </div>
     </div>
     </div>
-    <!-- Step 10: Two-Factor Authentication (Optional) -->
+    <!-- Step 10: marital status -->
     <div class="step" id="step10">
         <h1 class="mt-5 text-center step-num st-1">10</h1>
         <h3 class="text-center">What's your current marital status?</h3>
@@ -735,7 +747,7 @@
         </div>
     </div>
     </div>
-    <!-- Step 11: Two-Factor Authentication (Optional) -->
+    <!-- Step 11: appearance  -->
     <div class="step" id="step11">
         <h1 class="mt-5 text-center step-num st-1">11</h1>
         <h3 class="text-center">Continue the statement. I consider my appearance as:</h3>
@@ -781,7 +793,7 @@
         </div>
     </div>
     </div>
-    <!-- Step 12: Two-Factor Authentication (Optional) -->
+    <!-- Step 12: body type -->
     <div class="step" id="step12">
         <h1 class="mt-5 text-center step-num st-1">12</h1>
         <h3 class="text-center">How would you describe your body type?</h3>
