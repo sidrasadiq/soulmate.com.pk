@@ -143,90 +143,99 @@
     </div>
   </section>
   <section class="services my-6">
-    <div class="container ">
-      <h1 class=text-center data-aos="fade-left" data-aos-offset="200">
-        Our <span class="text-primary"> Services </span>
-        <hr class="w-25 m-auto" />
-      </h1>
+        <div class="container ">
+                <h1 class=text-center data-aos="fade-left" data-aos-offset="200">
+                Our <span class="text-primary"> Services </span>
+                <hr / class="w-25 m-auto" >
+                </h1>
 
-      <div class="row">
-        <div class="col-sm-12 col-md-4 col-lg-4 col-12" data-aos="fade-left" data-aos-offset="200">
+                <div class="row">
+                            <div class="col-sm-12 col-md-4 col-lg-4 col-12" data-aos="fade-left" data-aos-offset="200">
 
-          <div class="card">
-            <div class="card-body">
-              <i class="fa fa-users bg-primary p-2 text-white rounded"></i>
-              <h5 class="card-title">Profile Verification</h5>
-              <p class="card-text">Ensure authenticity with verified profiles, minimizing fake accounts and creating a safer environment for all.</p>
-              <a href="#" class="btn btn-primary">Join Us </a>
+                                    <div class="card">
+                                            <div class="card-body">
+                                                <i class="fa fa-user bg-primary p-2 text-white rounded mb-2"></i>
+                                                <h5 class="card-title">Profile Verification</h5>
+                                                <p class="card-text">Ensure authenticity with verified profiles, minimizing fake accounts and creating a safer environment for all.</p>
+                                                <a href="#" class="btn btn-primary">Join Us </a>
+                                            </div>
+                                    </div>
+                            
+                            </div>
+
+
+
+                             <div class="col-sm-12 col-md-4 col-lg-4 col-12" data-aos="fade-left" data-aos-offset="200">
+
+                                    <div class="card bg-primary text-white">
+                                            <div class="card-body">
+                                            <i class="fa fa-heart bg-white p-2 text-dark rounded mb-2"></i>
+                                                <h5 class="card-title">Personalized Matchmaking</h5>
+                                                <p class="card-text">Our advanced algorithm pairs you with individuals who share your interests, goals, and values.</p>
+                                                <a href="#" class="btn btn-primary bg-white text-dark">Join Us </a>
+                                            </div>
+                                    </div>
+                            
+                            </div>
+                                <div class="col-sm-12 col-md-4 col-lg-4 col-12" data-aos="fade-left" data-aos-offset="200">
+
+                                    <div class="card">
+                                            <div class="card-body">
+                                            <i class="fa fa-comments bg-primary p-2 text-white rounded mb-2"></i>
+                                                <h5 class="card-title">Communication Tools</h5>
+                                                <p class="card-text">Engage through private messages, video calls, and live chats, helping you get to know potential matches better.</p>
+                                                <a href="#" class="btn btn-primary">Join Us</a>
+                                            </div>
+                                    </div>
+
+                                </div>
             </div>
-          </div>
-        </div>
-        <div class="col-sm-12 col-md-4 col-lg-4 col-12" data-aos="fade-left" data-aos-offset="200">
-          <div class="card bg-primary text-white">
-            <div class="card-body">
-              <i class="fa fa-users bg-white p-2 text-dark rounded mb-2"></i>
-              <h5 class="card-title">Personalized Matchmaking</h5>
-              <p class="card-text">Our advanced algorithm pairs you with individuals who share your interests, goals, and values.</p>
-              <a href="#" class="btn btn-primary">Join Us </a>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-12 col-md-4 col-lg-4 col-12" data-aos="fade-left" data-aos-offset="200">
-          <div class="card">
-            <div class="card-body">
-              <i class="fa fa-users bg-primary p-2 text-white rounded"></i>
-              <h5 class="card-title">Communication Tools</h5>
-              <p class="card-text">Engage through private messages, video calls, and live chats, helping you get to know potential matches better.</p>
-              <a href="#" class="btn btn-primary">Join Us</a>
-            </div>
-          </div>
+
+            <div class="row mt-4">
+                                <div class="col-sm-12 col-md-4 col-lg-4 col-12"data-aos="fade-right" data-aos-offset="200">
+
+                                        <div class="card">
+                                                <div class="card-body">
+                                                <i class="fa fa-envelope bg-primary p-2 text-white rounded mb-2"></i>
+                                                    <h5 class="card-title">Event Invitations</h5>
+                                                    <p class="card-text">Receive invitations to exclusive matchmaking events where you can meet potential matches in a safe, comfortable setting.</p>
+                                                    <a href="#" class="btn btn-primary">Join us</a>
+                                                </div>
+                                        </div>
+
+                                 </div>
+
+
+                                 <div class="col-sm-12 col-md-4 col-lg-4 col-12"data-aos="fade-right" data-aos-offset="200">
+
+                                        <div class="card bg-primary text-white">
+                                                <div class="card-body">
+                                                <i class="fa fa-people-group bg-white p-2 text-dark rounded mb-2"></i>
+                                                    <h5 class="card-title">Relationship Counseling</h5>
+                                                    <p class="card-text">Our experienced counselors provide guidance to help you make confident relationship choices and navigate the matchmaking process.</p>
+                                                    <a href="#" class="btn btn-primary bg-white text-dark">Join Us</a>
+                                                </div>
+                                        </div>
+
+                                 </div>
+
+                                 <div class="col-sm-12 col-md-4 col-lg-4 col-12"data-aos="fade-right" data-aos-offset="200">
+
+                                        <div class="card">
+                                                <div class="card-body">
+                                                <i class="fa fa-shield-halved bg-primary p-2 text-white rounded mb-2"></i>
+                                                    <h5 class="card-title">Privacy Protection</h5>
+                                                    <p class="card-text">We maintain strict privacy controls, allowing you to control your information and decide when and with whom to share it.</p>
+                                                    <a href="#" class="btn btn-primary">Join Us</a>
+                                                </div>
+                                        </div>
+
+                                 </div>
+                </div>
 
         </div>
-      </div>
+</section>
 
-      <div class="row mt-4">
-        <div class="col-sm-12 col-md-4 col-lg-4 col-12" data-aos="fade-right" data-aos-offset="200">
-
-          <div class="card">
-            <div class="card-body">
-              <i class="fa fa-users bg-primary p-2 text-white rounded"></i>
-              <h5 class="card-title">Event Invitations</h5>
-              <p class="card-text">Receive invitations to exclusive matchmaking events where you can meet potential matches in a safe, comfortable setting.</p>
-              <a href="#" class="btn btn-primary">Join us</a>
-            </div>
-          </div>
-
-        </div>
-
-
-        <div class="col-sm-12 col-md-4 col-lg-4 col-12" data-aos="fade-right" data-aos-offset="200">
-
-          <div class="card bg-primary text-white">
-            <div class="card-body">
-              <i class="fa fa-users bg-white p-2 text-dark rounded mb-2"></i>
-              <h5 class="card-title">Relationship Counseling</h5>
-              <p class="card-text">Our experienced counselors provide guidance to help you make confident relationship choices and navigate the matchmaking process.</p>
-              <a href="#" class="btn btn-primary">Join Us</a>
-            </div>
-          </div>
-
-        </div>
-
-        <div class="col-sm-12 col-md-4 col-lg-4 col-12" data-aos="fade-right" data-aos-offset="200">
-
-          <div class="card">
-            <div class="card-body">
-              <i class="fa fa-users bg-primary p-2 text-white rounded"></i>
-              <h5 class="card-title">Privacy Protection</h5>
-              <p class="card-text">We maintain strict privacy controls, allowing you to control your information and decide when and with whom to share it.</p>
-              <a href="#" class="btn btn-primary">Join Us</a>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-    </div>
   </section>
   <section class="Testimonials my-6">
     <div class="container mt-3">
