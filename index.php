@@ -1,14 +1,28 @@
 <?php include 'includes/main.php'; ?>
 <?php include 'includes/functions.php'; ?>
 
+
 <head>
   <title>Soulmate</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <?php include 'includes/head-css.php'; ?>
 </head>
+<style>
+.text-primary {
+    color: #ce478b !important;
+}
+.btn-primary{
+  background-color: #3987cc !important;
+}
 
+.bg-primary{
+  background-color: #ce478b !important;
+
+}
+</style>
 <body>
+  
   <!-- Navbar Start-->
   <nav class="navbar navbar-expand fixed-top">
     <div class="container">
@@ -39,7 +53,7 @@
         </div>
       </div>
       <div class="carousel-item">
-        <img src="assets/images/SLIDERS SOULMATE 2.png" class="d-block w-100" alt="...">
+        <img src="assets/images/Sliders 22 wedding.png" class="d-block w-100" alt="...">
         <div class="carousel-caption  d-md-block">
           <h1>Find the Perfect Life Partner</h1>
           <h5>Connect with your soul mate that can be nearby or within your city.</h5>
@@ -172,7 +186,7 @@
                                             <i class="fa fa-heart bg-white p-2 text-dark rounded mb-2"></i>
                                                 <h5 class="card-title">Personalized Matchmaking</h5>
                                                 <p class="card-text">Our advanced algorithm pairs you with individuals who share your interests, goals, and values.</p>
-                                                <a href="#" class="btn btn-primary bg-white text-dark">Join Us </a>
+                                                <a href="#" class="btn btn-white bg-white text-dark">Join Us </a>
                                             </div>
                                     </div>
                             
@@ -213,7 +227,7 @@
                                                 <i class="fa fa-people-group bg-white p-2 text-dark rounded mb-2"></i>
                                                     <h5 class="card-title">Relationship Counseling</h5>
                                                     <p class="card-text">Our experienced counselors provide guidance to help you make confident relationship choices and navigate the matchmaking process.</p>
-                                                    <a href="#" class="btn btn-primary bg-white text-dark">Join Us</a>
+                                                    <a href="#" class="btn btn-white bg-white text-dark">Join Us</a>
                                                 </div>
                                         </div>
 
@@ -291,50 +305,46 @@
       <hr class="w-25 m-auto" />
       <div class="row">
         <div class="col-sm-12 col-md-6 col-lg-6 col-12 mt-5" data-aos="fade-left" data-aos-offset="200">
-          <form class="row g-3">
-            <div class="col-md-6">
-              <label for="inputEmail4" class="form-label">Email</label>
-              <input type="email" class="form-control" id="inputEmail4">
+        <div class="card p-4 shadow-sm">
+        <form>
+            <div class="mb-3">
+                <label for="company" class="form-label">Company</label>
+                <input type="text" class="form-control" id="company" placeholder="Company">
             </div>
-            <div class="col-md-6">
-              <label for="inputPassword4" class="form-label">Password</label>
-              <input type="password" class="form-control" id="inputPassword4">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="firstName" class="form-label">First Name <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="firstName" placeholder="First Name" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="lastName" class="form-label">Last Name <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="lastName" placeholder="Last Name" required>
+                </div>
             </div>
-            <div class="col-12">
-              <label for="inputAddress" class="form-label">Address</label>
-              <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+            <div class="row g-3 my-3">
+                <div class="col-md-6">
+                    <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                    <input type="email" class="form-control" id="email" placeholder="Email" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="telephone" class="form-label">Telephone</label>
+                    <input type="tel" class="form-control" id="telephone" placeholder="Telephone">
+                </div>
             </div>
-            <div class="col-12">
-              <label for="inputAddress2" class="form-label">Address 2</label>
-              <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
+            <div class="mb-3">
+                <label for="subject" class="form-label">Subject <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="subject" placeholder="Subject" required>
             </div>
-            <div class="col-md-6">
-              <label for="inputCity" class="form-label">City</label>
-              <input type="text" class="form-control" id="inputCity">
+            <div class="mb-3">
+                <label for="message" class="form-label">Message <span class="text-danger">*</span></label>
+                <textarea class="form-control" id="message" rows="4" placeholder="Message" required></textarea>
             </div>
-            <div class="col-md-4">
-              <label for="inputState" class="form-label">State</label>
-              <select id="inputState" class="form-select">
-                <option selected>Choose...</option>
-                <option>...</option>
-              </select>
+            <div class="text-muted mb-3">
+                <small>Note: Fields marked with <span class="text-danger">*</span> are required.</small>
             </div>
-            <div class="col-md-2">
-              <label for="inputZip" class="form-label">Zip</label>
-              <input type="text" class="form-control" id="inputZip">
-            </div>
-            <div class="col-12">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="gridCheck">
-                <label class="form-check-label" for="gridCheck">
-                  Check me out
-                </label>
-              </div>
-            </div>
-            <div class="col-12">
-              <button type="submit" class="btn btn-primary">Sign in</button>
-            </div>
-          </form>
+            <button type="submit" class="btn btn-primary w-100">Send Message</button>
+        </form>
+</div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-6 col-12 m-auto text-end" data-aos="fade-right" data-aos-offset="200">
           <img src="assets/images/b95b0519-e9ed-46cd-9f93-2feb1ad79798.jpg" class="img-fluid img-thumbnail mt-5">
