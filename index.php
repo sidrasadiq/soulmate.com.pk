@@ -306,11 +306,7 @@
       <div class="row">
         <div class="col-sm-12 col-md-6 col-lg-6 col-12 mt-5" data-aos="fade-left" data-aos-offset="200">
         <div class="card p-4 shadow-sm">
-        <form>
-            <div class="mb-3">
-                <label for="company" class="form-label">Company</label>
-                <input type="text" class="form-control" id="company" placeholder="Company">
-            </div>
+        <form>  
             <div class="row g-3">
                 <div class="col-md-6">
                     <label for="firstName" class="form-label">First Name <span class="text-danger">*</span></label>
@@ -320,6 +316,12 @@
                     <label for="lastName" class="form-label">Last Name <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="lastName" placeholder="Last Name" required>
                 </div>
+
+                <div class="">
+                <label for="city" class="form-label">City Name</label>
+                <input type="text" class="form-control" id="city" placeholder="city">
+            </div>
+
             </div>
             <div class="row g-3 my-3">
                 <div class="col-md-6">
