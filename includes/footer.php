@@ -41,11 +41,11 @@
         <div class="footer-bottom">
             <p>Copyright ©2020 All rights reserved by <a href="#" class="text-decoration-none">The Providers</a></p>
             <div class="social-icons">
-                <a href="#"><i class="fa-brands fa-facebook"></i></a>
-                <a href="#"><i class="fa-brands fa-twitter"></i></a>
-                <a href="#"><i class="fa-brands fa-instagram"></i></a>
-                <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
-                <a href="#"><i class="fa-brands fa-youtube"></i></a>
+                <a href="https://web.facebook.com/soulmatemetrimony"><i class="fa-brands fa-facebook"></i></a>
+                <!-- <a href="#"><i class="fa-brands fa-twitter"></i></a> -->
+                <a href="https://www.instagram.com/soulmatemetrimonypakistan/"><i class="fa-brands fa-instagram"></i></a>
+                <!-- <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+                <a href="#"><i class="fa-brands fa-youtube"></i></a> -->
             </div>
         </div>
     </div>
