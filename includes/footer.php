@@ -31,9 +31,9 @@
                 <h5>CONTACT</h5>
                 <ul class="list-unstyled">
                     <li><i class="fa-solid fa-location-dot"></i> New York, NY 2333, US</li>
-                    <li><i class="fa-regular fa-envelope"></i> theproviders98@gmail.com</li>
-                    <li><i class="fa-brands fa-whatsapp"></i> +12 3456789</li>
-                    <li><i class="fa-solid fa-phone"></i> +12 3456789</li>
+                    <li><i class="fa-regular fa-envelope"></i> info@soulmate.com.pk </li>
+                    <li><i class="fa-brands fa-whatsapp"></i> +923032666675 </li>
+                    <li><i class="fa-solid fa-phone"></i> +923032666675</li>
                 </ul>
             </div>
         </div>
