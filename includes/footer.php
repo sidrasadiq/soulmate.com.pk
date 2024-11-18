@@ -30,7 +30,7 @@
             <div class="col-md-3">
                 <h5>CONTACT</h5>
                 <ul class="list-unstyled">
-                    <li><i class="fa-solid fa-location-dot"></i> Main College Road Town Ship Lahore</li>
+                    <li><i class="fa-solid fa-location-dot"></i> Main College Road Town <br> Ship Lahore</li>
                     <li><i class="fa-regular fa-envelope"></i> info@soulmate.com.pk </li>
                     <li><i class="fa-brands fa-whatsapp"></i> +923032666675 </li>
                     <li><i class="fa-solid fa-phone"></i> +923032666675</li>
@@ -39,7 +39,7 @@
         </div>
         <!-- Footer Bottom -->
         <div class="footer-bottom">
-            <p>Copyright ©2020 All rights reserved by <a href="#" class="text-decoration-none">The Providers</a></p>
+            <p>Copyright ©2020 All rights reserved by <a href="https://themillionairesoft.com/" class="text-decoration-none">The Millionaire Soft.</a></p>
             <div class="social-icons">
                 <a href="https://web.facebook.com/soulmatemetrimony"><i class="fa-brands fa-facebook"></i></a>
                 <!-- <a href="#"><i class="fa-brands fa-twitter"></i></a> -->
