@@ -1,13 +1,13 @@
 /* // <uniquifier>: Use a unique and descriptive class name
 // <weight>: Use a value from 400 to 700 */
 
-  h1 {
+h1 {
   font-family: "Dancing Script", cursive;
   font-optical-sizing: auto;
- 
-} 
- 
-.text-primary{
+
+}
+
+.text-primary {
   color: #ce478b;
 }
 
@@ -15,25 +15,27 @@
 /* header.navbar {
   background-color: rgba(0, 0, 0, 0.5); 
   z-index: 10;
-} */ 
+} */
 
 /* Ensure the slider image goes under the header */
 .carousel-item img {
-  height: 100vh; /* Full height to cover the viewport */
+  height: 100vh;
+  /* Full height to cover the viewport */
   object-fit: cover;
 }
 
-.carousel-inner h1{
-  color:  #ce478b;
+.carousel-inner h1 {
+  color: #ce478b;
   font-weight: 800;
 
 }
 
-.carousel-inner h5{
+.carousel-inner h5 {
   color: #3987cc;
 
 }
-.navbar-brand{
+
+.navbar-brand {
   font-weight: 500;
   color: #ce478b;
   font-size: 24px;
@@ -42,7 +44,7 @@
 
 
 
-.log-in-button{
+.log-in-button {
 
   background-color: #ce478b;
   color: #fff;
@@ -55,8 +57,8 @@
 
 }
 
-.sign-up-button{
-    background-color: #3987cc;
+.sign-up-button {
+  background-color: #3987cc;
   color: #fff;
   font-size: 14px;
   padding: 8px 20px;
@@ -66,29 +68,31 @@
 
 }
 
-.log-in-button:hover{
+.log-in-button:hover {
   background-color: #3987cc;
 
 }
 
-.navbar-toggler{
+.navbar-toggler {
   border: none;
-  font-size:1.25rem;
+  font-size: 1.25rem;
 
 }
 
-.navbar-toggler:focus, .btn-close:focus{
+.navbar-toggler:focus,
+.btn-close:focus {
   box-shadow: none;
-  outline: none; 
+  outline: none;
 }
 
-.nav-link{
+.nav-link {
   color: #ffffff;
   font-weight: 500;
   position: relative;
 }
 
-.nav-link:hover, .nav-link.active{
+.nav-link:hover,
+.nav-link.active {
   color: #ffffff;
 }
 
@@ -112,29 +116,29 @@
 }
 } */
 
-.hero-section{
+.hero-section {
   background: url('assest/Shaadiimg.PNG') no-repeat center;
   background-size: cover;
   width: 100%;
 }
 
-.hero-section .container{
+.hero-section .container {
   height: 100vh;
 
   z-index: 1;
   position: relative;
 }
 
-.hero-section h4{
+.hero-section h4 {
   font-size: 1.5em;
   margin-top: 200px;
 }
 
-.hero-section h1{
+.hero-section h1 {
   font-size: 1.2em;
 }
 
-.formrow{
+.formrow {
 
   margin-bottom: 300px;
 }
@@ -169,54 +173,57 @@ button {
   transition: background-color 0.3s;
 } */
 
- /* Form container styling */
-        .search-form {
-          /* align-items: center; */
-            background-color: rgba(0, 0, 0, 0.6);
-            padding: 20px;
-            border-radius: 8px;
-            max-width: 2000px;
-            margin: 0 auto;
-        }
-        
-        /* Form controls */
-        .search-form .form-select,
-        .search-form .form-control,
-        .search-form button {
-            padding: 5px;
-            border-radius: 4px;
-            /* width: 155px; */
-        }
+/* Form container styling */
+.search-form {
+  /* align-items: center; */
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 2000px;
+  margin: 0 auto;
+}
 
-        .search-form .form-select,
-        .search-form .form-control {
-            background-color: white;
-        }
+/* Form controls */
+.search-form .form-select,
+.search-form .form-control,
+.search-form button {
+  padding: 5px;
+  border-radius: 4px;
+  /* width: 155px; */
+}
 
-        /* Button styling */
-        .search-form button {
-            background-color: #008CBA;
-            color: white;
-            border: none;
-            width: 100%;
-            transition: background-color 0.3s;
-        }
-        .search-form button:hover {
-            background-color: #007BA7;
-        }
+.search-form .form-select,
+.search-form .form-control {
+  background-color: white;
+}
 
-        /* Layout adjustments */
-        @media (min-width: 768px) {
-            .search-form .row > div {
-                flex: 0 0 auto;
-            }
-            .search-form .row .col-md-auto {
-                max-width: calc(100% / 5);
-            }
-            .search-form button {
-                max-width: 120px;
-            }
-        }
+/* Button styling */
+.search-form button {
+  background-color: #008CBA;
+  color: white;
+  border: none;
+  width: 100%;
+  transition: background-color 0.3s;
+}
+
+.search-form button:hover {
+  background-color: #007BA7;
+}
+
+/* Layout adjustments */
+@media (min-width: 768px) {
+  .search-form .row>div {
+    flex: 0 0 auto;
+  }
+
+  .search-form .row .col-md-auto {
+    max-width: calc(100% / 5);
+  }
+
+  .search-form button {
+    max-width: 120px;
+  }
+}
 
 /* button:hover {
   background-color: #005f73;
@@ -240,25 +247,31 @@ button {
   background-color: #ffd6ef;
   padding: 40px 0;
 }
+
 .footer h5 {
   font-weight: bold;
   margin-bottom: 20px;
 }
+
 .footer a {
   text-decoration: none;
   color: #000;
 }
+
 .footer a:hover {
   text-decoration: underline;
 }
+
 .footer .social-icons i {
   font-size: 18px;
   margin-right: 15px;
   color: #333;
 }
+
 .footer .social-icons i:hover {
   color: #007bff;
 }
+
 .footer-bottom {
   text-align: center;
   padding-top: 20px;
@@ -271,4 +284,3 @@ button {
 .text-primary {
   color: #cc39b3 !important;
 }
-
