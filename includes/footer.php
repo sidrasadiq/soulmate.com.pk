@@ -3,7 +3,7 @@
         <div class="row text-center text-md-start">
             <!-- About Us Section -->
             <div class="col-md-3">
-                <a class="navbar-brand me-auto" href="#"><img src='assest/logo.png'></a>
+                <a class="navbar-brand me-auto" href="#"><img src="../assets/images/logo.png"></a>
                 <p>Soulmate is a trusted platform dedicated to helping individuals find their life partners in a secure, respectful environment. </p>
             </div>
             <!-- Let Us Help Section -->
@@ -30,22 +30,22 @@
             <div class="col-md-3">
                 <h5>CONTACT</h5>
                 <ul class="list-unstyled">
-                    <li><i class="fa-solid fa-location-dot"></i> New York, NY 2333, US</li>
-                    <li><i class="fa-regular fa-envelope"></i> theproviders98@gmail.com</li>
-                    <li><i class="fa-brands fa-whatsapp"></i> +12 3456789</li>
-                    <li><i class="fa-solid fa-phone"></i> +12 3456789</li>
+                    <li><i class="fa-solid fa-location-dot"></i> Main College Road Town <br> Ship Lahore</li>
+                    <li><i class="fa-regular fa-envelope"></i> info@soulmate.com.pk </li>
+                    <li><i class="fa-brands fa-whatsapp"></i> +923032666675 </li>
+                    <li><i class="fa-solid fa-phone"></i> +923032666675</li>
                 </ul>
             </div>
         </div>
         <!-- Footer Bottom -->
         <div class="footer-bottom">
-            <p>Copyright ©2020 All rights reserved by <a href="#" class="text-decoration-none">The Providers</a></p>
+            <p>Copyright ©2020 All rights reserved by <a href="https://themillionairesoft.com/" class="text-decoration-none">The Millionaire Soft.</a></p>
             <div class="social-icons">
-                <a href="#"><i class="fa-brands fa-facebook"></i></a>
-                <a href="#"><i class="fa-brands fa-twitter"></i></a>
-                <a href="#"><i class="fa-brands fa-instagram"></i></a>
-                <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
-                <a href="#"><i class="fa-brands fa-youtube"></i></a>
+                <a href="https://web.facebook.com/soulmatemetrimony"><i class="fa-brands fa-facebook"></i></a>
+                <!-- <a href="#"><i class="fa-brands fa-twitter"></i></a> -->
+                <a href="https://www.instagram.com/soulmatemetrimonypakistan/"><i class="fa-brands fa-instagram"></i></a>
+                <!-- <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+                <a href="#"><i class="fa-brands fa-youtube"></i></a> -->
             </div>
         </div>
     </div>

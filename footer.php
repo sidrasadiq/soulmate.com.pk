@@ -1,7 +1,7 @@
 <footer>
     <div class="footer-container">
         <div class="about">
-            <img src="assest/logo footer.png">
+            <img src="assets/images/logo.png">
             <p>Sed ut perspiciatis unde omnis iste natus <br>
                 error sit voluptatem accusantium doloremque <br>
                 laudantium.</p>
