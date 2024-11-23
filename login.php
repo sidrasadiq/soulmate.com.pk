@@ -151,7 +151,7 @@
 </head>
 
 <body>
-    <div class="container-fluid d-flex justify-content-center align-items-center mt-5 pt-5 mb-5 ">
+    <div class="container-fluid d-flex justify-content-center align-items-center mt-1 pt-5 mb-3 ">
         <div class="main-container">
             <!-- Welcome Section -->
             <div class="welcome-section">
@@ -193,8 +193,6 @@
             </div>
         </div>
     </div>
-
-
 
 </body>
 
