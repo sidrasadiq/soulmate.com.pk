@@ -1,8 +1,7 @@
 <?php
 session_start();
-
-
 include 'layouts/config.php';
+include 'layouts/main.php';
 include 'layouts/functions.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -88,12 +87,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
 ?>
-
-
-
-
-<!DOCTYPE html>
-<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -267,23 +260,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="input-group">
                         <input type="password" name="password" class="form-control" placeholder="Your Password" required>
                     </div>
-
                     <!-- <button type="submit" onclick="window.location.href='complete-profile.php';">Continue</button> -->
                     <button id="login-button" type="submit">Continue</button>
-                    <!-- <div class="text-center mt-4"> -->
-                    <!-- <p>or</p> -->
-                    <!-- Google Sign-In Button -->
-                    <!-- <a href="#" class="login-with-google-btn ">
-                            Sign in with Google
-                        </a> -->
-                    <p class="mt-4 text-center">Let Others Know About Soulmate!</p>
-                    <!-- </div> -->
+
                     <!-- Social Icons Section -->
+                    <p class="mt-4 text-center">Let Others Know About Soulmate!</p>
                     <div class="social-icons-lg text-center mt-3">
                         <a href="https://www.facebook.com/soulmatemetrimony/" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
-                        <a href="#" aria-label="Twitter"><i class="bi bi-twitter"></i></a>
+                        <!-- <a href="#" aria-label="Twitter"><i class="bi bi-twitter"></i></a> -->
                         <a href="https://www.instagram.com/soulmatemetrimonypakistan/" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
-                        <a href="#" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+                        <!-- <a href="#" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a> -->
                     </div>
                     <p class="text-center mt-3">Don't have an account? <a href="signup.php">Sign Up</a></p>
                 </form>

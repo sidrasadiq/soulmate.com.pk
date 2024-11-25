@@ -31,12 +31,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["otp"])) {
             $update_stmt = $conn->prepare($update_sql);
             $update_stmt->bind_param("s", $email);
             if ($update_stmt->execute()) {
+                // Fetch the user's ID for session storage
+                $stmt->bind_result($user_id);
+                $stmt->fetch();
+                $_SESSION['user_id'] = $user_id; // Store user ID in session for profile completion
+
                 $_SESSION['message'][] = array(
                     "type" => "success",
-                    "content" => "Your account has been successfully verified! You can now log in."
+                    "content" => "Your account has been successfully verified! Please complete your profile."
                 );
+
                 unset($_SESSION['email']); // Clear the email from the session
-                header("Location: login.php");
+                $_SESSION["loggedin"] = true;
+                // Redirect to complete-profile.php
+                header("Location: complete-profile.php");
                 exit();
             } else {
                 throw new Exception("Failed to update user verification status.");
@@ -52,6 +60,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["otp"])) {
     header("Location: verify-otp.php");
     exit();
 }
+
+
 ?>
 
 <!DOCTYPE html>

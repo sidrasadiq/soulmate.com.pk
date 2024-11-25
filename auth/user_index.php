@@ -1,9 +1,7 @@
 <?php
-session_start();
-
 // Include required files
+include 'layouts/session.php';
 include 'layouts/config.php';
-include 'layouts/session.php';  // Ensure session_start() is called here
 include 'layouts/main.php';
 include 'layouts/functions.php';
 
@@ -13,11 +11,6 @@ $profile = [];
 // Check if user is logged in by verifying session user_id
 if (isset($_SESSION['user_id'])) {
     $userId = $_SESSION['user_id']; // Get the user ID from the session
-
-    // Ensure the database connection is established
-    if (!$conn) {
-        die("Connection failed: " . mysqli_connect_error());
-    }
 
     // Initialize arrays for countries, cities, and states
     $countries = [];
@@ -73,14 +66,6 @@ if (isset($_SESSION['user_id'])) {
 ?>
 
 
-
-
-
-
-
-<!DOCTYPE html>
-<html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -125,14 +110,14 @@ if (isset($_SESSION['user_id'])) {
         <div class="row">
             <div class="col-md-3 p-md-1 mb-md-3 ">
                 <a href="#" class="d-block text-decoration-none ">
-                    <img src="<?php echo $_SESSION['profile_picture']; ?>" alt="User" width="132" height="132" class="rounded-circle ">
+                    <img src="uploads/<?php echo rowInfoByColumn($conn, "profiles", "profile_picture", "user_id", $_SESSION["user_id"]); ?>" alt="User" width="132" height="132" class="rounded-circle ">
                 </a>
             </div>
 
             <div class="col-md-4 prof-con mt-md-3 mt-sm-4">
 
                 <h5 class="mt-4">
-                    <?php echo $_SESSION['username']; ?>
+                    <?php echo rowInfoByColumn($conn, "profiles", "last_name", "user_id", $_SESSION["user_id"]); ?>
                 </h5>
                 <button type="submit " class="btn btn-comp-prof"> Next Step: Complete your personality profile</button>
                 <p class="mt-2">Learn about membership features</p>
@@ -399,11 +384,7 @@ if (isset($_SESSION['user_id'])) {
             ?>
         </div> <!-- End of row -->
     </div> <!-- End of container -->
-
-
     <!-- Search Section End -->
-
-
     <?php include 'userlayout/footer.php'; ?>
 
     <script>

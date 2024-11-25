@@ -81,7 +81,7 @@ function displaySessionMessage()
                 // Output the Bootstrap alert with a unique class and data attribute for indexing
                 echo "<div class='alert alert-{$alertType} alert-dismissible fade show session-alert' role='alert' data-index='{$index}'>";
                 echo "{$content}";
-                echo "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>";
+                // echo "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>";
                 echo "</div>";
             }
         }
@@ -320,5 +320,57 @@ function sendOtpEmail($to, $username, $otp)
         return true;
     } catch (Exception $e) {
         return "Mailer Error: {$mail->ErrorInfo}";
+    }
+}
+
+function rowInfoByColumn($conn, $tableName, $columnName, $idColumnName, $id)
+{
+    // Start a transaction
+    $conn->begin_transaction();
+
+    try {
+        // Use prepared statement to prevent SQL injection
+        $query = "SELECT {$columnName} FROM {$tableName} WHERE {$idColumnName} = ?";
+
+        // Prepare the SQL query
+        $stmt = $conn->prepare($query);
+
+        // Bind the parameter (assuming ID is an integer)
+        $stmt->bind_param("i", $id);
+
+        // Execute the query
+        $stmt->execute();
+
+        // Fetch result
+        $result = $stmt->get_result();
+
+        // Check if a row was found
+        if ($result->num_rows > 0) {
+            // Fetch the row as an associative array
+            $row = $result->fetch_assoc();
+            $value = $row[$columnName]; // Return the specific column value
+
+            // Commit the transaction
+            $conn->commit();
+
+            return $value;
+        } else {
+            // Return null if no row was found
+            $conn->commit();
+            return null;
+        }
+    } catch (Exception $e) {
+        // Rollback the transaction on error
+        $conn->rollback();
+
+        // Handle the error (optional: log it or rethrow)
+        $_SESSION['message'][] = ["type" => "danger", "content" => "Error fetching data: " . $e->getMessage()];
+
+        return null;
+    } finally {
+        // Close the statement
+        if (isset($stmt) && $stmt) {
+            $stmt->close();
+        }
     }
 }
