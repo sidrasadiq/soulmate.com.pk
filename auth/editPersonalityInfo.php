@@ -179,11 +179,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
         </div>
         <div class="col-lg-10">
             <?php
-            // Display success message
-            if (isset($_SESSION['message'])) {
-                echo '<div class="alert alert-success mt-3" role="alert">' . $_SESSION['message'] . '</div>';
-                unset($_SESSION['message']);  // Clear message after displaying it
-            }
+            displaySessionMessage();
             ?>
         </div>
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
