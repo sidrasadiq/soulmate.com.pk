@@ -1,5 +1,5 @@
 <?php
-include 'layouts/session.php';
+session_start();
 include 'layouts/config.php';
 include 'layouts/functions.php';
 
@@ -9,15 +9,11 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
 }
-
 $userId = $_SESSION['user_id'];
-
-// Check if the user's profile is incomplete
-$profileCheckQuery = "SELECT * FROM profiles WHERE user_id = ? AND (
-    prefer_age_from IS NULL OR prefer_age_to IS NULL OR country_id IS NULL OR city_id IS NULL OR 
-    relationship_looking IS NULL OR ethnicity IS NULL OR beliefs IS NULL OR drink_alcohol IS NULL OR 
-    smoking IS NULL OR children IS NULL OR marital_status IS NULL OR my_appearance IS NULL OR 
-    body_type IS NULL OR profile_picture IS NULL)";
+// Check if the user profile is incomplete
+$profileCheckQuery = "SELECT * FROM profiles WHERE user_id = ? AND (prefer_age_from IS NULL OR prefer_age_to IS NULL OR country_id IS NULL 
+OR city_id IS NULL OR relationship_looking IS NULL OR ethnicity IS NULL OR beliefs IS NULL OR drink_alcohol IS NULL OR smoking IS NULL OR children IS NULL 
+OR marital_status IS NULL OR my_appearance IS NULL OR body_type IS NULL OR profile_picture IS NULL)";
 $stmtProfileCheck = $conn->prepare($profileCheckQuery);
 if (!$stmtProfileCheck) {
     throw new Exception("Prepare statement failed: " . $conn->error);
@@ -28,14 +24,15 @@ $stmtProfileCheck->execute();
 $profileResult = $stmtProfileCheck->get_result();
 
 if ($profileResult->num_rows > 0) {
-    // Profile is incomplete; show the form
+    // Profile is incomplete; allow the user to complete it
+    // Show the form (do not redirect to the same page)
 } else {
-    // If the profile is complete, redirect to index.php
-    header("Location: index.php");
+    // If profile is complete, proceed to the user dashboard
+    header("Location: user_index.php");
     exit();
 }
 
-// Initialize arrays for countries, states, and cities
+// Initialize arrays for countries and cities
 $countries = [];
 $cities = [];
 $states = [];
@@ -54,14 +51,13 @@ try {
     }
 
     // Fetch states
-    $queryStates = "SELECT id, state_name FROM states ORDER BY id ASC;";
+    $queryStates = "SELECT id, state_name FROM states  ORDER BY id ASC;";
     $stmtStates = $conn->prepare($queryStates);
     $stmtStates->execute();
-    $resultStates = $stmtStates->get_result();
+    $resultStates  = $stmtStates->get_result();
     while ($row = $resultStates->fetch_assoc()) {
         $states[] = $row;
     }
-
     // Fetch cities
     $queryCities = "SELECT id, city_name FROM cities ORDER BY id ASC;";
     $stmtCities = $conn->prepare($queryCities);
@@ -75,11 +71,11 @@ try {
 } catch (Exception $e) {
     $conn->rollback();
     $_SESSION['message'][] = array("type" => "error", "content" => "Error: " . $e->getMessage());
-    header("Location: complete-profile.php");
+    header("location: complete-profile.php");
     exit();
 }
 
-// Check if the form is submitted via POST
+// Check if form is submitted via POST
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
 
     // Sanitize and retrieve form data
@@ -93,15 +89,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
     $relationshipLooking = isset($_POST['relationshipLooking']) ? (is_array($_POST['relationshipLooking']) ? implode(", ", $_POST['relationshipLooking']) : $_POST['relationshipLooking']) : null;
     $ethnicity = isset($_POST['ethnicity']) ? $_POST['ethnicity'] : null;
     $beliefs = isset($_POST['beliefs']) ? $_POST['beliefs'] : null;
-    $drinkAlcohol = isset($_POST['drinkAlcohol']) ? $_POST['drinkAlcohol'] : 'No'; // Default to 'No'
-    $smoking = isset($_POST['smoking']) ? $_POST['smoking'] : 'No'; // Default to 'No'
-    $children = isset($_POST['children']) ? $_POST['children'] : 'No'; // Default to 'No'
+    $drinkAlcohol = isset($_POST['drinkAlcohol']) ? $_POST['drinkAlcohol'] : 'No'; // Set default to 'No' if not selected
+    $smoking = isset($_POST['smoking']) ? $_POST['smoking'] : 'No'; // Set default to 'No'
+    $children = isset($_POST['children']) ? $_POST['children'] : 'No'; // Set default to 'No'
     $maritalStatus = isset($_POST['maritalStatus']) ? $_POST['maritalStatus'] : null;
     $appearance = isset($_POST['appearance']) ? $_POST['appearance'] : null;
     $bodyType = isset($_POST['bodyType']) ? $_POST['bodyType'] : null;
+    var_dump($_POST);
 
     try {
-        // Start a transaction for saving data
+        // Start the transaction for saving data
         $conn->begin_transaction();
 
         // Handle file upload for photo
@@ -115,21 +112,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
                     throw new Exception("Failed to upload the file.");
                 }
             } else {
-                throw new Exception("Invalid file type. Only JPEG, PNG, and JPG are allowed.");
+                throw new Exception("Invalid file type. Only JPEG, PNG, and GIF are allowed.");
             }
         }
 
-        // Update the user's profile
+        // Update existing profile
         $sql_update_profile = "UPDATE profiles 
-            SET prefer_age_from = ?, prefer_age_to = ?, country_id = ?, city_id = ?, state_id = ?, 
-                relationship_looking = ?, ethnicity = ?, beliefs = ?, drink_alcohol = ?, smoking = ?, 
-                children = ?, marital_status = ?, my_appearance = ?, body_type = ?, profile_picture = ? 
-            WHERE user_id = ?";
+   SET prefer_age_from = ?, prefer_age_to = ?, country_id = ?, city_id = ?, state_id=?,
+       relationship_looking = ?, ethnicity = ?, beliefs = ?, drink_alcohol = ?, smoking = ?, 
+       children = ?, marital_status = ?, my_appearance = ?, body_type = ?, profile_picture = ? 
+   WHERE user_id = ?";
+
+
         $stmt_update = $conn->prepare($sql_update_profile);
         if (!$stmt_update) {
             throw new Exception("Failed to prepare update statement: " . $conn->error);
         }
 
+        // Bind parameters
         $stmt_update->bind_param(
             "iiiiissssssssssi",
             $ageFrom,
@@ -150,50 +150,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
             $userId
         );
 
+        // Execute and handle errors
         if (!$stmt_update->execute()) {
             throw new Exception("Failed to update profile: " . $stmt_update->error);
         }
 
-        // Fetch the user's role ID from the users table
-        $roleQuery = "SELECT role_id FROM users WHERE id = ?";
-        $stmtRole = $conn->prepare($roleQuery);
-        $stmtRole->bind_param("i", $userId);
-        $stmtRole->execute();
-        $resultRole = $stmtRole->get_result();
-        if ($resultRole->num_rows > 0) {
-            $userRole = $resultRole->fetch_assoc();
-            $_SESSION['role_id'] = $userRole['role_id'];
-        }
 
-        // Fetch the user's first and last name from the profiles table
-        $userDetailsQuery = "SELECT first_name, last_name FROM profiles WHERE user_id = ?";
-        $stmtUserDetails = $conn->prepare($userDetailsQuery);
-        $stmtUserDetails->bind_param("i", $userId);
-        $stmtUserDetails->execute();
-        $resultUserDetails = $stmtUserDetails->get_result();
-
-        if ($resultUserDetails->num_rows > 0) {
-            $user = $resultUserDetails->fetch_assoc();
-            $_SESSION['first_name'] = $user['first_name'];
-            $_SESSION['last_name'] = $user['last_name'];
-            // $_SESSION['loggedin'] = true;
-        }
-
-        // Commit the transaction
+        // Commit the transaction after successful insert
         $conn->commit();
 
         $_SESSION['message'][] = array("type" => "success", "content" => "Profile saved successfully!");
-        header("Location: index.php");
+        header("Location: user_index.php?user_id=$userId"); // Redirect to the next page
         exit();
     } catch (Exception $e) {
-        // Rollback the transaction in case of error
+        // Rollback if error occurs
         $conn->rollback();
         $_SESSION['message'][] = array("type" => "error", "content" => "Error: " . $e->getMessage());
-        header("Location: complete-profile.php");
+        header("location: complete-profile.php");
         exit();
     }
 }
 ?>
+
+
+
+
+
+
 
 
 
@@ -698,7 +681,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
                     </div>
                 </div>
             </div>
-
     </div> <!--main container end-->
     <!-- Step 5: Ethnicity -->
     <div class="step" id="step5">

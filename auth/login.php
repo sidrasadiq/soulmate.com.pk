@@ -1,69 +1,60 @@
 <?php
 session_start();
 include 'layouts/config.php';
-include 'layouts/main.php';
 include 'layouts/functions.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = trim($_POST['email']);
-    $password = trim($_POST['password']);
+    $email = $_POST['email'];
+    $password = $_POST['password'];
 
     if (empty($email) || empty($password)) {
-        $_SESSION['message'][] = ["type" => "danger", "content" => "Email and Password are required."];
+        $_SESSION['message'] = array("type" => "error", "content" => "Email and Password are required.");
         header("Location: " . $_SERVER['PHP_SELF']);
         exit();
     }
 
     try {
+        // Enable error reporting
         mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
-        // Query to fetch user data along with verification status
-        $sql = "SELECT u.id, u.username, u.password, u.role_id, u.is_verified, 
-                       COALESCE(p.first_name, 'Soulmate') AS first_name, 
-                       COALESCE(p.last_name, 'User') AS last_name
-                FROM users u 
-                LEFT JOIN profiles p ON u.id = p.user_id
-                WHERE u.email = ? 
-                AND u.is_active = 1;";
-
-        $stmt = $conn->prepare($sql);
-        if (!$stmt) {
-            throw new Exception("Prepare statement failed: " . $conn->error);
+        // Prepare the SQL statement
+        $stmt = mysqli_prepare($conn, "SELECT id, username, password, role_id FROM users WHERE email = ?");
+        if ($stmt === false) {
+            throw new Exception("Prepare statement failed: " . mysqli_error($conn));
         }
 
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $stmt->bind_result($id, $username, $hashed_password, $role_id, $is_verified, $first_name, $last_name);
+        // Bind parameters
+        mysqli_stmt_bind_param($stmt, "s", $email);
 
-        if ($stmt->fetch()) {
-            // Check if the user is verified
-            if ($is_verified != 1) {
-                $_SESSION['message'][] = ["type" => "danger", "content" => "Your account is not verified. Please check your email for the verification link."];
-                header("Location: " . $_SERVER['PHP_SELF']);
-                exit();
-            }
+        // Execute the statement
+        mysqli_stmt_execute($stmt);
 
+        // Bind the result
+        mysqli_stmt_bind_result($stmt, $id, $username, $hashed_password, $role);
+
+        // Fetch the result
+        if (mysqli_stmt_fetch($stmt)) {
             // Verify the password
             if (password_verify($password, $hashed_password)) {
+                // if ($password === $hashed_password) {
+                // Store data in session variables
                 $_SESSION["loggedin"] = true;
                 $_SESSION["user_id"] = $id;
+                // $_SESSION["first_name"] = $first_name;
+                // $_SESSION["last_name"] = $last_name;
                 $_SESSION["username"] = $username;
-                $_SESSION["role_id"] = $role_id;
+                $_SESSION["role_id"] = $role;
                 $_SESSION["email"] = $email;
-                $_SESSION["first_name"] = $first_name ?? "Soulmate";
-                $_SESSION["last_name"] = $last_name ?? "User";
-
-                // Send welcome email using PHPMailer
-                $emailSent = sendWelcomeEmail($email, $username);
-
-                if ($emailSent === true) {
-                    $_SESSION['message'][] = ["type" => "success", "content" => "Login successful! Welcome email sent."];
+                // Check user role and redirect accordingly
+                if ($role == 1) {
+                    header("Location: index.php");
                 } else {
-                    $_SESSION['message'][] = ["type" => "warning", "content" => "Login successful, but failed to send welcome email: $emailSent"];
-                }
 
-                header("Location: index.php");
-                exit();
+                    // Set success message
+                    // $_SESSION['message'][] = ["type" => "success", "content" => "Login successful!"];
+                    header("Location: complete-profile.php");
+                    exit();
+                }
             } else {
                 $_SESSION['message'][] = ["type" => "danger", "content" => "Invalid email or password."];
                 header("Location: " . $_SERVER['PHP_SELF']);
@@ -79,14 +70,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         header("Location: " . $_SERVER['PHP_SELF']);
         exit();
     } finally {
+        // Close the statement and the connection
         if (isset($stmt)) {
-            $stmt->close();
+            mysqli_stmt_close($stmt);
         }
+        // if (isset($conn)) {
+        //     mysqli_close($conn);
+        // }
     }
 }
-
-
 ?>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -156,7 +151,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         /* form section Button */
-        .form-section #login-button {
+        .form-section button {
             width: 100%;
             padding: 12px;
             margin-top: 15px;
@@ -169,7 +164,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         /* hover form section */
-        .form-section #login-button:hover {
+        .form-section button:hover {
             background: linear-gradient(135deg, #E63A7A, #3987cc);
         }
 
@@ -251,25 +246,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
             <!-- Form Section -->
             <div class="form-section ">
+                <?php displaySessionMessage(); ?>
                 <form class="login-form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
                     <h2 class="text-center mb-4">Members Log In</h2>
-                    <?php displaySessionMessage(); ?>
                     <div class="input-group mt-5">
                         <input type="email" name="email" class="form-control" placeholder="Your Email Address" required>
                     </div>
                     <div class="input-group">
                         <input type="password" name="password" class="form-control" placeholder="Your Password" required>
                     </div>
-                    <!-- <button type="submit" onclick="window.location.href='complete-profile.php';">Continue</button> -->
-                    <button id="login-button" type="submit">Continue</button>
 
+                    <!-- <button type="submit" onclick="window.location.href='complete-profile.php';">Continue</button> -->
+                    <button type="submit">Continue</button>
+                    <div class="text-center mt-4">
+                        <p>or</p>
+                        <!-- Google Sign-In Button -->
+                        <a href="#" class="login-with-google-btn ">
+                            Sign in with Google
+                        </a>
+                        <p class="mt-5">Let Others Know About Soulmate!</p>
+                    </div>
                     <!-- Social Icons Section -->
-                    <p class="mt-4 text-center">Let Others Know About Soulmate!</p>
                     <div class="social-icons-lg text-center mt-3">
                         <a href="https://www.facebook.com/soulmatemetrimony/" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
-                        <!-- <a href="#" aria-label="Twitter"><i class="bi bi-twitter"></i></a> -->
+                        <a href="#" aria-label="Twitter"><i class="bi bi-twitter"></i></a>
                         <a href="https://www.instagram.com/soulmatemetrimonypakistan/" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
-                        <!-- <a href="#" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a> -->
+                        <a href="#" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
                     </div>
                     <p class="text-center mt-3">Don't have an account? <a href="signup.php">Sign Up</a></p>
                 </form>
