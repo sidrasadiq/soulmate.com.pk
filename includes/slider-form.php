@@ -57,8 +57,8 @@
 
         <!-- Submit Button -->
         <div class="col-12 col-md-2 d-flex justify-content-md-end">
-            <a href="<?php echo homeURL(); ?>/auth/login.php">
-                <button type="submit" class="btn btn-primary w-100">Let's Begin</button>
+            <a href="<?php echo homeURL(); ?>/auth/login.php" class="btn btn-primary w-100">
+                Let's Begin <!-- <button type="submit" class="btn btn-primary w-100">Let's Begin</button> -->
             </a>
         </div>
     </div>
