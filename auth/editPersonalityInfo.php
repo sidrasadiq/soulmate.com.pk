@@ -1,5 +1,5 @@
 <?php
-session_start();
+
 include 'layouts/config.php';
 include 'layouts/session.php';
 include 'layouts/main.php';
@@ -152,9 +152,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
 ?>
 
 
-<!DOCTYPE html>
-<html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -179,7 +176,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
         </div>
         <div class="col-lg-10">
             <?php
-            displaySessionMessage();
+            // Display success message
+            if (isset($_SESSION['message'])) {
+                echo '<div class="alert alert-success mt-3" role="alert">' . $_SESSION['message'] . '</div>';
+                unset($_SESSION['message']);  // Clear message after displaying it
+            }
             ?>
         </div>
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">

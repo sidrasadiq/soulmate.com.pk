@@ -1,7 +1,7 @@
 <?php
 // Include required files
+include 'layouts/session.php';
 include 'layouts/config.php';
-include 'layouts/session.php';  // Ensure session_start() is called here
 include 'layouts/main.php';
 include 'layouts/functions.php';
 
@@ -31,7 +31,7 @@ if (isset($_SESSION['user_id'])) {
             $countries[] = $row;
         }
 
-        // Fetch cities  
+        // Fetch cities
         $queryCities = "SELECT id, city_name FROM cities ORDER BY id ASC;";
         $stmtCities = $conn->prepare($queryCities);
         $stmtCities->execute();
@@ -50,7 +50,6 @@ if (isset($_SESSION['user_id'])) {
         while ($row = $resultStates->fetch_assoc()) {
             $states[] = $row;
         }
-
         // Fetch the is_complete value from the database for the logged-in user
         $query = "SELECT is_complete FROM personality_profile WHERE created_by = ?";
         $stmt = $conn->prepare($query);
@@ -63,6 +62,7 @@ if (isset($_SESSION['user_id'])) {
             $row = $result->fetch_assoc();
             $is_complete = (int)$row['is_complete']; // Ensure proper integer type for comparison
         }
+
         // Commit transaction
         $conn->commit();
     } catch (Exception $e) {
@@ -76,15 +76,6 @@ if (isset($_SESSION['user_id'])) {
     echo "User is not logged in.";
 }
 ?>
-
-
-
-
-
-
-
-<!DOCTYPE html>
-<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -100,8 +91,6 @@ if (isset($_SESSION['user_id'])) {
             padding: 20px;
             /* Light background for better contrast */
         }
-
-
 
         .card-body {
             flex-grow: 1;
@@ -130,14 +119,14 @@ if (isset($_SESSION['user_id'])) {
         <div class="row">
             <div class="col-md-3 p-md-1 mb-md-3 ">
                 <a href="#" class="d-block text-decoration-none ">
-                    <img src="uploads/<?php echo rowInfoByColumn($conn, "profiles", "profile_picture", "user_id", $_SESSION['user_id']); ?>" alt="User" width="132" height="132" class="rounded-circle ">
+                    <img src="uploads/<?php echo rowInfoByColumn($conn, "profiles", "profile_picture", "user_id", $_SESSION["user_id"]); ?>" alt="User" width="132" height="132" class="rounded-circle ">
                 </a>
             </div>
 
             <div class="col-md-4 prof-con mt-md-3 mt-sm-4">
 
                 <h5 class="mt-4">
-                    <?php echo $_SESSION['username']; ?>
+                    <?php echo rowInfoByColumn($conn, "profiles", "first_name", "user_id", $_SESSION["user_id"]) . " " . rowInfoByColumn($conn, "profiles", "last_name", "user_id", $_SESSION["user_id"]); ?>
                 </h5>
                 <!-- Conditional display of the button based on is_complete -->
                 <?php if ($is_complete === 0): ?>
@@ -324,31 +313,30 @@ if (isset($_SESSION['user_id'])) {
     <div class="container mt-4">
         <div class="row">
             <?php
-            $query = "
-     SELECT 
-                profiles.*, 
-                countries.country_name, 
-                cities.city_name,
-                states.state_name,
-                occupation.occupation_name,
-                users.username,
-                users.email,
-                nationality.nationality_name,
-                religion.religion_name,
-                qualifications.qualification_name,
-                user_cast.cast_name
-            FROM 
-                profiles
-            JOIN users ON profiles.user_id = users.id
-            LEFT JOIN countries ON profiles.country_id = countries.id
-            LEFT JOIN cities ON profiles.city_id = cities.id
-            LEFT JOIN states ON profiles.state_id = states.id
-            LEFT JOIN occupation ON profiles.occupation_id = occupation.id
-            LEFT JOIN nationality ON profiles.nationality_id = nationality.id
-            LEFT JOIN religion ON profiles.religion_id = religion.id
-            LEFT JOIN qualifications ON profiles.qualification_id = qualifications.id
-            LEFT JOIN user_cast ON profiles.cast_id = user_cast.id
-            WHERE users.id != $userId";
+            $query = "SELECT 
+                    profiles.*, 
+                    countries.country_name, 
+                    cities.city_name,
+                    states.state_name,
+                    occupation.occupation_name,
+                    users.username,
+                    users.email,
+                    nationality.nationality_name,
+                    religion.religion_name,
+                    qualifications.qualification_name,
+                    user_cast.cast_name
+                FROM 
+                    profiles
+                JOIN users ON profiles.user_id = users.id
+                LEFT JOIN countries ON profiles.country_id = countries.id
+                LEFT JOIN cities ON profiles.city_id = cities.id
+                LEFT JOIN states ON profiles.state_id = states.id
+                LEFT JOIN occupation ON profiles.occupation_id = occupation.id
+                LEFT JOIN nationality ON profiles.nationality_id = nationality.id
+                LEFT JOIN religion ON profiles.religion_id = religion.id
+                LEFT JOIN qualifications ON profiles.qualification_id = qualifications.id
+                LEFT JOIN user_cast ON profiles.cast_id = user_cast.id
+                WHERE users.id != $userId";
 
             $result = mysqli_query($conn, $query);
 

@@ -1,8 +1,6 @@
 <?php
-include 'userlayout/header.php';
-
-session_start();
 include 'layouts/config.php';
+include 'userlayout/header.php';
 include 'layouts/session.php';
 include 'layouts/main.php';
 include 'layouts/functions.php';
@@ -18,8 +16,7 @@ if (isset($_SESSION['user_id'])) {
 
     try {
         // Query to fetch user details
-        $query = "
-            SELECT 
+        $query = "SELECT 
                 profiles.*, 
                 countries.country_name, 
                 cities.city_name,
@@ -164,85 +161,104 @@ try {
     exit();
 }
 
-// Handle profile update
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['btnUpdateProfile'])) {
-    // Process form submission logic
-    $firstName = isset($_POST['firstName']) ? intval($_POST['firstName']) : '';
-    $lastName = isset($_POST['lastName']) ? intval($_POST['lastName']) : '';
-    $userName = isset($_POST['userName']) ? intval($_POST['userName']) : '';
-    $dob = isset($_POST['dob']) ? intval($_POST['dob']) : '';
-    $gender = isset($_POST['gender']) ? intval($_POST['gender']) : '';
-    $contactNum = isset($_POST['contactNum']) ? intval($_POST['contactNum']) : '';
-    $WhatsNum = isset($_POST['WhatsNum']) ? intval($_POST['WhatsNum']) : '';
-    $cnicNum = isset($_POST['cnicNum']) ? intval($_POST['cnicNum']) : '';
-    $cast = isset($_POST['cast']) ? intval($_POST['cast']) : '';
-    $nationality = isset($_POST['nationality']) ? intval($_POST['nationality']) : '';
-    $religion = isset($_POST['religion']) ? intval($_POST['religion']) : '';
-    $qualification = isset($_POST['qualification']) ? intval($_POST['qualification']) : '';
-    $interests = isset($_POST['interests']) ? intval($_POST['interests']) : '';
-    $country = isset($_POST['country']) ? intval($_POST['country']) : '';
-    $state = isset($_POST['state']) ? intval($_POST['state']) : '';
-    $city = isset($_POST['city']) ? intval($_POST['city']) : '';
-    $userProfilePic = isset($_POST['userProfilePic']) ? intval($_POST['userProfilePic']) : '';
-    $occupation = isset($_POST['occupation']) ? intval($_POST['occupation']) : '';
-    $BioDetails = isset($_POST['BioDetails']) ? intval($_POST['BioDetails']) : '';
-    $bodyType = isset($_POST['bodyType']) ? intval($_POST['bodyType']) : '';
-    $ethnicity = isset($_POST['ethnicity']) ? intval($_POST['ethnicity']) : '';
-    $appearance = isset($_POST['appearance']) ? intval($_POST['appearance']) : '';
-    $height = isset($_POST['height']) ? intval($_POST['height']) : '';
-    $weight = isset($_POST['weight']) ? intval($_POST['weight']) : '';
-    $drinkAlcohol = isset($_POST['drinkAlcohol']) ? intval($_POST['drinkAlcohol']) : '';
-    $smoking = isset($_POST['smoking']) ? intval($_POST['smoking']) : '';
-    $maritalStatus = isset($_POST['maritalStatus']) ? intval($_POST['maritalStatus']) : '';
-    $children = isset($_POST['children']) ? intval($_POST['children']) : '';
-    $relationshipLooking = isset($_POST['relationshipLooking']) ? intval($_POST['relationshipLooking']) : '';
-    $profileId = isset($_GET['id']) ? intval($_GET['id']) : ''; // Profile ID
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["btnUpdateProfile"])) {
+    // Step 1: Retrieve and validate form data
+    $userId = intval($_POST['userId']);
+    $firstName = isset($_POST['firstName']) ? trim($_POST['firstName']) : '';
+    $lastName = isset($_POST['lastName']) ? trim($_POST['lastName']) : '';
+    $userName = isset($_POST['userName']) ? trim($_POST['userName']) : '';
+    $dob = isset($_POST['dob']) ? trim($_POST['dob']) : '';
+    $gender = isset($_POST['gender']) ? trim($_POST['gender']) : '';
+    $contactNum = isset($_POST['contactNum']) ? trim($_POST['contactNum']) : '';
+    $whatsNum = isset($_POST['whatsNum']) ? trim($_POST['whatsNum']) : '';
+    $cnicNum = isset($_POST['cnicNum']) ? trim($_POST['cnicNum']) : '';
+    $cast = isset($_POST['cast']) ? trim($_POST['cast']) : '';
+    $nationality = isset($_POST['nationality']) ? trim($_POST['nationality']) : '';
+    $religion = isset($_POST['religion']) ? trim($_POST['religion']) : '';
+    $qualification = isset($_POST['qualification']) ? trim($_POST['qualification']) : '';
+    $interests = isset($_POST['interests']) ? trim($_POST['interests']) : '';
+    $country = isset($_POST['country']) ? trim($_POST['country']) : '';
+    $state = isset($_POST['state']) ? trim($_POST['state']) : '';
+    $city = isset($_POST['city']) ? trim($_POST['city']) : '';
+    $userProfilePic = isset($_POST['userProfilePic']) ? trim($_POST['userProfilePic']) : '';
+    $preferences = isset($_POST['preferences']) ? trim($_POST['preferences']) : '';
+    $occupation = isset($_POST['occupation']) ? trim($_POST['occupation']) : '';
+    $taskDetails = isset($_POST['taskDetails']) ? trim($_POST['taskDetails']) : '';
+    $bodyType = isset($_POST['bodyType']) ? trim($_POST['bodyType']) : '';
+    $ethnicity = isset($_POST['ethnicity']) ? trim($_POST['ethnicity']) : '';
+    $appearance = isset($_POST['appearance']) ? trim($_POST['appearance']) : '';
+    $height = isset($_POST['height']) ? trim($_POST['height']) : '';
+    $weight = isset($_POST['weight']) ? trim($_POST['weight']) : '';
+    $drinkAlcohol = isset($_POST['drinkAlcohol']) ? trim($_POST['drinkAlcohol']) : '';
+    $smoking = isset($_POST['smoking']) ? trim($_POST['smoking']) : '';
+    $maritalStatus = isset($_POST['maritalStatus']) ? trim($_POST['maritalStatus']) : '';
+    $children = isset($_POST['children']) ? trim($_POST['children']) : '';
+
+    $updatedAt = date("Y-m-d H:i:s");
+    $updatedBy = $_SESSION["user_id"]; // Assuming you store the user_id in session
+
     try {
-        $conn->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
+        // Step 2: Start a database transaction
+        $conn->begin_transaction();
 
-        // Prepare and execute the update query here
-        // ... (update logic is untouched for brevity)
-        $query = "
-UPDATE profiles
-SET
-first_name = ?, last_name = ?, user_id = ?, date_of_birth = ?, gender = ?,
-contact_number = ?, whatsapp_contact = ?, cnic= ?, cast_id = ?,
-nationality_id = ?, religion_id = ?, qualification_id = ?, interests = ?,
-country_id = ?, state_id = ?, city_id = ?, profile_picture = ?, occupation_id = ?,
-bio = ?, body_type = ?, ethnicity = ?, my_appearance = ?, height = ?,
-weight = ?, drink_alcohol = ?, smoking = ?, marital_status = ?, children = ?,
-relationship_looking = ?
-WHERE id = ? AND user_id = ?";
+        // Step 3: Prepare the SQL query to update profile information
+        $sql = "UPDATE profile SET 
+                    first_name = ?, 
+                    last_name = ?, 
+                    user_name = ?, 
+                    date_of_birth = ?, 
+                    gender = ?, 
+                    contact_number = ?, 
+                    whatsapp_contact = ?, 
+                    cnic = ?, 
+                    cast_id = ?, 
+                    nationality_id = ?, 
+                    religion_id = ?, 
+                    qualification_id = ?, 
+                    interests = ?, 
+                    preferences = ?, 
+                    occupation_id = ?, 
+                    body_type = ?, 
+                    ethnicity = ?, 
+                    my_appearance = ?, 
+                    height = ?, 
+                    weight = ?, 
+                    drink_alcohol = ?, 
+                    smoking = ?, 
+                    marital_status = ?, 
+                    children = ?, 
+                    country_id = ?, 
+                    state_id = ?, 
+                    city_id = ?, 
+                    profile_picture = ?, 
+                    updated_at = ?, 
+                    updated_by = ?
+                WHERE user_id = ?";
 
-
-        $stmt = $conn->prepare($query);
-
-        if ($stmt === false) {
-            die('MySQL prepare error: ' . $conn->error);
+        $stmt = $conn->prepare($sql);
+        if (!$stmt) {
+            throw new Exception("Failed to prepare statement: " . $conn->error);
         }
 
-        // Bind parameters and execute statement
+        // Step 4: Bind the parameters
         $stmt->bind_param(
-            "ssissssssssssssssssssssssssiiii",
+            'ssssssssiiiiiisssssssiiisssssssi',
             $firstName,
             $lastName,
             $userName,
             $dob,
             $gender,
             $contactNum,
-            $WhatsNum,
+            $whatsNum,
             $cnicNum,
             $cast,
             $nationality,
             $religion,
             $qualification,
             $interests,
-            $country,
-            $state,
-            $city,
-            $userProfilePic,
+            $preferences,
             $occupation,
-            $BioDetails,
             $bodyType,
             $ethnicity,
             $appearance,
@@ -252,34 +268,40 @@ WHERE id = ? AND user_id = ?";
             $smoking,
             $maritalStatus,
             $children,
-            $relationshipLooking,
-            $profileId,
+            $country,
+            $state,
+            $city,
+            $userProfilePic,
+            $updatedAt,
+            $updatedBy,
             $userId
         );
 
-        if (!$stmt->execute()) {
-            throw new Exception('Execute statement failed: ' . $stmt->error);
+        // Step 5: Execute the statement
+        if ($stmt->execute()) {
+            $_SESSION['message'][] = array("type" => "success", "content" => "Profile updated successfully!");
+            // Commit the transaction
+            $conn->commit();
+        } else {
+            throw new Exception("Failed to update profile: " . $stmt->error);
         }
 
-        // Commit transaction
-        $conn->commit();
-
-        $_SESSION['message'] = ['type' => 'success', 'content' => 'Profile updated successfully.'];
-        header("Location: showprofile.php");
-        exit();
+        // Step 6: Close the statement
+        $stmt->close();
     } catch (Exception $e) {
+        // Step 7: Rollback transaction in case of error
         $conn->rollback();
-        $_SESSION['message'] = ['type' => 'error', 'content' => 'Error updating profile: ' . $e->getMessage()];
-        header("Location: editprofile.php");
-        exit();
+
+        // Store error message in session
+        $_SESSION['message'][] = array("type" => "error", "content" => "Error: " . $e->getMessage());
+    } finally {
+        // Step 8: Redirect back to profile page or another page
+        header("location: editProfile.php");
+        exit(); // Ensure script execution stops after redirection
     }
 }
+
 ?>
-
-
-
-<!DOCTYPE html>
-<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -800,131 +822,152 @@ WHERE id = ? AND user_id = ?";
                                         </div>
 
 
-                                        <!-- height -->
+                                        <?php
+                                        // Helper function to generate options for a select list
+                                        function generateOptions($name, $values, $selectedValue)
+                                        {
+                                            $optionsHtml = '';
+                                            foreach ($values as $value) {
+                                                $isSelected = ($selectedValue == $value) ? 'selected' : '';
+                                                $optionsHtml .= "<option value=\"$value\" $isSelected>$value</option>";
+                                            }
+                                            return $optionsHtml;
+                                        }
+
+                                        // Define available height and weight options
+                                        $heightOptions = [
+                                            "4'7 (140 cm)",
+                                            "4'8 (143 cm)",
+                                            "4'9 (145 cm)",
+                                            "4'10 (148 cm)",
+                                            "4'11 (150 cm)",
+                                            "5' (153 cm)",
+                                            "5'1 (155 cm)",
+                                            "5'2 (158 cm)",
+                                            "5'3 (161 cm)",
+                                            "5'4 (163 cm)",
+                                            "5'5 (166 cm)",
+                                            "5'6 (168 cm)",
+                                            "5'7 (171 cm)",
+                                            "5'8 (173 cm)",
+                                            "5'9 (176 cm)",
+                                            "5'10 (178 cm)",
+                                            "5'11 (181 cm)",
+                                            "6' (183 cm)",
+                                            "6'1 (186 cm)",
+                                            "6'2 (188 cm)",
+                                            "6'3 (191 cm)",
+                                            "6'4 (194 cm)",
+                                            "6'5 (196 cm)",
+                                            "6'6 (199 cm)",
+                                            "6'7 (201 cm)",
+                                            "6'8 (204 cm)",
+                                            "6'9 (206 cm)",
+                                            "6'10 (209 cm)",
+                                            "6'11 (211 cm)",
+                                            "7' (214 cm)",
+                                            "7'1 (216 cm)",
+                                            "7'2 (219 cm)"
+                                        ];
+
+                                        $weightOptions = [
+                                            "40kg (88Ib)",
+                                            "41kg (90Ib)",
+                                            "42kg (93Ib)",
+                                            "43kg (95Ib)",
+                                            "44kg (97Ib)",
+                                            "45kg (99Ib)",
+                                            "46kg (101Ib)",
+                                            "47kg (104Ib)",
+                                            "48kg (106Ib)",
+                                            "49kg (108Ib)",
+                                            "50kg (110Ib)",
+                                            "51kg (112Ib)",
+                                            "52kg (115Ib)",
+                                            "53kg (117Ib)",
+                                            "54kg (119Ib)",
+                                            "55kg (121Ib)",
+                                            "56kg (123Ib)",
+                                            "57kg (126Ib)",
+                                            "58kg (128Ib)",
+                                            "59kg (130Ib)",
+                                            "60kg (132Ib)",
+                                            "61kg (134Ib)",
+                                            "62kg (137Ib)",
+                                            "63kg (139Ib)",
+                                            "64kg (141Ib)",
+                                            "65kg (143Ib)",
+                                            "66kg (146Ib)",
+                                            "67kg (148Ib)",
+                                            "68kg (150Ib)",
+                                            "69kg (152Ib)",
+                                            "70kg (154Ib)",
+                                            "71kg (157Ib)",
+                                            "72kg (159Ib)",
+                                            "73kg (161Ib)",
+                                            "74kg (163Ib)",
+                                            "75kg (165Ib)",
+                                            "76kg (168Ib)",
+                                            "77kg (170Ib)",
+                                            "78kg (172Ib)",
+                                            "79kg (175Ib)",
+                                            "80kg (176Ib)",
+                                            "81kg (179Ib)",
+                                            "82kg (181Ib)",
+                                            "83kg (183Ib)",
+                                            "84kg (185Ib)",
+                                            "85kg (187Ib)",
+                                            "86kg (190Ib)",
+                                            "87kg (192Ib)",
+                                            "88kg (194Ib)",
+                                            "89kg (196Ib)",
+                                            "90kg (198Ib)",
+                                            "91kg (201Ib)",
+                                            "92kg (203Ib)",
+                                            "93kg (205Ib)",
+                                            "94kg (207Ib)",
+                                            "95kg (209Ib)",
+                                            "96kg (212Ib)",
+                                            "97kg (214Ib)",
+                                            "98kg (216Ib)",
+                                            "99kg (218Ib)",
+                                            "100kg (220Ib)"
+                                        ];
+
+                                        ?>
+
                                         <div class="row">
+                                            <!-- Height -->
                                             <div class="col-lg-3 mt-2">
                                                 <div class="mb-3">
                                                     <p class="text-muted">Height:</p>
                                                     <hr>
                                                     <select id="height" name="height" class="form-select text-muted" required>
-                                                        <option selected disabled value=""> Please Select... </option>
-                                                        <option value="4'7 (140 cm)" <?php echo (isset($profile['height']) && $profile['height'] == "4'7 (140 cm)") ? 'selected' : ''; ?>>4'7" (140 cm)</option>
-                                                        <option value="4'8 (143 cm)" <?php echo (isset($profile['height']) && $profile['height'] == "4'8 (143 cm)") ? 'selected' : ''; ?>>4'8" (143 cm)</option>
-                                                        <option value="4'9 (145 cm)" <?php echo (isset($profile['height']) && $profile['height'] == "4'9 (145 cm)") ? 'selected' : ''; ?>>4'9" (145 cm)</option>
-                                                        <option value="4'10 (148 cm)" <?php echo (isset($profile['height']) && $profile['height'] == "4'10 (148 cm)") ? 'selected' : ''; ?>>4'10" (148 cm)</option>
-                                                        <option value="4'11 (150 cm)" <?php echo (isset($profile['height']) && $profile['height'] == "4'11 (150 cm)") ? 'selected' : ''; ?>>4'11" (150 cm)</option>
-                                                        <option value="5' (153 cm)" <?php echo (isset($profile['height']) && $profile['height'] == "5' (153 cm)") ? 'selected' : ''; ?>>5' (153 cm)</option>
-                                                        <option value="5'1 (155 cm)" <?php echo (isset($profile['height']) && $profile['height'] == "5'1 (155 cm)") ? 'selected' : ''; ?>>5'1" (155 cm)</option>
-                                                        <option value="5'2 (158 cm)" <?php echo (isset($profile['height']) && $profile['height'] == "5'2 (158 cm)") ? 'selected' : ''; ?>>5'2" (158 cm)</option>
-                                                        <option value="5'3 (161 cm)" <?php echo (isset($profile['height']) && $profile['height'] == "5'3 (161 cm)") ? 'selected' : ''; ?>>5'3" (161 cm)</option>
-                                                        <option value="5'4 (163 cm)" <?php echo (isset($profile['height']) && $profile['height'] == "5'4 (163 cm)") ? 'selected' : ''; ?>>5'4" (163 cm)</option>
-                                                        <option value="5'5 (166 cm)" <?php echo (isset($profile['height']) && $profile['height'] == "5'5 (166 cm)") ? 'selected' : ''; ?>>5'5" (166 cm)</option>
-                                                        <option value="5'6 (168 cm)" <?php echo (isset($profile['height']) && $profile['height'] == "5'6 (168 cm)") ? 'selected' : ''; ?>>5'6" (168 cm)</option>
-                                                        <option value="5'7 (171 cm)" <?php echo (isset($profile['height']) && $profile['height'] == "5'7 (171 cm)") ? 'selected' : ''; ?>>5'7" (171 cm)</option>
-                                                        <option value="5'8 (173 cm)" <?php echo (isset($profile['height']) && $profile['height'] == "5'8 (173 cm)") ? 'selected' : ''; ?>>5'8" (173 cm)</option>
-                                                        <option value="5'9 (176 cm)" <?php echo (isset($profile['height']) && $profile['height'] == "5'9 (176 cm)") ? 'selected' : ''; ?>>5'9" (176 cm)</option>
-                                                        <option value="5'10 (178 cm)" <?php echo (isset($profile['height']) && $profile['height'] == "5'10 (178 cm)") ? 'selected' : ''; ?>>5'10" (178 cm)</option>
-                                                        <option value="5'11 (181 cm)" <?php echo (isset($profile['height']) && $profile['height'] == "5'11 (181 cm)") ? 'selected' : ''; ?>>5'11" (181 cm)</option>
-                                                        <option value="6' (183 cm)" <?php echo (isset($profile['height']) && $profile['height'] == "6' (183 cm)") ? 'selected' : ''; ?>>6' (183 cm)</option>
-                                                        <option value="6'1 (186 cm)" <?php echo (isset($profile['height']) && $profile['height'] == "6'1 (186 cm)") ? 'selected' : ''; ?>>6'1" (186 cm)</option>
-                                                        <option value="6'2 (188 cm)" <?php echo (isset($profile['height']) && $profile['height'] == "6'2 (188 cm)") ? 'selected' : ''; ?>>6'2" (188 cm)</option>
-                                                        <option value="6'3 (191 cm)" <?php echo (isset($profile['height']) && $profile['height'] == "6'3 (191 cm)") ? 'selected' : ''; ?>>6'3" (191 cm)</option>
-                                                        <option value="6'4 (194 cm)" <?php echo (isset($profile['height']) && $profile['height'] == "6'4 (194 cm)") ? 'selected' : ''; ?>>6'4" (194 cm)</option>
-                                                        <option value="6'5 (196 cm)" <?php echo (isset($profile['height']) && $profile['height'] == "6'5 (196 cm)") ? 'selected' : ''; ?>>6'5" (196 cm)</option>
-                                                        <option value="6'6 (199 cm)" <?php echo (isset($profile['height']) && $profile['height'] == "6'6 (199 cm)") ? 'selected' : ''; ?>>6'6" (199 cm)</option>
-                                                        <option value="6'7 (201 cm)" <?php echo (isset($profile['height']) && $profile['height'] == "6'7 (201 cm)") ? 'selected' : ''; ?>>6'7" (201 cm)</option>
-                                                        <option value="6'8 (204 cm)" <?php echo (isset($profile['height']) && $profile['height'] == "6'8 (204 cm)") ? 'selected' : ''; ?>>6'8" (204 cm)</option>
-                                                        <option value="6'9 (206 cm)" <?php echo (isset($profile['height']) && $profile['height'] == "6'9 (206 cm)") ? 'selected' : ''; ?>>6'9" (206 cm)</option>
-                                                        <option value="6'10 (209 cm)" <?php echo (isset($profile['height']) && $profile['height'] == "6'10 (209 cm)") ? 'selected' : ''; ?>>6'10" (209 cm)</option>
-                                                        <option value="6'11 (211 cm)" <?php echo (isset($profile['height']) && $profile['height'] == "6'11 (211 cm)") ? 'selected' : ''; ?>>6'11" (211 cm)</option>
-                                                        <option value="7' (214 cm)" <?php echo (isset($profile['height']) && $profile['height'] == "7' (214 cm)") ? 'selected' : ''; ?>>7' (214 cm)</option>
-                                                        <option value="7'1 (216 cm)" <?php echo (isset($profile['height']) && $profile['height'] == "7'1 (216 cm)") ? 'selected' : ''; ?>>7'1" (216 cm)</option>
-                                                        <option value="7'2 (219 cm)" <?php echo (isset($profile['height']) && $profile['height'] == "7'2 (219 cm)") ? 'selected' : ''; ?>>7'2" (219 cm)</option>
-
+                                                        <option selected disabled value="">Please Select...</option>
+                                                        <?php echo generateOptions('height', $heightOptions, $profile['height'] ?? ''); ?>
                                                     </select>
-
                                                     <div class="valid-feedback">Looks good!</div>
                                                     <div class="invalid-feedback">Please select a project.</div>
                                                 </div>
                                             </div>
-
                                         </div>
 
-                                        <!-- Weight -->
                                         <div class="row">
+                                            <!-- Weight -->
                                             <div class="col-lg-3 mt-2">
                                                 <div class="mb-3">
                                                     <p class="text-muted">Weight:</p>
                                                     <hr>
-                                                    <select id="weight" name="occupation" class="form-select text-muted" required>
-                                                        <option selected disabled value="">Please Select... </option>
-                                                        <option value="40kg (88Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "40kg (88Ib)") ? 'selected' : ''; ?>>40kg (88Ib)</option>
-                                                        <option value="41kg (90Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "41kg (90Ib)") ? 'selected' : ''; ?>>41kg (90Ib)</option>
-                                                        <option value="42kg (93Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "42kg (93Ib)") ? 'selected' : ''; ?>>42kg (93Ib)</option>
-                                                        <option value="43kg (95Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "43kg (95Ib)") ? 'selected' : ''; ?>>43kg (95Ib)</option>
-                                                        <option value="44kg (97Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "44kg (97Ib)") ? 'selected' : ''; ?>>44kg (97Ib)</option>
-                                                        <option value="45kg (99Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "45kg (99Ib)") ? 'selected' : ''; ?>>45kg (99Ib)</option>
-                                                        <option value="46kg (101Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "46kg (101Ib)") ? 'selected' : ''; ?>>46kg (101Ib)</option>
-                                                        <option value="47kg (104Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "47kg (104Ib)") ? 'selected' : ''; ?>>47kg (104Ib)</option>
-                                                        <option value="48kg (106Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "48kg (106Ib)") ? 'selected' : ''; ?>>48kg (106Ib)</option>
-                                                        <option value="49kg (108Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "49kg (108Ib)") ? 'selected' : ''; ?>>49kg (108Ib)</option>
-                                                        <option value="50kg (110Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "50kg (110Ib)") ? 'selected' : ''; ?>>50kg (110Ib)</option>
-                                                        <option value="51kg (112Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "51kg (112Ib)") ? 'selected' : ''; ?>>51kg (112Ib)</option>
-                                                        <option value="52kg (115Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "52kg (115Ib)") ? 'selected' : ''; ?>>52kg (115Ib)</option>
-                                                        <option value="53kg (117Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "53kg (117Ib)") ? 'selected' : ''; ?>>53kg (117Ib)</option>
-                                                        <option value="54kg (119Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "54kg (119Ib)") ? 'selected' : ''; ?>>54kg (119Ib)</option>
-                                                        <option value="55kg (121Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "55kg (121Ib)") ? 'selected' : ''; ?>>55kg (121Ib)</option>
-                                                        <option value="56kg (123Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "56kg (123Ib)") ? 'selected' : ''; ?>>56kg (123Ib)</option>
-                                                        <option value="57kg (126Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "57kg (126Ib)") ? 'selected' : ''; ?>>57kg (126Ib)</option>
-                                                        <option value="58kg (128Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "58kg (128Ib)") ? 'selected' : ''; ?>>58kg (128Ib)</option>
-                                                        <option value="59kg (130Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "59kg (130Ib)") ? 'selected' : ''; ?>>59kg (130Ib)</option>
-                                                        <option value="60kg (132Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "60kg (132Ib)") ? 'selected' : ''; ?>>60kg (132Ib)</option>
-                                                        <option value="61kg (134Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "61kg (134Ib)") ? 'selected' : ''; ?>>61kg (134Ib)</option>
-                                                        <option value="62kg (137Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "62kg (137Ib)") ? 'selected' : ''; ?>>62kg (137Ib)</option>
-                                                        <option value="63kg (139Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "63kg (139Ib)") ? 'selected' : ''; ?>>63kg (139Ib)</option>
-                                                        <option value="64kg (141Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "64kg (141Ib)") ? 'selected' : ''; ?>>64kg (141Ib)</option>
-                                                        <option value="65kg (143Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "65kg (143Ib)") ? 'selected' : ''; ?>>65kg (143Ib)</option>
-                                                        <option value="66kg (146Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "66kg (146Ib)") ? 'selected' : ''; ?>>66kg (146Ib)</option>
-                                                        <option value="67kg (148Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "67kg (148Ib)") ? 'selected' : ''; ?>>67kg (148Ib)</option>
-                                                        <option value="68kg (150Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "68kg (150Ib)") ? 'selected' : ''; ?>>68kg (150Ib)</option>
-                                                        <option value="69kg (152Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "69kg (152Ib)") ? 'selected' : ''; ?>>69kg (152Ib)</option>
-                                                        <option value="70kg (154Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "70kg (154Ib)") ? 'selected' : ''; ?>>70kg (154Ib)</option>
-                                                        <option value="71kg (157Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "71kg (157Ib)") ? 'selected' : ''; ?>>71kg (157Ib)</option>
-                                                        <option value="72kg (159Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "72kg (159Ib)") ? 'selected' : ''; ?>>72kg (159Ib)</option>
-                                                        <option value="73kg (161Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "73kg (161Ib)") ? 'selected' : ''; ?>>73kg (161Ib)</option>
-                                                        <option value="74kg (163Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "74kg (163Ib)") ? 'selected' : ''; ?>>74kg (163Ib)</option>
-                                                        <option value="75kg (165Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "75kg (165Ib)") ? 'selected' : ''; ?>>75kg (165Ib)</option>
-                                                        <option value="76kg (168Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "76kg (168Ib)") ? 'selected' : ''; ?>>76kg (168Ib)</option>
-                                                        <option value="77kg (170Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "77kg (170Ib)") ? 'selected' : ''; ?>>77kg (170Ib)</option>
-                                                        <option value="78kg (172Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "78kg (172Ib)") ? 'selected' : ''; ?>>78kg (172Ib)</option>
-                                                        <option value="79kg (175Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "79kg (175Ib)") ? 'selected' : ''; ?>>79kg (175Ib)</option>
-                                                        <option value="80kg (176Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "80kg (176Ib)") ? 'selected' : ''; ?>>80kg (176Ib)</option>
-                                                        <option value="81kg (179Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "81kg (179Ib)") ? 'selected' : ''; ?>>81kg (179Ib)</option>
-                                                        <option value="82kg (181Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "82kg (181Ib)") ? 'selected' : ''; ?>>82kg (181Ib)</option>
-                                                        <option value="83kg (183Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "83kg (183Ib)") ? 'selected' : ''; ?>>83kg (183Ib)</option>
-                                                        <option value="84kg (185Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "84kg (185Ib)") ? 'selected' : ''; ?>>84kg (185Ib)</option>
-                                                        <option value="85kg (187Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "85kg (187Ib)") ? 'selected' : ''; ?>>85kg (187Ib)</option>
-                                                        <option value="86kg (190Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "86kg (190Ib)") ? 'selected' : ''; ?>>86kg (190Ib)</option>
-                                                        <option value="87kg (192Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "87kg (192Ib)") ? 'selected' : ''; ?>>87kg (192Ib)</option>
-                                                        <option value="88kg (194Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "88kg (194Ib)") ? 'selected' : ''; ?>>88kg (194Ib)</option>
-                                                        <option value="89kg (196Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "89kg (196Ib)") ? 'selected' : ''; ?>>89kg (196Ib)</option>
-                                                        <option value="90kg (198Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "90kg (198Ib)") ? 'selected' : ''; ?>>90kg (198Ib)</option>
-                                                        <option value="91kg (201Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "91kg (201Ib)") ? 'selected' : ''; ?>>91kg (201Ib)</option>
-                                                        <option value="92kg (203Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "92kg (203Ib)") ? 'selected' : ''; ?>>92kg (203Ib)</option>
-                                                        <option value="93kg (205Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "93kg (205Ib)") ? 'selected' : ''; ?>>93kg (205Ib)</option>
-                                                        <option value="94kg (207Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "94kg (207Ib)") ? 'selected' : ''; ?>>94kg (207Ib)</option>
-                                                        <option value="95kg (209Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "95kg (209Ib)") ? 'selected' : ''; ?>>95kg (209Ib)</option>
-                                                        <option value="96kg (212Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "96kg (212Ib)") ? 'selected' : ''; ?>>96kg (212Ib)</option>
-                                                        <option value="97kg (214Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "97kg (214Ib)") ? 'selected' : ''; ?>>97kg (214Ib)</option>
-                                                        <option value="98kg (216Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "98kg (216Ib)") ? 'selected' : ''; ?>>98kg (216Ib)</option>
-                                                        <option value="99kg (218Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "99kg (218Ib)") ? 'selected' : ''; ?>>99kg (218Ib)</option>
-                                                        <option value="100kg (220Ib)" <?php echo (isset($profile['weight']) && $profile['weight'] == "100kg (220Ib)") ? 'selected' : ''; ?>>100kg (220Ib)</option>
+                                                    <select id="weight" name="weight" class="form-select text-muted" required>
+                                                        <option selected disabled value="">Please Select...</option>
+                                                        <?php echo generateOptions('weight', $weightOptions, $profile['weight'] ?? ''); ?>
                                                     </select>
                                                     <div class="valid-feedback">Looks good!</div>
                                                     <div class="invalid-feedback">Please select a project.</div>
                                                 </div>
                                             </div>
                                         </div>
+
                                     </div>
                                     <!--  -->
                                     <h4 class="mt-5 headCustom">Your Lifestyle</h4>
@@ -1104,5 +1147,5 @@ WHERE id = ? AND user_id = ?";
         }
     </script>
 
-</html>
+    </html>
 </body>

@@ -19,7 +19,11 @@
                  <i class="bi bi-globe me-3"></i>
                  <div class="dropdown">
                      <a href="#" class="d-block text-decoration-none dropdown-toggle" data-bs-toggle="dropdown">
-                         <img src="uploads/<?php echo rowInfoByColumn($conn, "profiles", "profile_picture", "user_id", $_SESSION['user_id']); ?>" alt="User" width="32" height="32" class="rounded-circle">
+                         <img src="uploads/<?php
+                                            if (isset($_SESSION["user_id"]) && isset($conn)) {
+                                                echo rowInfoByColumn($conn, "profiles", "profile_picture", "user_id", $_SESSION["user_id"]);
+                                            }
+                                            ?>" alt="User" width="32" height="32" class="rounded-circle">
                      </a>
                      <ul class="dropdown-menu dropdown-menu-end text-small">
                          <li><a class="dropdown-item" href="#">Make The First Move</a></li>
