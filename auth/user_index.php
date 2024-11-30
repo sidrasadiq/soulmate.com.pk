@@ -181,17 +181,18 @@ if (isset($_SESSION['user_id'])) {
         </div>
 
     </div>
-    <!-- search section start -->
+    <?php
+    // Search Section Start
+    ?>
     <div class="container-fluid">
         <form action="search-result.php" method="POST">
-
             <div class="card search-card border-0 shadow">
                 <div class="card-body">
                     <div class="row align-items-center">
                         <!-- Seeking -->
                         <div class="col-md-2">
                             <label for="seeking" class="fw-bold">Seeking</label>
-                            <select class="form-select  custom-border" id="seeking" aria-label="Default select example" name="seeking">
+                            <select class="form-select custom-border" id="seeking" name="seeking">
                                 <option value="male">Male</option>
                                 <option value="female">Female</option>
                                 <option value="any" selected>Any</option>
@@ -201,61 +202,11 @@ if (isset($_SESSION['user_id'])) {
                         <!-- Age -->
                         <div class="col-md-1">
                             <label for="age" class="fw-bold">Age</label>
-                            <select class="form-select  custom-border" id="age" aria-label="Default select example" name="age">
+                            <select class="form-select custom-border" id="age" name="age">
                                 <option value="" selected></option>
-                                <option value="18">18</option>
-                                <option value="19">19</option>
-                                <option value="20">20</option>
-                                <option value="21">21</option>
-                                <option value="22">22</option>
-                                <option value="23">23</option>
-                                <option value="24">24</option>
-                                <option value="25">25</option>
-                                <option value="26">26</option>
-                                <option value="27">27</option>
-                                <option value="28">28</option>
-                                <option value="29">29</option>
-                                <option value="30">30</option>
-                                <option value="31">31</option>
-                                <option value="32">32</option>
-                                <option value="33">33</option>
-                                <option value="34">34</option>
-                                <option value="35">35</option>
-                                <option value="36">36</option>
-                                <option value="37">37</option>
-                                <option value="38">38</option>
-                                <option value="39">39</option>
-                                <option value="40">40</option>
-                                <option value="41">41</option>
-                                <option value="42">42</option>
-                                <option value="43">43</option>
-                                <option value="44">44</option>
-                                <option value="45">45</option>
-                                <option value="46">46</option>
-                                <option value="47">47</option>
-                                <option value="48">48</option>
-                                <option value="49">49</option>
-                                <option value="50">50</option>
-                                <option value="51">51</option>
-                                <option value="52">52</option>
-                                <option value="53">53</option>
-                                <option value="54">54</option>
-                                <option value="55">55</option>
-                                <option value="56">56</option>
-                                <option value="57">57</option>
-                                <option value="58">58</option>
-                                <option value="59">59</option>
-                                <option value="60">60</option>
-                                <option value="61">61</option>
-                                <option value="62">62</option>
-                                <option value="63">63</option>
-                                <option value="64">64</option>
-                                <option value="65">65</option>
-                                <option value="66">66</option>
-                                <option value="67">67</option>
-                                <option value="68">68</option>
-                                <option value="69">69</option>
-                                <option value="70">70 </option>
+                                <?php for ($i = 18; $i <= 70; $i++): ?>
+                                    <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                                <?php endfor; ?>
                             </select>
                         </div>
 
@@ -265,7 +216,9 @@ if (isset($_SESSION['user_id'])) {
                             <select class="form-select custom-border" id="country" name="country">
                                 <option value="any" selected>Any</option>
                                 <?php foreach ($countries as $country): ?>
-                                    <option value="<?php echo $country['id']; ?>"><?php echo $country['country_name']; ?></option>
+                                    <option value="<?php echo htmlspecialchars($country['id']); ?>">
+                                        <?php echo htmlspecialchars($country['country_name']); ?>
+                                    </option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -273,34 +226,38 @@ if (isset($_SESSION['user_id'])) {
                         <!-- State/Province -->
                         <div class="col-md-2">
                             <label for="state" class="fw-bold">State/Province</label>
-                            <select class="form-select  custom-border" id="state" aria-label="Default select example" name="state">
+                            <select class="form-select custom-border" id="state" name="state">
                                 <option value="any" selected>Any</option>
                                 <?php foreach ($states as $state): ?>
-                                    <option value="<?php echo $state['id']; ?>"><?php echo $state['state_name']; ?></option>
-                                    <?php endforeach; ?>>
+                                    <option value="<?php echo htmlspecialchars($state['id']); ?>">
+                                        <?php echo htmlspecialchars($state['state_name']); ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
 
                         <!-- City -->
                         <div class="col-md-2">
                             <label for="city" class="fw-bold">City</label>
-                            <select class="form-select custom-border" id="city" aria-label="Default select example" name="city">
+                            <select class="form-select custom-border" id="city" name="city">
                                 <option value="any" selected>Any</option>
                                 <?php foreach ($cities as $city): ?>
-                                    <option value="<?php echo $city['id']; ?>"><?php echo $city['city_name']; ?></option>
-                                    <?php endforeach; ?>>
+                                    <option value="<?php echo htmlspecialchars($city['id']); ?>">
+                                        <?php echo htmlspecialchars($city['city_name']); ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
 
                         <!-- Within -->
-                        <div class="col-md-2 ">
+                        <div class="col-md-2">
                             <label for="within" class="fw-bold">Within</label>
-                            <input type="text" class="form-control  custom-border " id="within" placeholder="   - km" name="within">
+                            <input type="number" class="form-control custom-border" id="within" placeholder="- km" name="within">
                         </div>
 
                         <!-- Search Button -->
-                        <div class="col-md-1 ">
-                            <button type="submit" name="submit" value="submit" class="btn btn-search w-100 shadow ">Search</button>
+                        <div class="col-md-1">
+                            <button type="submit" name="submit" value="submit" class="btn btn-search w-100 shadow">Search</button>
                         </div>
                     </div>
                 </div>
@@ -308,11 +265,12 @@ if (isset($_SESSION['user_id'])) {
         </form>
     </div>
 
-    <!-- Search Section Start -->
-
     <div class="container mt-4">
         <div class="row">
             <?php
+            // Secure the user ID
+            $userId = intval($_SESSION['user_id']); // Assuming user ID is stored in session
+
             $query = "SELECT 
                     profiles.*, 
                     countries.country_name, 
@@ -342,67 +300,54 @@ if (isset($_SESSION['user_id'])) {
 
             if ($result && $result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
-                    // Wrap the entire card in an anchor tag to make it clickable
-                    $profileLink = 'showprofile.php?id=' . $row['id']; // Adjust this URL as needed
+                    $profileLink = 'showprofile.php?id=' . htmlspecialchars($row['id']);
                     echo '<div class="col-md-3 mb-4">';
-                    echo '<a href="' . $profileLink . '" target="_blank" class="text-decoration-none">'; // Make the card clickable and open in a new tab
+                    echo '<a href="' . $profileLink . '" target="_blank" class="text-decoration-none">';
 
                     echo '<div class="card h-100 shadow-sm border-0">';
 
-                    // Set profile picture with a fallback
-                    $profilePicture = $row['profile_picture'] ?: 'placeholder.jpg';
+                    $profilePicture = htmlspecialchars($row['profile_picture'] ?: 'placeholder.jpg');
                     echo "<img src='uploads/{$profilePicture}' class='card-img-top' alt='Profile Picture' style='height: 200px; object-fit: cover;'>";
 
                     echo '<div class="card-body">';
-                    echo '<div>';
 
-                    // Display username
                     echo "<h4 class='card-title'>" . htmlspecialchars($row['username']) . "</h4>";
-
-                    // Display date of birth, city, and country
                     echo '<p class="card-text text-muted">';
-                    echo isset($row['date_of_birth']) && !empty($row['date_of_birth'])
-                        ? htmlspecialchars((new DateTime())->diff(new DateTime($row['date_of_birth']))->y . " . " . $row['city_name'] . "," . $row['state_name'] . ", " . $row['country_name'])
-                        : 'No data available';
+                    if (!empty($row['date_of_birth'])) {
+                        $age = (new DateTime())->diff(new DateTime($row['date_of_birth']))->y;
+                        echo htmlspecialchars("$age . {$row['city_name']}, {$row['state_name']}, {$row['country_name']}");
+                    } else {
+                        echo 'No data available';
+                    }
                     echo '</p>';
 
-                    // Display religion
                     echo "<h5 class='card-text'>" . htmlspecialchars($row['religion_name']) . "</h5>";
+                    echo "<p class='card-text'><small class='text-muted'>Seeking: " .
+                        htmlspecialchars("{$row['looking_for']} {$row['prefer_age_from']}-{$row['prefer_age_to']}") . "</small></p>";
 
-                    // Display what the user is seeking and age preferences
-                    echo "<p class='card-text'><small class='text-muted'>Seeking: ";
-                    echo htmlspecialchars($row['looking_for'] . " " . $row['prefer_age_from'] . "-" . $row['prefer_age_to']);
-                    echo "</small></p>";
-
-                    echo '</div>'; // End of the div wrapping username, religion, etc.
-
-                    // Display bio
-                    echo "<p class='card-text'><strong><small class='text-muted'>" . htmlspecialchars($row['bio']) . "</small></strong></p>";
-
-                    echo '</div>'; // End of card body
+                    echo "<p class='card-text'><strong><small class='text-muted'>{$row['bio']}</small></strong></p>";
+                    echo '</div>';
 
                     echo '<div class="card-footer border-0 bg-transparent text-start">';
                     echo '<div>';
-                    echo '<i class="bi bi-heart-fill p-2 text-muted fs-3"></i>'; // Adjust the size using fs-3
+                    echo '<i class="bi bi-heart-fill p-2 text-muted fs-3"></i>';
                     echo '<i class="bi bi-chat-fill p-2 text-muted fs-3"></i>';
                     echo '<i class="bi bi-gift-fill p-2 text-muted fs-3"></i>';
                     echo '<i class="bi bi-camera-fill p-2 text-muted fs-3"></i>';
                     echo '</div>';
-                    echo '</div>'; // End of card footer
+                    echo '</div>';
 
-                    echo '</div>'; // End of card
-                    echo '</a>'; // Close the anchor tag
-                    echo '</div>'; // End of col-md-3
+                    echo '</div>'; // End card
+                    echo '</a>';
+                    echo '</div>'; // End col-md-3
                 }
             } else {
                 echo '<p>No profiles found.</p>';
             }
             ?>
-        </div> <!-- End of row -->
-    </div> <!-- End of container -->
+        </div>
+    </div>
 
-
-    <!-- Search Section End -->
 
 
     <?php include 'userlayout/footer.php'; ?>
