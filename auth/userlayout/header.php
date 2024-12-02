@@ -29,10 +29,10 @@
                          <li><a class="dropdown-item" href="#">Make The First Move</a></li>
                          <li><a class="dropdown-item" href="showprofile.php?id=<?php echo urlencode($_SESSION['user_id']); ?>">View Profile</a></li>
                          <li><a class="dropdown-item" href="editprofile.php">Edit Profile</a></li>
-                         <li><a class="dropdown-item" href="#">Photo</a></li>
+                         <!-- <li><a class="dropdown-item" href="#">Photo</a></li>
                          <li><a class="dropdown-item" href="#">Matches</a></li>
-                         <li><a class="dropdown-item" href="#">Hobbies & Interests</a></li>
-                         <li><a class="dropdown-item" href="#">Personality Questions</a></li>
+                         <li><a class="dropdown-item" href="#">Hobbies & Interests</a></li> -->
+                         <li><a class="dropdown-item" href="editPersonalityInfo.php">Personality Questions</a></li>
                          <li><a class="dropdown-item" href="logout.php">Log out</a></li>
                          <li>
                              <hr class="dropdown-divider">

@@ -1,9 +1,9 @@
 <?php
 include 'layouts/config.php';
-include 'userlayout/header.php';
 include 'layouts/session.php';
 include 'layouts/main.php';
 include 'layouts/functions.php';
+include 'userlayout/header.php';
 
 // Check if user is logged in
 if (isset($_SESSION['user_id'])) {
