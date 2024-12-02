@@ -57,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $emailSent = sendWelcomeEmail($email, $username);
 
                 if ($emailSent === true) {
-                    $_SESSION['message'][] = ["type" => "success", "content" => "Login successful! Welcome email sent."];
+                    $_SESSION['message'][] = ["type" => "success", "content" => "Login successful!"];
                 } else {
                     $_SESSION['message'][] = ["type" => "warning", "content" => "Login successful, but failed to send welcome email: $emailSent"];
                 }
