@@ -125,7 +125,7 @@ if (isset($_SESSION['user_id'])) {
                     <img src="uploads/<?php echo rowInfoByColumn($conn, "profiles", "profile_picture", "user_id", $_SESSION["user_id"]); ?>" alt="User" width="132" height="132" class="rounded-circle ">
                 </a>
             </div>
-
+            <?php displaySessionMessage(); ?>
             <div class="col-md-4 prof-con mt-md-3 mt-sm-4">
 
                 <h5 class="mt-4">
