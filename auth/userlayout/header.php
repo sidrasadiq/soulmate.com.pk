@@ -34,7 +34,7 @@
                          <li><a class="dropdown-item" href="#">Matches</a></li>
                          <li><a class="dropdown-item" href="#">Hobbies & Interests</a></li> -->
 
-                        <li><a class="dropdown-item" href="">Personality Questions</a></li>
+                        <li><a class="dropdown-item" href="editPersonalityInfor.php">Personality Questions</a></li>
                         <li><a class="dropdown-item" href="logout.php">Log out</a></li>
                         <li>
                             <hr class="dropdown-divider">

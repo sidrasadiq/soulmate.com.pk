@@ -1,7 +1,10 @@
 <?php
-session_start();
-include 'layouts/config.php';
+// Include required files
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 include 'layouts/session.php';
+include 'layouts/config.php';
 include 'layouts/main.php';
 include 'layouts/functions.php';
 
