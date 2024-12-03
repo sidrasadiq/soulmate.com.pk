@@ -334,9 +334,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <?php include 'userlayout/footer.php'; ?>
 </body>
 
 </html>
-<?php include 'userlayout/footer.php';
-
-?>
