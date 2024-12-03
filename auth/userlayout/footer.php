@@ -1,7 +1,7 @@
 <div class="container-fluid p-5 d-flex flex-column align-items-center text-center hom-bg mb-5 mt-5">
-    <h1 class="text-white mt-5">Meet More Single People!</h1>
+    <h1 class="text-white mt-5 ">Meet More Single People!</h1>
     <h3 class="text-white mt-1">Meet Over 60 million members across the Cupid Media network</h3>
-    <button class="btn btn-search mt-2">Visit Our Other Sites</button>
+    <a href="https://soulmate.com.pk/" class="btn btn-search mt-2">Visit Our Other Sites</a>
 </div>
 <div class="container">
     <footer class="py-3 my-4">

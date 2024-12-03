@@ -118,7 +118,7 @@ if (isset($_SESSION['user_id'])) {
 <body class="bg-light ">
     <?php include 'userlayout/header.php'; ?>
 
-    <div class="container-fluid p-5 pt-5 main">
+    <div class="container-fluid p-xl-5 pt-xl-5 pt-5 pb-5 main">
         <div class="row">
             <?php displaySessionMessage(); ?>
             <div class="col-md-3 p-md-1 mb-md-3 ">
@@ -133,7 +133,7 @@ if (isset($_SESSION['user_id'])) {
                 </h5>
                 <!-- Conditional display of the button based on is_complete -->
                 <?php if ($is_complete === 0): ?>
-                    <a href="editPersonalityInfo.php?id=<?php echo urlencode($userId); ?>" class="btn btn-comp-prof">Next Step: Complete your personality profile</a>
+                    <a href="editPersonalityInfo.php?id=<?php echo urlencode($userId); ?>" class="btn btn-comp-prof ">Next Step: Complete your personality profile</a>
                 <?php endif; ?>
 
                 <p class="mt-2">Learn about membership features</p>
@@ -149,7 +149,7 @@ if (isset($_SESSION['user_id'])) {
                 </div>
 
             </div>
-            <div class="col-md-5 d-flex justify-content-between align-items-center prog-con">
+            <div class="col-md-5 d-flex justify-content-between align-items-center prog-con d-none d-sm-flex">
                 <!-- Circular Progress Bars -->
                 <div class="progress-circle" data-percentage="75">
                     <svg viewBox="0 0 36 36" class="circular-chart">
@@ -310,7 +310,7 @@ if (isset($_SESSION['user_id'])) {
                     echo '<div class="card h-100 shadow-sm border-0">';
 
                     $profilePicture = htmlspecialchars($row['profile_picture'] ?: 'placeholder.jpg');
-                    echo "<img src='uploads/{$profilePicture}' class='card-img-top' alt='Profile Picture' style='height: 200px; object-fit: cover;'>";
+                    echo "<img src='uploads/{$profilePicture}' class='card-img-top' alt='Profile Picture' style='object-fit: cover; height: 300px; width: 100%;'>";
 
                     echo '<div class="card-body">';
 

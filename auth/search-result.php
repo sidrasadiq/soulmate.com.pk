@@ -1,5 +1,5 @@
  <?php
-    include 'userlayout/header.php';
+
     session_start();
 
     // Include required files
@@ -7,7 +7,7 @@
     include 'layouts/session.php';  // Ensure session_start() is called here
     include 'layouts/main.php';
     include 'layouts/functions.php';
-
+    include 'userlayout/header.php';
     // Initialize $profile as an empty array
     $profile = [];
 
@@ -169,7 +169,7 @@
 
                             // Set profile picture with a fallback
                             $profilePicture = $row['profile_picture'] ?: 'placeholder.jpg';
-                            echo "<img src='uploads/{$profilePicture}' class='card-img-top' alt='Profile Picture' style='height: 200px; object-fit: cover;'>";
+                            echo "<img src='uploads/{$profilePicture}' class='card-img-top' alt='Profile Picture' style='object-fit: cover; height: 300px; width: 100%;'>";
 
                             echo '<div class="card-body">';
                             echo '<div>';

@@ -105,6 +105,8 @@ if ($result && $result->num_rows > 0) {
             width: 350px;
             height: 400px;
         }
+
+        @media screen and (max-width: 768px) {}
     </style>
 </head>
 
@@ -117,7 +119,7 @@ if ($result && $result->num_rows > 0) {
             <div class="content">
                 <div class="container-fluid">
                     <div class="row">
-                        <div class="col-xl-4 col-lg-5">
+                        <div class="col-xl-4 col-lg-5 col-sm-5">
                             <div class="card text-center border-0">
                                 <div class="card-body">
                                     <?php if (!empty($profile['profile_picture'])): ?>
@@ -132,7 +134,7 @@ if ($result && $result->num_rows > 0) {
                             </div> <!-- end card -->
                         </div> <!-- end col-->
                         <!-- second section start -->
-                        <div class="col-xl-8 col-lg-7">
+                        <div class="col-xl-8 col-lg-7 col-sm-12 ">
                             <div class="card">
                                 <!-- card Body start  -->
                                 <div class="card-body">

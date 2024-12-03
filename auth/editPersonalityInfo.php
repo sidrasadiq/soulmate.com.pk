@@ -163,6 +163,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
         .container {
             margin-left: 13px;
         }
+
+        @media screen and (max-width: 768px) {
+            .container {
+                margin-left: 0px;
+            }
+        }
     </style>
 </head>
 <?php include 'userlayout/header.php'; ?>
@@ -172,7 +178,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
     <div class="container">
         <h3 class=" text-muted mt-5">Edit Personality Profile</h3>
         <div class="max-width-3">
-            Let your personality shine. Express yourself in your own words to give other users a better understanding of <br> who you are.
+            Let your personality shine. Express yourself in your own words to give other users a better understanding of <br class="d-none d-sm-flex"> who you are.
         </div>
         <div class="col-lg-10">
             <?php
@@ -181,7 +187,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
         </div>
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
             <!-- favorite movie -->
-            <div class="col-lg-10">
+            <div class="col-lg-10 ">
                 <div class="mb-3 mt-5 text-muted">
                     <label for="favorite_movie" class="form-label">What is your favorite movie?</label>
                     <textarea id="favorite_movie" name="favorite_movie" class="form-control border-secondary-subtle" rows="2"
