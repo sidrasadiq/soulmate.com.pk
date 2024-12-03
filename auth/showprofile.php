@@ -80,8 +80,6 @@ if ($result && $result->num_rows > 0) {
 
 // Display the profile information
 ?>
-<!DOCTYPE html>
-<html lang="en">
 
 <head>
     <meta charset="UTF-8">
