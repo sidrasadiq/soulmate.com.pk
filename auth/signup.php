@@ -7,6 +7,8 @@ include 'layouts/functions.php';
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["username"])) {
 
     // Input data from form
+    $firstName = trim($_POST['firstName']);
+    $lastName = trim($_POST['lastName']);
     $username = trim($_POST['username']);
     $usergender = $_POST['usergender'];
     $userlooking = $_POST['userlooking'];
@@ -66,13 +68,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["username"])) {
             $user_id = $stmt_user->insert_id;
 
             // Insert into the profile table using the user_id
-            $sql_profile = "INSERT INTO profiles (user_id, gender, looking_for, date_of_birth, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)";
+            $sql_profile = "INSERT INTO profiles (first_name, last_name, user_id, gender, looking_for, date_of_birth, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt_profile = $conn->prepare($sql_profile);
             if (!$stmt_profile) {
                 throw new Exception("Failed to prepare profile statement: " . $conn->error);
             }
 
-            $stmt_profile->bind_param("isssss", $user_id, $usergender, $userlooking, $userdate, $createdAt, $updatedAt);
+            $stmt_profile->bind_param("ssisssss", $firstName, $lastName, $user_id, $usergender, $userlooking, $userdate, $createdAt, $updatedAt);
             if ($stmt_profile->execute()) {
                 // Commit transaction if both inserts were successful
                 $conn->commit();
@@ -259,7 +261,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["username"])) {
                 <form class="signup-form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
                     <h2 class="text-center mb-4">Sign Up</h2>
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Full Name" name="username" required>
+                        <input type="text" class="form-control" placeholder="First Name" name="firstName" required>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Last Name" name="lastName" required>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Username" name="username" required>
                     </div>
                     <div class="input-group">
                         <select class="form-select" name="usergender" required>
