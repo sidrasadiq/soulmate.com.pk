@@ -111,7 +111,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["username"])) {
 }
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -254,8 +253,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["username"])) {
                 </div>
             </div>
             <!-- Form Section -->
-
-
             <div class="form-section  ">
                 <?php displaySessionMessage(); ?>
                 <form class="signup-form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
@@ -299,15 +296,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["username"])) {
                             Yes, I confirm that I am over 18 and agree to the Terms of Use and Privacy Statement.
                         </label>
                     </div>
-
-
-
                     <button type="submit" class="btn">Submit</button>
                     <p class="text-center mt-3">Already have an account? <a href="login.php">Log In</a></p>
                 </form>
-
-
-
             </div>
         </div>
     </div>
