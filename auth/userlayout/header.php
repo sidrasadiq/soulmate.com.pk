@@ -5,12 +5,15 @@
             <a href="/" class="header-logo d-flex align-items-center mb-2 mb-lg-0 text-decoration-none">
                 <img src="assets/images/logo.png" alt="Logo" height="40">
             </a>
-            <ul class="header-nav nav nav-pills d-flex justify-content-between mb-2 mb-md-0">
-                <li class="nav-item"><a href="#" class="nav-link px-3 link-body-emphasis">Online</a></li>
+            <ul class="header-nav nav nav-pills d-flex justify-content-center align-items-center mb-2 mb-md-0">
+                <li class="nav-item">
+                    <a href="user_index.php" class="nav-link px-2 text-body-secondary">Home</a>
+                </li>
+                <!-- <li class="nav-item"><a href="#" class="nav-link px-3 link-body-emphasis">Online</a></li>
                 <li class="nav-item"><a href="#" class="nav-link px-3 link-body-emphasis">Matches</a></li>
                 <li class="nav-item"><a href="#" class="nav-link px-3 link-body-emphasis">Search</a></li>
                 <li class="nav-item"><a href="#" class="nav-link px-3 link-body-emphasis">Message</a></li>
-                <li class="nav-item"><a href="#" class="nav-link px-3 link-body-emphasis">Activity</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-3 link-body-emphasis">Activity</a></li> -->
             </ul>
 
 
@@ -27,19 +30,20 @@
 
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end text-small">
-                        <li><a class="dropdown-item" href="#">Make The First Move</a></li>
+                        <!-- <li><a class="dropdown-item" href="#">Make The First Move</a></li> -->
                         <li><a class="dropdown-item" href="showprofile.php?id=<?php echo urlencode($_SESSION['user_id']); ?>">View Profile</a></li>
                         <li><a class="dropdown-item" href="editprofile.php">Edit Profile</a></li>
                         <!-- <li><a class="dropdown-item" href="#">Photo</a></li>
                          <li><a class="dropdown-item" href="#">Matches</a></li>
                          <li><a class="dropdown-item" href="#">Hobbies & Interests</a></li> -->
 
-                        <li><a class="dropdown-item" href="editPersonalityInfor.php">Personality Questions</a></li>
-                        <li><a class="dropdown-item" href="logout.php">Log out</a></li>
+                        <li><a class="dropdown-item" href="editPersonalityInfo.php">Personality Questions</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" href="#">Switch Off Profile</a></li>
+                        <!-- <li><a class="dropdown-item" href="#">Switch Off Profile</a></li> -->
+                        <li><a class="dropdown-item" href="logout.php">Log out</a></li>
+
                     </ul>
                 </div>
                 <i class="bi bi-gear ms-3"></i>
@@ -74,15 +78,16 @@
                         </span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end text-small">
-                        <li><a class="dropdown-item" href="#">Make The First Move</a></li>
+                        <!-- <li><a class="dropdown-item" href="#">Make The First Move</a></li> -->
                         <li><a class="dropdown-item" href="showprofile.php?id=<?php echo urlencode($_SESSION['user_id']); ?>">View Profile</a></li>
                         <li><a class="dropdown-item" href="editprofile.php">Edit Profile</a></li>
-                        <li><a class="dropdown-item" href="">Personality Questions</a></li>
-                        <li><a class="dropdown-item" href="logout.php">Log out</a></li>
+                        <li><a class="dropdown-item" href="editPersonalityInfo.php">Personality Questions</a></li>
+
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" href="#">Switch Off Profile</a></li>
+                        <!-- <li><a class="dropdown-item" href="#">Switch Off Profile</a></li> -->
+                        <li><a class="dropdown-item" href="logout.php">Log out</a></li>
                     </ul>
                 </div>
             </div>
