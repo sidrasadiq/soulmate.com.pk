@@ -914,7 +914,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
                             </div>
                             <hr>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="smoking" value="occasionally smoke id=" occasionally smoke">
+                                <input class="form-check-input" type="radio" name="smoking" value="occasionally smoke" id="occasionally smoke">
                                 <label class="form-check-label" for="occasionally smoke">
                                     Occasionally smoke</label>
                             </div>
