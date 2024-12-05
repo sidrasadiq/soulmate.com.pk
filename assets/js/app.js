@@ -73,6 +73,7 @@
         }
     }
 
+    
     // Portlet Widget (Card Reload, Collapse, and Delete)
     function initPortletCard() {
 

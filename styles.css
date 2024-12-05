@@ -284,3 +284,21 @@ button {
 .text-primary {
   color: #cc39b3 !important;
 }
+
+/* Container for the age range */
+.age-range-container {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  /* Adjust the gap between select boxes and 'to' text */
+}
+
+.age-select {
+  flex: 1;
+  /* Makes both dropdowns take equal width */
+}
+
+.age-range-text {
+  margin: 0 10px;
+  font-size: 16px;
+}
