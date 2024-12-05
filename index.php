@@ -365,48 +365,36 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
     $(document).ready(function() {
-      // Reinitialize or refresh slider after slide transition
-      $('.slider-class').on('afterChange', function(event, slick, currentSlide) {
-        // You can manually trigger content refresh if needed
-        refreshFormFields(); // Call your custom function to refresh the fields
+      // Function to populate age dropdowns dynamically
+      function populateAgeDropdowns() {
+        var ageFromSelect = document.getElementById("ageFrom");
+        var ageToSelect = document.getElementById("ageTo");
+
+        // Clear previous options
+        ageFromSelect.innerHTML = "";
+        ageToSelect.innerHTML = "";
+
+        // Add new options (18 to 75)
+        for (var i = 18; i <= 75; i++) {
+          var optionFrom = document.createElement("option");
+          optionFrom.value = i;
+          optionFrom.textContent = i;
+          ageFromSelect.appendChild(optionFrom);
+
+          var optionTo = document.createElement("option");
+          optionTo.value = i;
+          optionTo.textContent = i;
+          ageToSelect.appendChild(optionTo);
+        }
+      }
+
+      // Initialize age dropdowns on page load
+      populateAgeDropdowns();
+
+      // Reinitialize form fields when the carousel slide changes
+      $('#carouselExampleCaptions').on('slide.bs.carousel', function() {
+        populateAgeDropdowns(); // Re-populate the age dropdowns
       });
-
-      // Function to refresh form fields
-      function refreshFormFields() {
-        // This function can trigger a reflow or re-initialize select dropdowns, age fields, etc.
-        $('#ageFrom').trigger('change'); // Example to re-trigger changes or reinitialize
-        $('#ageTo').trigger('change');
-      }
-    });
-    // Function to dynamically fill age dropdown
-    function populateAgeDropdowns() {
-      var ageFromSelect = document.getElementById("ageFrom");
-      var ageToSelect = document.getElementById("ageTo");
-
-      // Clear previous options
-      ageFromSelect.innerHTML = "";
-      ageToSelect.innerHTML = "";
-
-      // Add new options (18 to 75)
-      for (var i = 18; i <= 75; i++) {
-        var optionFrom = document.createElement("option");
-        optionFrom.value = i;
-        optionFrom.textContent = i;
-        ageFromSelect.appendChild(optionFrom);
-
-        var optionTo = document.createElement("option");
-        optionTo.value = i;
-        optionTo.textContent = i;
-        ageToSelect.appendChild(optionTo);
-      }
-    }
-
-    // Call the function on page load and when slider changes
-    populateAgeDropdowns();
-
-    // If you're using a slider library like Slick, Owl Carousel, etc.
-    $('.slider-class').on('afterChange', function(event, slick, currentSlide) {
-      populateAgeDropdowns(); // Re-populate the dropdowns when slide changes
     });
   </script>
 </body>
