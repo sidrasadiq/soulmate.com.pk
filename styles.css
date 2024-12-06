@@ -175,26 +175,40 @@ button {
 
 /* Form container styling */
 .search-form {
-  /* align-items: center; */
   background-color: rgba(0, 0, 0, 0.6);
   padding: 20px;
   border-radius: 8px;
-  max-width: 2000px;
+  max-width: 1200px;
+  /* Adjusted max-width for better responsiveness */
   margin: 0 auto;
+}
+
+/* Form labels */
+.search-form .form-label {
+  margin-bottom: 4px;
+  /* Slight spacing for better readability */
+  font-weight: 500;
+  /* Optional: Make labels slightly bolder */
+  color: #fff;
+  /* Ensure text is visible against dark background */
 }
 
 /* Form controls */
 .search-form .form-select,
 .search-form .form-control,
 .search-form button {
-  padding: 5px;
+  padding: 8px;
   border-radius: 4px;
-  /* width: 155px; */
+  background-color: white;
+  border: 1px solid #ccc;
+  /* Subtle border for better visibility */
 }
 
+/* Remove unnecessary spacing between fields */
 .search-form .form-select,
 .search-form .form-control {
-  background-color: white;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 /* Button styling */
@@ -203,7 +217,9 @@ button {
   color: white;
   border: none;
   width: 100%;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s ease-in-out;
+  padding: 10px;
+  /* Increased padding for better clickability */
 }
 
 .search-form button:hover {
@@ -211,6 +227,14 @@ button {
 }
 
 /* Layout adjustments */
+.search-form .row>div {
+  padding: 0 8px;
+  /* Subtle padding between columns */
+  margin-top: 0;
+  /* Remove default margins for alignment */
+  margin-bottom: 0;
+}
+
 @media (min-width: 768px) {
   .search-form .row>div {
     flex: 0 0 auto;
@@ -218,12 +242,36 @@ button {
 
   .search-form .row .col-md-auto {
     max-width: calc(100% / 5);
+    /* Improved column distribution */
   }
 
   .search-form button {
-    max-width: 120px;
+    max-width: 140px;
+    /* Slightly wider button */
   }
 }
+
+/* Align text and fields more closely */
+.search-form .form-label+.form-select,
+.search-form .form-label+.form-control {
+  margin-top: -5px;
+  /* Bring fields closer to labels */
+}
+
+/* Form responsiveness */
+@media (max-width: 768px) {
+  .search-form {
+    padding: 0px;
+    max-width: 100%;
+    /* Full width on smaller screens */
+  }
+
+  .search-form button {
+    max-width: 100%;
+    /* Ensure button spans full width */
+  }
+}
+
 
 /* button:hover {
   background-color: #005f73;
@@ -299,6 +347,6 @@ button {
 }
 
 .age-range-text {
-  margin: 0 10px;
+  margin: 0 5px;
   font-size: 16px;
 }
