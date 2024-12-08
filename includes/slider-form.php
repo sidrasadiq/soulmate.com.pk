@@ -1,24 +1,24 @@
-<form class="search-form mt-3">
+<form class="search-form mt-3 p-3">
     <div class="row">
         <!-- I'm looking for a -->
         <div class="col-12 col-md-3">
-            <label for="lookingFor" class="form-label text-start d-block mb-0">I'm looking for a</label>
+            <label for="lookingFor" class="form-label text-start d-block mb-1">I'm looking for a</label>
             <select id="lookingFor" name="lookingFor" class="form-select" aria-label="I'm looking for a">
                 <!-- <option selected disabled>Choose...</option> -->
                 <option value="woman">Woman</option>
-                <option value="man">Man</option>
+                <option value="man">Man </option>
             </select>
         </div>
 
         <!-- Aged from -->
         <div class="col-6 col-md-1">
-            <label for="ageFrom" class="form-label text-start d-block mb-0">aged</label>
+            <label for="ageFrom" class="form-label text-start d-block mb-1">aged</label>
             <select id="ageFrom" name="ageFrom" class="form-select" aria-label="Age from"></select>
         </div>
 
         <!-- To age -->
         <div class="col-6 col-md-1">
-            <label for="ageTo" class="form-label text-start d-block mb-0">&nbsp;</label>
+            <label for="ageTo" class="form-label text-start d-block mb-1">&nbsp;</label>
             <select id="ageTo" name="ageTo" class="form-select" aria-label="Age to"></select>
         </div>
 
@@ -30,7 +30,7 @@
 
         <!-- Of religion -->
         <div class="col-6 col-md-2">
-            <label for="religion" class="form-label text-start d-block mb-0">of religion</label>
+            <label for="religion" class="form-label text-start d-block mb-1">of religion</label>
             <select name="religion" class="form-select" aria-label="Religion">
                 <option selected disabled>Religion</option>
                 <?php foreach ($religions as $religion): ?>
@@ -51,7 +51,7 @@
 
         <!-- Country selection dropdown in your form -->
         <div class="col-6 col-md-3">
-            <label for="country" class="form-label text-start d-block mb-0">and living in</label>
+            <label for="country" class="form-label text-start d-block mb-1">and living in</label>
             <select name="country" class="form-select" aria-label="Country">
                 <option selected disabled>Select Country</option>
                 <?php foreach ($countries as $country): ?>
