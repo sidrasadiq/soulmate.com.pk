@@ -411,30 +411,30 @@ if (isset($_SESSION['user_id'])) {
 
     // Main query to fetch profiles
     $query = "SELECT 
-            profiles.*, 
-            countries.country_name, 
-            cities.city_name, 
-            states.state_name, 
-            users.username,
-            users.email
-          FROM profiles
-          JOIN users ON profiles.user_id = users.id
-          LEFT JOIN countries ON profiles.country_id = countries.id
-          LEFT JOIN cities ON profiles.city_id = cities.id
-          LEFT JOIN states ON profiles.state_id = states.id
-          WHERE users.id != ?
-            AND users.role_id = 2
-            AND users.is_verified = 1
-            AND profiles.is_profile_complete = 1
-            AND profiles.gender = ?
-            AND profiles.marital_status = ?
-            AND profiles.date_of_birth BETWEEN DATE_SUB(CURDATE(), INTERVAL ? YEAR)
-                                            AND DATE_SUB(CURDATE(), INTERVAL ? YEAR)
-            AND (profiles.qualification_id = ? OR profiles.qualification_id IS NULL)
-            AND profiles.country_id = ?
-            AND profiles.state_id = ?
-            AND profiles.city_id = ?
-            AND profiles.cast_id = ?";
+    profiles.*, 
+    countries.country_name, 
+    cities.city_name, 
+    states.state_name, 
+    users.username,
+    users.email
+FROM profiles
+JOIN users ON profiles.user_id = users.id
+LEFT JOIN countries ON profiles.country_id = countries.id
+LEFT JOIN cities ON profiles.city_id = cities.id
+LEFT JOIN states ON profiles.state_id = states.id
+WHERE users.id != ?
+  AND users.role_id = ?
+  AND users.is_verified = ?
+  AND profiles.is_profile_complete = ?
+  AND profiles.gender = 'female'
+  AND profiles.marital_status = 'single'
+  AND profiles.date_of_birth BETWEEN DATE_SUB(CURDATE(), INTERVAL ? YEAR)
+                                AND DATE_SUB(CURDATE(), INTERVAL ? YEAR)
+  AND (profiles.qualification_id = ? OR profiles.qualification_id IS NULL)
+  AND profiles.country_id = ?
+  AND profiles.state_id = ?
+  AND profiles.city_id = ?
+  AND profiles.cast_id = ?";
 
     $stmt = $conn->prepare($query);
     $stmt->bind_param(
@@ -442,8 +442,8 @@ if (isset($_SESSION['user_id'])) {
         $userId,
         $oppositeGender,
         $requirements['preferred_marital_status'],
-        $requirements['preferred_age_from'], // Youngest age first
         $requirements['preferred_age_to'],   // Oldest age second
+        $requirements['preferred_age_from'], // Youngest age first
         $requirements['preferred_education_level_id'],
         $requirements['preferred_country_id'],
         $requirements['preferred_state_id'],
