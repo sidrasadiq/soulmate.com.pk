@@ -428,8 +428,7 @@ if (isset($_SESSION['user_id'])) {
             AND profiles.is_profile_complete = 1
             AND profiles.gender = ?
             AND profiles.marital_status = ?
-            AND profiles.date_of_birth BETWEEN DATE_SUB(CURDATE(), INTERVAL ? YEAR) 
-                                          AND DATE_SUB(CURDATE(), INTERVAL ? YEAR)
+
             AND profiles.qualification_id = ?
             AND profiles.country_id = ?
             AND profiles.state_id = ?
@@ -438,12 +437,12 @@ if (isset($_SESSION['user_id'])) {
 
     $stmt = $conn->prepare($query);
     $stmt->bind_param(
-        "issiiiiiii",
+        "issiiiii",
         $userId,
         $oppositeGender,
         $requirements['preferred_marital_status'],
-        $requirements['preferred_age_to'],
-        $requirements['preferred_age_from'],
+        // $requirements['preferred_age_to'],
+        // $requirements['preferred_age_from'],
         $requirements['preferred_education_level_id'],
         $requirements['preferred_country_id'],
         $requirements['preferred_state_id'],
@@ -467,7 +466,7 @@ if (isset($_SESSION['user_id'])) {
                     <div class="col-md-3 mb-4">
                         <a href="<?= $profileLink ?>" target="_blank" class="text-decoration-none">
                             <div class="card h-100 shadow-sm border-0">
-                                <img src="uploads/<?= $profilePicture ?>" class="card-img-top" alt="Profile Picture" style="object-fit: cover; height: 300px; width: 100%;">
+                                <img src="<?= $profilePicture ?>" class="card-img-top" alt="Profile Picture" style="object-fit: cover; height: 300px; width: 100%;">
                                 <div class="card-body">
                                     <h4 class="card-title"><?= htmlspecialchars($row['username']) ?></h4>
                                     <p class="card-text text-muted">

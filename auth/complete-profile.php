@@ -195,8 +195,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["saveProfileData"])) {
             $profileStmt->close();
         }
 
-
-
         // Sanitize and filter input data
         $maritalStatus = isset($_POST['maritalStatus']) ? htmlspecialchars($_POST['maritalStatus'], ENT_QUOTES, 'UTF-8') : null;
         $yourCountry = isset($_POST['yourCountry']) ? intval($_POST['yourCountry']) : 0;
