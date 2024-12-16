@@ -1,98 +1,67 @@
 <header class="p-3 mb-3 border-bottom sticky-top headd">
-    <div class="container-fluid d-none d-sm-block">
-        <div class="d-flex align-items-center">
+    <div class="container-fluid">
+        <div class="d-flex align-items-center justify-content-between">
             <!-- Logo on the left -->
-            <a href="/" class="header-logo d-flex align-items-center mb-2 mb-lg-0 text-decoration-none">
+            <a href="/" class="header-logo d-flex align-items-center text-decoration-none">
                 <img src="assets/images/logo.png" alt="Logo" height="40">
             </a>
-            <ul class="header-nav nav nav-pills d-flex justify-content-center align-items-center mb-2 mb-md-0">
+
+            <!-- Navigation Links for Large Screens -->
+            <ul class="header-nav nav nav-pills d-none d-sm-flex justify-content-center align-items-center mb-0">
                 <li class="nav-item">
                     <a href="user_index.php" class="nav-link px-2 text-body-secondary">Home</a>
                 </li>
-                <!-- <li class="nav-item"><a href="#" class="nav-link px-3 link-body-emphasis">Online</a></li>
-                <li class="nav-item"><a href="#" class="nav-link px-3 link-body-emphasis">Matches</a></li>
-                <li class="nav-item"><a href="#" class="nav-link px-3 link-body-emphasis">Search</a></li>
-                <li class="nav-item"><a href="#" class="nav-link px-3 link-body-emphasis">Message</a></li>
-                <li class="nav-item"><a href="#" class="nav-link px-3 link-body-emphasis">Activity</a></li> -->
             </ul>
 
-
-            <!-- Icons and dropdown menu on the right -->
+            <!-- Icons and Dropdown Menu -->
             <div class="header-icons d-flex align-items-center">
                 <i class="bi bi-globe me-3"></i>
                 <div class="dropdown">
                     <a href="#" class="d-block text-decoration-none dropdown-toggle" data-bs-toggle="dropdown">
-                        <img src="uploads/<?php
-                                            if (isset($_SESSION["user_id"]) && isset($conn)) {
-                                                echo rowInfoByColumn($conn, "profiles", "profile_picture", "user_id", $_SESSION["user_id"]);
-                                            }
-                                            ?>" alt="User" width="32" height="32" class="rounded-circle" alt="User" width="32" height="32" class="rounded-circle">
-
+                        <img src="<?php
+                                    if (isset($_SESSION["user_id"]) && isset($conn)) {
+                                        echo rowInfoByColumn($conn, "profiles", "profile_picture", "user_id", $_SESSION["user_id"]);
+                                    } ?>"
+                            alt="User" width="32" height="32" class="rounded-circle">
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end text-small">
-                        <!-- <li><a class="dropdown-item" href="#">Make The First Move</a></li> -->
                         <li><a class="dropdown-item" href="showprofile.php?id=<?php echo urlencode($_SESSION['user_id']); ?>">View Profile</a></li>
                         <li><a class="dropdown-item" href="editprofile.php">Edit Profile</a></li>
-                        <!-- <li><a class="dropdown-item" href="#">Photo</a></li>
-                         <li><a class="dropdown-item" href="#">Matches</a></li>
-                         <li><a class="dropdown-item" href="#">Hobbies & Interests</a></li> -->
-
                         <li><a class="dropdown-item" href="editPersonalityInfo.php">Personality Questions</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <!-- <li><a class="dropdown-item" href="#">Switch Off Profile</a></li> -->
                         <li><a class="dropdown-item" href="logout.php">Log out</a></li>
-
                     </ul>
                 </div>
-                <i class="bi bi-gear ms-3"></i>
             </div>
-        </div>
-    </div>
 
-    <!-- for the mobile screen -->
-
-    <div class="container-fluid d-block d-sm-none">
-        <div class="d-flex align-items-center">
-            <!-- Logo on the left -->
-            <a href="/" class="header-logo d-flex align-items-center mb-2 mb-lg-0 text-decoration-none">
-                <img src="assets/images/logo.png" alt="Logo" height="40">
-            </a>
-
-            <!-- Icons and dropdown menu on the right -->
-            <div class="header-icons d-flex align-items-center ">
-                <div class="dropdown">
-                    <!-- Custom dropdown toggle with three-line icon -->
-                    <a href="#" class="d-block text-decoration-none" data-bs-toggle="dropdown">
-                        <img src="uploads/<?php
-                                            if (isset($_SESSION["user_id"]) && isset($conn)) {
-                                                echo rowInfoByColumn($conn, "profiles", "profile_picture", "user_id", $_SESSION["user_id"]);
-                                            }
-                                            ?>" alt="User" width="32" height="32" class="rounded-circle" alt="User" width="35" height="35" class="rounded-circle">
-
-                        <span class="hamburger-icon " style="display: inline-block; width: 24px; height: 24px; position: relative;">
-                            <span style="background-color: #000; height: 2px; width: 100%; position: absolute; top: 10px; left:3px;"></span>
-                            <span style="background-color: #000; height: 2px; width: 100%; position: absolute; top: 16px; left:3px;"></span>
-                            <span style="background-color: #000; height: 2px; width: 100%; position: absolute; top: 22px; left:3px;"></span>
+            <!-- Mobile Menu -->
+            <div class="d-block d-sm-none dropdown">
+                <a href="#" class="text-decoration-none d-flex align-items-center" data-bs-toggle="dropdown">
+                    <img src="uploads/<?php
+                                        if (isset($_SESSION["user_id"]) && isset($conn)) {
+                                            echo rowInfoByColumn($conn, "profiles", "profile_picture", "user_id", $_SESSION["user_id"]);
+                                        } ?>"
+                        alt="User" width="32" height="32" class="rounded-circle">
+                    <span class="ms-2">
+                        <span class="hamburger-icon d-flex flex-column justify-content-center">
+                            <span class="bg-dark mb-1" style="height: 2px; width: 20px;"></span>
+                            <span class="bg-dark mb-1" style="height: 2px; width: 20px;"></span>
+                            <span class="bg-dark" style="height: 2px; width: 20px;"></span>
                         </span>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end text-small">
-                        <!-- <li><a class="dropdown-item" href="#">Make The First Move</a></li> -->
-                        <li><a class="dropdown-item" href="showprofile.php?id=<?php echo urlencode($_SESSION['user_id']); ?>">View Profile</a></li>
-                        <li><a class="dropdown-item" href="editprofile.php">Edit Profile</a></li>
-                        <li><a class="dropdown-item" href="editPersonalityInfo.php">Personality Questions</a></li>
-
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <!-- <li><a class="dropdown-item" href="#">Switch Off Profile</a></li> -->
-                        <li><a class="dropdown-item" href="logout.php">Log out</a></li>
-                    </ul>
-                </div>
+                    </span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end text-small">
+                    <li><a class="dropdown-item" href="showprofile.php?id=<?php echo urlencode($_SESSION['user_id']); ?>">View Profile</a></li>
+                    <li><a class="dropdown-item" href="editprofile.php">Edit Profile</a></li>
+                    <li><a class="dropdown-item" href="editPersonalityInfo.php">Personality Questions</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" href="logout.php">Log out</a></li>
+                </ul>
             </div>
         </div>
     </div>
-
-
 </header>

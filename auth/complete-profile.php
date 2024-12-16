@@ -1,8 +1,57 @@
 <?php
-session_start();
+include 'layouts/session.php';
 include 'layouts/config.php';
 include 'layouts/functions.php';
 
+
+$user_id = $_SESSION['user_id'];
+
+try {
+    // Check if required profile fields are empty
+    $profileCheckQuery = "SELECT profile_picture, marital_status, country_id, state_id, city_id, 
+                                 religion_id, cast_id, is_house_rented, house_address, my_appearance
+                          FROM profiles WHERE user_id = ?";
+    $stmtProfileCheck = $conn->prepare($profileCheckQuery);
+    $stmtProfileCheck->bind_param("i", $user_id);
+    $stmtProfileCheck->execute();
+    $result = $stmtProfileCheck->get_result();
+
+    if ($result->num_rows === 0) {
+        throw new Exception("Profile not found for this user.");
+    }
+
+    $profile = $result->fetch_assoc();
+
+    // Check if any required field is empty
+    $requiredFields = [
+        $profile['profile_picture'],
+        $profile['marital_status'],
+        $profile['country_id'],
+        $profile['state_id'],
+        $profile['city_id'],
+        $profile['religion_id'],
+        $profile['cast_id'],
+        $profile['is_house_rented'],
+    ];
+
+    $isIncomplete = false;
+    foreach ($requiredFields as $field) {
+        if (empty($field)) {
+            $isIncomplete = true;
+            break;
+        }
+    }
+
+    // Redirect to index.php if profile is complete
+    if (!$isIncomplete) {
+        header("Location: index.php");
+        exit();
+    }
+} catch (Exception $e) {
+    $_SESSION['message'][] = array("type" => "error", "content" => "Error: " . $e->getMessage());
+    header("Location: login.php");
+    exit();
+}
 
 // Initialize arrays for countries and cities
 $countries = [];
@@ -94,6 +143,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["saveProfileData"])) {
         $profile_pic_1 = null;
 
         // Handle Image Upload
+        // Define the base URL of the uploads directory
+        $baseURL = 'assets/images/uploads/'; // Replace 'yourdomain.com' with your actual domain
+
+        // Handle Image Upload
         if (isset($_FILES['profile_pic_1']) && $_FILES['profile_pic_1']['error'] === UPLOAD_ERR_OK) {
             $tmpName = $_FILES['profile_pic_1']['tmp_name'];
             $originalName = basename($_FILES['profile_pic_1']['name']);
@@ -118,13 +171,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["saveProfileData"])) {
             $profile = $result->fetch_assoc();
             $profile_id = $profile['id']; // Get the profile ID
 
-            // Generate a unique filename with the format profile_pic_1_<user_id>_<profile_id>_<unique_number>.<extension>
-            $uniqueNumber = uniqid(); // Generate a unique number
+            // Generate a unique filename
+            $uniqueNumber = uniqid();
             $newFileName = "profile_pic_1_{$user_id}_{$profile_id}_{$uniqueNumber}." . $imageExtension;
 
             // Ensure the upload directory exists
             if (!is_dir($uploadDir)) {
-                if (!mkdir($uploadDir, 0755, true)) { // Create directory with appropriate permissions
+                if (!mkdir($uploadDir, 0755, true)) {
                     throw new Exception("Failed to create directory for image uploads.");
                 }
             }
@@ -135,12 +188,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["saveProfileData"])) {
                 throw new Exception("Failed to upload the profile picture.");
             }
 
-            // Save the file name to the database
-            $profile_pic_1 = $newFileName;
+            // Save the full path (URL) to the database
+            $profile_pic_1 = $baseURL . $newFileName;
 
             // Close the profile query statement
             $profileStmt->close();
         }
+
 
 
         // Sanitize and filter input data
@@ -242,13 +296,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["saveProfileData"])) {
 
         // Commit Transaction
         $conn->commit();
+        // echo "Profile and soulmate requirements updated successfully.";
 
         $_SESSION['message'][] = array(
             "type" => "success",
             "content" => "<b>Success!</b> Profile and soulmate requirements updated successfully."
         );
-
-        // echo "Profile and soulmate requirements updated successfully.";
+        // Redirect to index.php after success
+        header("Location: index.php");
+        exit();
     } catch (Exception $e) {
         // Rollback Transaction on Failure
         if (isset($destination) && file_exists($destination)) {

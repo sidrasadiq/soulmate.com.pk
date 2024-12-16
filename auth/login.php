@@ -62,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $_SESSION['message'][] = ["type" => "warning", "content" => "Login successful, but failed to send welcome email: $emailSent"];
                 }
 
-                header("Location: user_index.php");
+                header("Location: index.php");
                 exit();
             } else {
                 $_SESSION['message'][] = ["type" => "danger", "content" => "Invalid email or password."];

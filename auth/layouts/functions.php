@@ -377,3 +377,44 @@ function rowInfoByColumn($conn, $tableName, $columnName, $idColumnName, $id)
         }
     }
 }
+
+
+// function fetchOptions($conn, $table, $column)
+// {
+//     $options = [];
+//     try {
+//         // Validate table and column names to prevent SQL injection
+//         // $allowedTables = ['requirements']; // Whitelist of allowed tables
+//         // $allowedColumns = ['seeking', 'countries', 'states', 'cities']; // Whitelist of allowed columns
+
+//         // if (!in_array($table, $allowedTables) || !in_array($column, $allowedColumns)) {
+//         //     throw new Exception("Invalid table or column specified");
+//         // }
+
+//         // Prepare and execute the query
+//         $query = "SELECT id, label FROM $table WHERE type = ?";
+//         $stmt = $conn->prepare($query);
+
+//         if (!$stmt) {
+//             throw new Exception("Failed to prepare statement: " . $conn->error);
+//         }
+
+//         $stmt->bind_param("s", $column); // Bind parameter to avoid SQL injection
+//         $stmt->execute();
+
+//         $result = $stmt->get_result();
+
+//         // Fetch results
+//         while ($row = $result->fetch_assoc()) {
+//             $options[] = ['id' => $row['id'], 'label' => $row['label']];
+//         }
+
+//         $stmt->close();
+//     } catch (Exception $e) {
+//         error_log("Error fetching options: " . $e->getMessage()); // Log error for debugging
+//         // Optionally display a user-friendly message or return an empty result
+//         echo "<p class='text-danger'>An error occurred while fetching data.</p>";
+//     }
+
+//     return $options;
+// }
