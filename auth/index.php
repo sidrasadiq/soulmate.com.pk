@@ -423,11 +423,11 @@ LEFT JOIN countries ON profiles.country_id = countries.id
 LEFT JOIN cities ON profiles.city_id = cities.id
 LEFT JOIN states ON profiles.state_id = states.id
 WHERE users.id != ?
-  AND users.role_id = ?
-  AND users.is_verified = ?
-  AND profiles.is_profile_complete = ?
-  AND profiles.gender = 'female'
-  AND profiles.marital_status = 'single'
+  AND users.role_id = 2
+  AND users.is_verified = 1
+  AND profiles.is_profile_complete = 1
+  AND profiles.gender = ?
+  AND profiles.marital_status = ?
   AND profiles.date_of_birth BETWEEN DATE_SUB(CURDATE(), INTERVAL ? YEAR)
                                 AND DATE_SUB(CURDATE(), INTERVAL ? YEAR)
   AND (profiles.qualification_id = ? OR profiles.qualification_id IS NULL)
