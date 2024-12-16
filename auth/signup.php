@@ -3,19 +3,17 @@ session_start();
 
 include 'layouts/config.php';
 include 'layouts/functions.php';
-include 'layouts/main.php';
-
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["username"])) {
 
-    // Input data from form
-    $firstName = trim($_POST['firstName']);
-    $lastName = trim($_POST['lastName']);
-    $username = trim($_POST['username']);
-    $usergender = $_POST['usergender'];
-    $userlooking = $_POST['userlooking'];
-    $userdate = $_POST['userdate'];
-    $useremail = trim($_POST['useremail']);
-    $userpass = password_hash(trim($_POST['userpass']), PASSWORD_BCRYPT); // Secure password hashing
+    // Input validation and sanitization
+    $firstName = filter_var(trim($_POST['firstName']), FILTER_SANITIZE_STRING);
+    $lastName = filter_var(trim($_POST['lastName']), FILTER_SANITIZE_STRING);
+    $username = filter_var(trim($_POST['username']), FILTER_SANITIZE_STRING);
+    $usergender = filter_var($_POST['usergender'], FILTER_SANITIZE_STRING);
+    $userlooking = filter_var($_POST['userlooking'], FILTER_SANITIZE_STRING); // Moved to requirements
+    $userdate = filter_var($_POST['userdate'], FILTER_SANITIZE_STRING);
+    $useremail = filter_var(trim($_POST['useremail']), FILTER_VALIDATE_EMAIL);
+    $userpass = password_hash(trim($_POST['userpass']), PASSWORD_DEFAULT); // Secure password hashing
     $createdAt = date("Y-m-d H:i:s");
     $updatedAt = date("Y-m-d H:i:s");
     $role_id = 2; // Default role_id for new users
@@ -44,73 +42,79 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["username"])) {
         // Start the transaction
         $conn->begin_transaction();
 
-        // Check if email is unique
+        // Check if the email already exists
         $sql_check = "SELECT id FROM users WHERE email = ?";
         $stmt_check = $conn->prepare($sql_check);
         $stmt_check->bind_param("s", $useremail);
         $stmt_check->execute();
         $stmt_check->store_result();
+
         if ($stmt_check->num_rows > 0) {
             $_SESSION['message'][] = array("type" => "error", "content" => "This email is already registered.");
             header("location: signup.php");
             exit();
         }
 
-        // Insert into the user table with role_id and OTP
-        $sql_user = "INSERT INTO users (username, email, password, role_id, is_verified, verification_token, otp, created_at, updated_at) 
-                     VALUES (?, ?, ?, ?, 0, ?, ?, ?, ?)";
+        // Insert user into the `users` table
+        $sql_user = "INSERT INTO users (username, email, password, role_id, is_verified, verification_token, otp, created_at, updated_at) VALUES (?, ?, ?, ?, 0, ?, ?, ?, ?)";
         $stmt_user = $conn->prepare($sql_user);
-        if (!$stmt_user) {
-            throw new Exception("Failed to prepare user statement: " . $conn->error);
-        }
-
         $stmt_user->bind_param("ssssisss", $username, $useremail, $userpass, $role_id, $verification_token, $otp, $createdAt, $updatedAt);
-        if ($stmt_user->execute()) {
-            $user_id = $stmt_user->insert_id;
+        $stmt_user->execute();
 
-            // Insert into the profile table using the user_id
-            $sql_profile = "INSERT INTO profiles (first_name, last_name, user_id, gender, looking_for, date_of_birth, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-            $stmt_profile = $conn->prepare($sql_profile);
-            if (!$stmt_profile) {
-                throw new Exception("Failed to prepare profile statement: " . $conn->error);
-            }
+        $user_id = $conn->insert_id; // Get the inserted user ID
+        $_SESSION['user_id'] = $user_id; // Store user ID in session
 
-            $stmt_profile->bind_param("ssisssss", $firstName, $lastName, $user_id, $usergender, $userlooking, $userdate, $createdAt, $updatedAt);
-            if ($stmt_profile->execute()) {
-                // Commit transaction if both inserts were successful
-                $conn->commit();
+        // Insert into the `profiles` table
+        $sql_profile = "INSERT INTO profiles (first_name, last_name, user_id, gender, date_of_birth, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $stmt_profile = $conn->prepare($sql_profile);
+        $stmt_profile->bind_param("ssissss", $firstName, $lastName, $user_id, $usergender, $userdate, $createdAt, $updatedAt);
+        $stmt_profile->execute();
 
-                // Save email to session
-                $_SESSION['email'] = $useremail;
+        $profile_id = $conn->insert_id; // Get the inserted profile ID
 
-                // Send OTP email to the user
-                $emailSent = sendOtpEmail($useremail, $username, $otp);
-                if ($emailSent !== true) {
-                    $_SESSION['message'][] = array("type" => "error", "content" => "Error sending OTP email: $emailSent");
-                }
+        // Insert into the `requirements` table
+        $sql_requirements = "INSERT INTO requirements (user_id, profile_id, looking_for, created_at, updated_at) VALUES (?, ?, ?, ?, ?)";
+        $stmt_requirements = $conn->prepare($sql_requirements);
+        $stmt_requirements->bind_param("iisss", $user_id, $profile_id, $userlooking, $createdAt, $updatedAt);
+        $stmt_requirements->execute();
 
-                $_SESSION['message'][] = array(
-                    "type" => "success",
-                    "content" => "Signup successful! An OTP has been sent to your email. Please verify your account."
-                );
-                header("Location: verify-otp.php");
-                exit();
-            } else {
-                throw new Exception("Failed to save profile data: " . $stmt_profile->error);
-            }
+        // Commit the transaction
+        $conn->commit();
+
+        // Send OTP email
+        $emailSent = sendOtpEmail($useremail, $username, $otp);
+        if ($emailSent !== true) {
+            $_SESSION['message'][] = array("type" => "error", "content" => "Error sending OTP email: $emailSent");
         } else {
-            throw new Exception("Failed to save user data: " . $stmt_user->error);
+            $_SESSION['message'][] = array(
+                "type" => "success",
+                "content" => "Signup successful! An OTP has been sent to your email. Please verify your account."
+            );
+
+            // Set session data for user
+            $_SESSION['username'] = $username;
+            $_SESSION['role_id'] = $role_id;
+            $_SESSION['email'] = $useremail;
+            $_SESSION["first_name"] = $firstName ?? "Soulmate";
+            $_SESSION["last_name"] = $lastName ?? "User";
+
+            header("Location: verify-otp.php");
+            exit();
         }
     } catch (Exception $e) {
-        // Roll back transaction on error
+        // Rollback transaction on failure
         $conn->rollback();
         $_SESSION['message'][] = array("type" => "error", "content" => "Error: " . $e->getMessage());
-    } finally {
+        error_log("Error: " . $e->getMessage()); // Log the error
         header("location: signup.php");
         exit();
+    } finally {
+        $conn->close();
     }
 }
 ?>
+
+<?php include 'layouts/main.php'; ?>
 
 <head>
     <meta charset="UTF-8">
@@ -259,7 +263,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["username"])) {
         }
 
         .navbar-brand img.logo:hover {
-            transform: scale(1.1);
+            transform: scale(1.2);
         }
 
         /* Sign Up Button Styling */
@@ -386,6 +390,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["username"])) {
             font-size: 14px;
             color: #1167b3;
         }
+
+        /* Base styles for all custom alerts */
+        .custom-alert {
+            color: #fff;
+            /* White text for better contrast */
+            border: none;
+            /* Remove default border */
+            padding: 1rem;
+            font-size: 1rem;
+            border-radius: 0.5rem;
+            /* Rounded corners */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            /* Subtle shadow */
+        }
+
+        /* Gradient for success alert (pink to blue) */
+        .custom-alert.alert-success {
+            background: linear-gradient(90deg, #ff7eb3, #8ec5fc);
+            /* Pink to blue gradient */
+        }
+
+        /* Optionally customize other alert types */
+        .custom-alert.alert-danger {
+            background: linear-gradient(90deg, #ff7f7f, #ffafaf);
+            /* Red gradient */
+        }
+
+        .custom-alert.alert-warning {
+            background: linear-gradient(90deg, #fff4a3, #ffeaa1);
+            /* Yellow gradient */
+        }
+
+        .custom-alert.alert-info {
+            background: linear-gradient(90deg, #a3e8ff, #91cfff);
+            /* Light blue gradient */
+        }
+
+        /* Ensure text alignment for readability */
+        .custom-alert {
+            text-align: center;
+        }
     </style>
 </head>
 
@@ -415,7 +460,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["username"])) {
 
             <!-- Form Section -->
             <div class="form-section">
+
                 <form class="signup-form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
+                    <?php displaySessionMessage(); ?>
                     <h2 class="text-center mb-4">Sign Up</h2>
                     <div class="input-group">
                         <input type="text" class="form-control" placeholder="First Name" name="firstName" required>
@@ -448,7 +495,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["username"])) {
                         <input type="email" class="form-control" placeholder="Email Address" name="useremail" required>
                     </div>
                     <div class="input-group">
-                        <input type="password" class="form-control" placeholder="Your Soulmate Password" name="userpass" required>
+                        <input type="password" class="form-control" placeholder="Password for your account" name="userpass" required>
                     </div>
                     <div class="form-check mb-3">
                         <input class="form-check-input" type="checkbox" id="defaultCheck1" name="usercheck" required>

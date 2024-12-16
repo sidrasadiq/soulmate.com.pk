@@ -75,13 +75,12 @@ function displaySessionMessage()
         foreach ($_SESSION['message'] as $index => $message) {
             // Ensure message type and content are valid
             if (is_array($message) && isset($message['type'], $message['content'])) {
-                $alertType = htmlspecialchars($message['type']);
+                $alertType = htmlspecialchars($message['type']); // Can use this to customize gradient for different types
                 $content = htmlspecialchars($message['content']);
 
-                // Output the Bootstrap alert with a unique class and data attribute for indexing
-                echo "<div class='alert alert-{$alertType} alert-dismissible fade show session-alert' role='alert' data-index='{$index}'>";
+                // Add a custom class for gradient styling
+                echo "<div class='alert alert-{$alertType} custom-alert alert-dismissible fade show session-alert' role='alert' data-index='{$index}'>";
                 echo "{$content}";
-                // echo "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>";
                 echo "</div>";
             }
         }
@@ -90,18 +89,18 @@ function displaySessionMessage()
         unset($_SESSION['message']);
 
         // Add JavaScript to dismiss each alert after 3 seconds
-        echo "<script>
-                setTimeout(function() {
-                    var alerts = document.querySelectorAll('.session-alert');
-                    alerts.forEach(function(alert) {
-                        alert.classList.remove('show');
-                        alert.classList.add('fade');
-                        setTimeout(function() {
-                            alert.remove();
-                        }, 500); // Wait for the fade effect to finish
-                    });
-                }, 5000); // 5 seconds
-              </script>";
+        // echo "<script>
+        //         setTimeout(function() {
+        //             var alerts = document.querySelectorAll('.session-alert');
+        //             alerts.forEach(function(alert) {
+        //                 alert.classList.remove('show');
+        //                 alert.classList.add('fade');
+        //                 setTimeout(function() {
+        //                     alert.remove();
+        //                 }, 500); // Wait for the fade effect to finish
+        //             });
+        //         }, 5000); // 5 seconds
+        //       </script>";
     }
 }
 // Function to fetch a specific column value from any table based on column name and ID
@@ -155,6 +154,14 @@ function rowInfo($conn, $tableName, $columnName, $id)
             $stmt->close();
         }
     }
+}
+
+function sanitizeInput($input)
+{
+    $input = trim($input);
+    $input = strip_tags($input);
+    $input = htmlspecialchars($input, ENT_QUOTES, 'UTF-8');
+    return $input;
 }
 
 function sendVerificationEmail($userEmail, $username)

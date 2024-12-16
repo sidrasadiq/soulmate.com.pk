@@ -302,6 +302,7 @@
                   <label for="firstName" class="form-label">First Name <span class="text-danger">*</span></label>
                   <input type="text" class="form-control" id="firstName" placeholder="First Name" required>
                 </div>
+
                 <div class="col-md-6">
                   <label for="lastName" class="form-label">Last Name <span class="text-danger">*</span></label>
                   <input type="text" class="form-control" id="lastName" placeholder="Last Name" required>
@@ -351,8 +352,7 @@
   <?php include 'includes/footer.php'; ?>
 
   <?php include 'includes/footer-scripts.php'; ?>
-  <!-- Include jQuery -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
   <script>
     $(document).ready(function() {
       // Function to populate age dropdowns dynamically

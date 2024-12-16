@@ -4,64 +4,52 @@ session_start();
 include 'layouts/config.php';
 include 'layouts/functions.php';
 
-// Check if the email exists in the session
-if (!isset($_SESSION['email'])) {
+if (!isset($_SESSION['user_id'])) {
     $_SESSION['message'][] = array("type" => "error", "content" => "Session expired. Please sign up again.");
     header("Location: signup.php");
     exit();
 }
 
-$email = $_SESSION['email']; // Get email from session
+$user_id = $_SESSION['user_id'];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["otp"])) {
-    // Retrieve the OTP entered by the user
     $otp = trim($_POST['otp']);
 
     try {
-        // Check if the OTP and email match in the database
-        $sql = "SELECT id FROM users WHERE email = ? AND otp = ?";
+        // Check if the OTP matches for the user ID
+        $sql = "SELECT id FROM users WHERE id = ? AND otp = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("si", $email, $otp);
+        $stmt->bind_param("ii", $user_id, $otp);
         $stmt->execute();
         $stmt->store_result();
 
         if ($stmt->num_rows > 0) {
-            // If a match is found, mark the user as verified
-            $update_sql = "UPDATE users SET is_verified = 1, otp = NULL WHERE email = ?";
+            // Update verification status and clear OTP
+            $update_sql = "UPDATE users SET is_verified = 1, otp = NULL WHERE id = ?";
             $update_stmt = $conn->prepare($update_sql);
-            $update_stmt->bind_param("s", $email);
-            if ($update_stmt->execute()) {
-                // Fetch the user's ID for session storage
-                $stmt->bind_result($user_id);
-                $stmt->fetch();
-                $_SESSION['user_id'] = $user_id; // Store user ID in session for profile completion
+            $update_stmt->bind_param("i", $user_id);
+            $update_stmt->execute();
 
-                $_SESSION['message'][] = array(
-                    "type" => "success",
-                    "content" => "Your account has been successfully verified! Please complete your profile."
-                );
-
-                unset($_SESSION['email']); // Clear the email from the session
-                $_SESSION["loggedin"] = true;
-                // Redirect to complete-profile.php
-                header("Location: complete-profile.php");
-                exit();
-            } else {
-                throw new Exception("Failed to update user verification status.");
-            }
+            $_SESSION['message'][] = array(
+                "type" => "success",
+                "content" => "Your account has been successfully verified! Please complete your profile."
+            );
+            $_SESSION["loggedin"] = true;
+            header("Location: complete-profile.php");
+            exit();
         } else {
-            // Invalid OTP
             $_SESSION['message'][] = array("type" => "error", "content" => "Invalid OTP.");
         }
     } catch (Exception $e) {
         $_SESSION['message'][] = array("type" => "error", "content" => "Error: " . $e->getMessage());
+        error_log("Error: " . $e->getMessage());
+    } finally {
+        $stmt->close(); // Close the statement
     }
 
     header("Location: verify-otp.php");
     exit();
 }
-
-
 ?>
 
 <!DOCTYPE html>
@@ -117,6 +105,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["otp"])) {
             text-align: center;
             margin-top: 15px;
             color: #555;
+        }
+
+        /* Base styles for all custom alerts */
+        .custom-alert {
+            color: #fff;
+            /* White text for better contrast */
+            border: none;
+            /* Remove default border */
+            padding: 1rem;
+            font-size: 1rem;
+            border-radius: 0.5rem;
+            /* Rounded corners */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            /* Subtle shadow */
+        }
+
+        /* Gradient for success alert (pink to blue) */
+        .custom-alert.alert-success {
+            background: linear-gradient(90deg, #ff7eb3, #8ec5fc);
+            /* Pink to blue gradient */
+        }
+
+        /* Optionally customize other alert types */
+        .custom-alert.alert-danger {
+            background: linear-gradient(90deg, #ff7f7f, #ffafaf);
+            /* Red gradient */
+        }
+
+        .custom-alert.alert-warning {
+            background: linear-gradient(90deg, #fff4a3, #ffeaa1);
+            /* Yellow gradient */
+        }
+
+        .custom-alert.alert-info {
+            background: linear-gradient(90deg, #a3e8ff, #91cfff);
+            /* Light blue gradient */
+        }
+
+        /* Ensure text alignment for readability */
+        .custom-alert {
+            text-align: center;
         }
     </style>
 </head>

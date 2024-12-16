@@ -3,34 +3,6 @@ session_start();
 include 'layouts/config.php';
 include 'layouts/functions.php';
 
-// Ensure the user is logged in by checking the session for 'user_id'
-if (!isset($_SESSION['user_id'])) {
-    $_SESSION['message'][] = array("type" => "error", "content" => "You must be logged in to complete your profile.");
-    header("Location: login.php");
-    exit();
-}
-$userId = $_SESSION['user_id'];
-// Check if the user profile is incomplete
-$profileCheckQuery = "SELECT * FROM profiles WHERE user_id = ? AND (prefer_age_from IS NULL OR prefer_age_to IS NULL OR country_id IS NULL 
-OR city_id IS NULL OR relationship_looking IS NULL OR ethnicity IS NULL OR beliefs IS NULL OR drink_alcohol IS NULL OR smoking IS NULL OR children IS NULL 
-OR marital_status IS NULL OR my_appearance IS NULL OR body_type IS NULL OR profile_picture IS NULL)";
-$stmtProfileCheck = $conn->prepare($profileCheckQuery);
-if (!$stmtProfileCheck) {
-    throw new Exception("Prepare statement failed: " . $conn->error);
-}
-
-$stmtProfileCheck->bind_param("i", $userId);
-$stmtProfileCheck->execute();
-$profileResult = $stmtProfileCheck->get_result();
-
-if ($profileResult->num_rows > 0) {
-    // Profile is incomplete; allow the user to complete it
-    // Show the form (do not redirect to the same page)
-} else {
-    // If profile is complete, proceed to the user dashboard
-    header("Location: user_index.php");
-    exit();
-}
 
 // Initialize arrays for countries and cities
 $countries = [];
@@ -67,6 +39,37 @@ try {
         $cities[] = $row;
     }
 
+    // Fetch Religion
+    $queryReligion = "SELECT id, religion_name FROM religion ORDER BY id ASC;";
+    $stmtReligion = $conn->prepare($queryReligion);
+    $stmtReligion->execute();
+    $resultReligion = $stmtReligion->get_result();
+    while ($row = $resultReligion->fetch_assoc()) {
+        $religion[] = $row;
+    }
+
+    // Fetch Casts
+    $queryCaste = "SELECT id, cast_name FROM user_cast ORDER BY cast_name ASC;";
+    $stmtCaste = $conn->prepare($queryCaste);
+    $stmtCaste->execute();
+    $resultCaste = $stmtCaste->get_result();
+    $user_cast = [];
+    while ($row = $resultCaste->fetch_assoc()) {
+        $user_cast[] = $row;
+    }
+
+    // Fetch Qualifications
+    $queryQualifications = "SELECT id, qualification_name FROM qualifications ORDER BY id ASC;";
+    $stmtQualifications = $conn->prepare($queryQualifications);
+    $stmtQualifications->execute();
+    $resultQualifications = $stmtQualifications->get_result();
+
+    $qualifications = [];
+    while ($row = $resultQualifications->fetch_assoc()) {
+        $qualifications[] = $row;
+    }
+
+
     $conn->commit();
 } catch (Exception $e) {
     $conn->rollback();
@@ -75,101 +78,192 @@ try {
     exit();
 }
 
-// Check if form is submitted via POST
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
-
-    // Sanitize and retrieve form data
-    $photo = isset($_FILES['uploadedFile']) ? $_FILES['uploadedFile']['name'] : null;
-
-    $ageFrom = isset($_POST['ageFrom']) ? intval($_POST['ageFrom']) : null;
-    $ageTo = isset($_POST['ageTo']) ? intval($_POST['ageTo']) : null;
-    $country = isset($_POST['country']) ? intval($_POST['country']) : null;
-    $city = isset($_POST['city']) ? intval($_POST['city']) : null;
-    $state = isset($_POST['state']) ? intval($_POST['state']) : null;
-    $relationshipLooking = isset($_POST['relationshipLooking']) ? (is_array($_POST['relationshipLooking']) ? implode(", ", $_POST['relationshipLooking']) : $_POST['relationshipLooking']) : null;
-    $ethnicity = isset($_POST['ethnicity']) ? $_POST['ethnicity'] : null;
-    $beliefs = isset($_POST['beliefs']) ? $_POST['beliefs'] : null;
-    $drinkAlcohol = isset($_POST['drinkAlcohol']) ? $_POST['drinkAlcohol'] : 'No'; // Set default to 'No' if not selected
-    $smoking = isset($_POST['smoking']) ? $_POST['smoking'] : 'No'; // Set default to 'No'
-    $children = isset($_POST['children']) ? $_POST['children'] : 'No'; // Set default to 'No'
-    $maritalStatus = isset($_POST['maritalStatus']) ? $_POST['maritalStatus'] : null;
-    $appearance = isset($_POST['appearance']) ? $_POST['appearance'] : null;
-    $bodyType = isset($_POST['bodyType']) ? $_POST['bodyType'] : null;
-    var_dump($_POST);
-
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["saveProfileData"])) {
     try {
-        // Start the transaction for saving data
+        // Start Transaction
         $conn->begin_transaction();
 
-        // Handle file upload for photo
-        if (isset($_FILES['uploadedFile']) && $_FILES['uploadedFile']['error'] == 0) {
-            $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-            if (in_array($_FILES['uploadedFile']['type'], $allowedTypes)) {
-                $uploadDir = 'uploads/';
-                $photo = basename($_FILES['uploadedFile']['name']);
-                $uploadFile = $uploadDir . $photo;
-                if (!move_uploaded_file($_FILES['uploadedFile']['tmp_name'], $uploadFile)) {
-                    throw new Exception("Failed to upload the file.");
-                }
-            } else {
-                throw new Exception("Invalid file type. Only JPEG, PNG, and GIF are allowed.");
+        // Get the user ID from the session
+        if (!isset($_SESSION['user_id'])) {
+            throw new Exception("User is not logged in.");
+        }
+        $user_id = $_SESSION['user_id'];
+
+        // Define the upload directory for images
+        $uploadDir = 'assets/images/uploads/';
+        $profile_pic_1 = null;
+
+        // Handle Image Upload
+        if (isset($_FILES['profile_pic_1']) && $_FILES['profile_pic_1']['error'] === UPLOAD_ERR_OK) {
+            $tmpName = $_FILES['profile_pic_1']['tmp_name'];
+            $originalName = basename($_FILES['profile_pic_1']['name']);
+            $imageExtension = pathinfo($originalName, PATHINFO_EXTENSION);
+
+            // Validate file type (allow only images)
+            $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+            if (!in_array(strtolower($imageExtension), $allowedExtensions)) {
+                throw new Exception("Invalid file type. Only JPG, JPEG, PNG, and GIF are allowed.");
             }
+
+            // Fetch the profile ID for the logged-in user
+            $profileQuery = "SELECT id FROM profiles WHERE user_id = ?";
+            $profileStmt = $conn->prepare($profileQuery);
+            $profileStmt->bind_param("i", $user_id);
+            $profileStmt->execute();
+            $result = $profileStmt->get_result();
+
+            if ($result->num_rows === 0) {
+                throw new Exception("Profile not found for the logged-in user.");
+            }
+            $profile = $result->fetch_assoc();
+            $profile_id = $profile['id']; // Get the profile ID
+
+            // Generate a unique filename with the format profile_pic_1_<user_id>_<profile_id>_<unique_number>.<extension>
+            $uniqueNumber = uniqid(); // Generate a unique number
+            $newFileName = "profile_pic_1_{$user_id}_{$profile_id}_{$uniqueNumber}." . $imageExtension;
+
+            // Ensure the upload directory exists
+            if (!is_dir($uploadDir)) {
+                if (!mkdir($uploadDir, 0755, true)) { // Create directory with appropriate permissions
+                    throw new Exception("Failed to create directory for image uploads.");
+                }
+            }
+
+            // Move the uploaded file to the upload directory
+            $destination = $uploadDir . $newFileName;
+            if (!move_uploaded_file($tmpName, $destination)) {
+                throw new Exception("Failed to upload the profile picture.");
+            }
+
+            // Save the file name to the database
+            $profile_pic_1 = $newFileName;
+
+            // Close the profile query statement
+            $profileStmt->close();
         }
 
-        // Update existing profile
-        $sql_update_profile = "UPDATE profiles 
-   SET prefer_age_from = ?, prefer_age_to = ?, country_id = ?, city_id = ?, state_id=?,
-       relationship_looking = ?, ethnicity = ?, beliefs = ?, drink_alcohol = ?, smoking = ?, 
-       children = ?, marital_status = ?, my_appearance = ?, body_type = ?, profile_picture = ? 
-   WHERE user_id = ?";
 
+        // Sanitize and filter input data
+        $maritalStatus = isset($_POST['maritalStatus']) ? htmlspecialchars($_POST['maritalStatus'], ENT_QUOTES, 'UTF-8') : null;
+        $yourCountry = isset($_POST['yourCountry']) ? intval($_POST['yourCountry']) : 0;
+        $yourState = isset($_POST['yourState']) ? intval($_POST['yourState']) : 0;
+        $yourCity = isset($_POST['yourCity']) ? intval($_POST['yourCity']) : 0;
+        $beliefs = isset($_POST['beliefs']) ? $_POST['beliefs'] : 16;
+        $caste = isset($_POST['caste']) ? intval($_POST['caste']) : null;
+        $houseStatus = isset($_POST['houseStatus']) ? intval($_POST['houseStatus']) : null;
+        $houseAddress = isset($_POST['houseAddress']) ? htmlspecialchars($_POST['houseAddress'], ENT_QUOTES, 'UTF-8') : null;
 
-        $stmt_update = $conn->prepare($sql_update_profile);
-        if (!$stmt_update) {
-            throw new Exception("Failed to prepare update statement: " . $conn->error);
-        }
+        // Validate ENUM values against allowed options
+        $validDrinkAlcohol = ['do drink', 'occasionally drink', 'do not drink', 'prefer not to say'];
+        $drinkAlcohol = (isset($_POST['drinkAlcohol']) && in_array($_POST['drinkAlcohol'], $validDrinkAlcohol))
+            ? $_POST['drinkAlcohol'] : 'prefer not to say';
 
-        // Bind parameters
-        $stmt_update->bind_param(
-            "iiiiissssssssssi",
-            $ageFrom,
-            $ageTo,
-            $country,
-            $city,
-            $state,
-            $relationshipLooking,
-            $ethnicity,
-            $beliefs,
-            $drinkAlcohol,
-            $smoking,
-            $children,
-            $maritalStatus,
-            $appearance,
-            $bodyType,
-            $photo,
-            $userId
+        $validSmoking = ['do smoke', 'occasionally smoke', 'do not smoke', 'prefer not to say'];
+        $smoking = (isset($_POST['smoking']) && in_array($_POST['smoking'], $validSmoking))
+            ? $_POST['smoking'] : 'prefer not to say';
+
+        $validChildren = ['yes', 'not sure', 'no', 'prefer not to say'];
+        $children = (isset($_POST['children']) && in_array($_POST['children'], $validChildren))
+            ? $_POST['children'] : 'prefer not to say';
+
+        $validAppearance = ['below average', 'average', 'attractive', 'very attractive', 'prefer not to say'];
+        $appearance = (isset($_POST['appearance']) && in_array($_POST['appearance'], $validAppearance))
+            ? $_POST['appearance'] : 'prefer not to say';
+
+        $validBodyType = ['petite', 'slim', 'average', 'few extra pounds', 'full figured', 'large and lovely', 'prefer not to say'];
+        $bodyType = (isset($_POST['bodyType']) && in_array($_POST['bodyType'], $validBodyType))
+            ? $_POST['bodyType'] : 'prefer not to say';
+
+        // Soulmate requirements
+        $prefered_age_from = isset($_POST['ageFrom']) ? intval($_POST['ageFrom']) : null;
+        $prefered_age_to = isset($_POST['ageTo']) ? intval($_POST['ageTo']) : null;
+        $preferred_Country = isset($_POST['preferredCountry']) ? intval($_POST['preferredCountry']) : 0;
+        $preferred_State = isset($_POST['preferredState']) ? intval($_POST['preferredState']) : 0;
+        $preferred_City = isset($_POST['preferredCity']) ? intval($_POST['preferredCity']) : 0;
+        $preferredQualification = isset($_POST['preferredQualification']) ? intval($_POST['preferredQualification']) : null;
+        $soulmateCaste = isset($_POST['soulmateCaste']) ? intval($_POST['soulmateCaste']) : null;
+        $soulmateMaritalStatus = isset($_POST['soulmateMaritalStatus']) ? htmlspecialchars($_POST['soulmateMaritalStatus'], ENT_QUOTES, 'UTF-8') : 'prefer not to say';
+
+        // Update Profile Data
+        $updateProfileQuery = "UPDATE profiles SET 
+            profile_picture = ?, marital_status = ?, country_id = ?, state_id = ?, city_id = ?, 
+            religion_id = ?, cast_id = ?, is_house_rented = ?, house_address = ?, 
+            my_appearance = ?, body_type = ?, drinkAlcohol = ?, smoking = ?, children = ?, updated_at = NOW()
+            WHERE user_id = ?";
+        $updateProfileStmt = $conn->prepare($updateProfileQuery);
+        $updateProfileStmt->bind_param(
+            "ssiiiiiissssssi",
+            $profile_pic_1,   // profile_picture (string)
+            $maritalStatus,   // marital_status (string)
+            $yourCountry,     // country_id (integer)
+            $yourState,       // state_id (integer)
+            $yourCity,        // city_id (integer)
+            $beliefs,         // religion_id (integer)
+            $caste,           // cast_id (integer)
+            $houseStatus,     // is_house_rented (integer)
+            $houseAddress,    // house_address (string)
+            $appearance,      // my_appearance (string)
+            $bodyType,        // body_type (string)
+            $drinkAlcohol,    // drink_alcohol (string)
+            $smoking,         // smoking (string)
+            $children,        // children (string)
+            $user_id          // user_id (integer)
         );
+        $updateProfileStmt->execute();
 
-        // Execute and handle errors
-        if (!$stmt_update->execute()) {
-            throw new Exception("Failed to update profile: " . $stmt_update->error);
+
+        if ($updateProfileStmt->affected_rows === 0) {
+            throw new Exception("Profile update failed or no changes made.");
         }
 
+        // Update Soulmate Requirements
+        $updateRequirementsQuery = "UPDATE requirements SET 
+            preferred_age_from = ?, preferred_age_to = ?, preferred_country_id = ?, 
+            preferred_state_id = ?, preferred_city_id = ?, preferred_education_level_id = ?, 
+            preferred_cast_id = ?, preferred_marital_status = ?, updated_at = NOW()
+            WHERE user_id = ?";
+        $updateRequirementsStmt = $conn->prepare($updateRequirementsQuery);
+        $updateRequirementsStmt->bind_param(
+            "iiiiiiisi",
+            $prefered_age_from,
+            $prefered_age_to,
+            $preferred_Country,
+            $preferred_State,
+            $preferred_City,
+            $preferredQualification,
+            $soulmateCaste,
+            $soulmateMaritalStatus,
+            $user_id
+        );
+        $updateRequirementsStmt->execute();
+        if ($updateRequirementsStmt->affected_rows === 0) {
+            throw new Exception("Failed to update soulmate requirements.");
+        }
 
-        // Commit the transaction after successful insert
+        // Commit Transaction
         $conn->commit();
 
-        $_SESSION['message'][] = array("type" => "success", "content" => "Profile saved successfully!");
-        header("Location: user_index.php?user_id=$userId"); // Redirect to the next page
-        exit();
+        $_SESSION['message'][] = array(
+            "type" => "success",
+            "content" => "<b>Success!</b> Profile and soulmate requirements updated successfully."
+        );
+
+        // echo "Profile and soulmate requirements updated successfully.";
     } catch (Exception $e) {
-        // Rollback if error occurs
+        // Rollback Transaction on Failure
+        if (isset($destination) && file_exists($destination)) {
+            unlink($destination); // Delete the uploaded file if transaction fails
+        }
         $conn->rollback();
-        $_SESSION['message'][] = array("type" => "error", "content" => "Error: " . $e->getMessage());
-        header("location: complete-profile.php");
-        exit();
+        echo "Error: " . $e->getMessage();
+    } finally {
+        // Close statements and connection
+        if (isset($updateProfileStmt)) $updateProfileStmt->close();
+        if (isset($updateRequirementsStmt)) $updateRequirementsStmt->close();
+        // $conn->close();
     }
 }
+
 ?>
 
 <head>
@@ -178,7 +272,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-    <title>Complete Profile - Matrimony</title>
+    <title>Complete Profile - Soulamte</title>
     <style>
         /* not show all steps in one step */
         .step {
@@ -193,7 +287,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
         /* steps of all buttons  */
         .step-buttons {
             margin-top: 50px;
-            margin-right: 490px;
+            margin-bottom: 100px;
             padding: 10px;
 
         }
@@ -298,7 +392,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
         .btn-pre {
             background-color: #3987cc;
             color: white;
-            margin-right: 70px;
+
             width: 100px;
             border: none;
             border-radius: 5px;
@@ -318,12 +412,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
 
         /* progress bar */
         .progress {
-            height: 20px;
+            height: 10px;
             margin-bottom: 20px;
             color: red;
 
-
-            /* Space between the progress bar and buttons */
         }
 
         /* progressbar color */
@@ -349,11 +441,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
 
             }
 
-            /* first step  button */
-            .stp-main {
-                margin-right: 80px;
-            }
-
             /* next button */
             .btn-nxt {
                 margin-right: 10px;
@@ -364,6 +451,72 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
             .btn-pre {
                 margin-right: 40px;
             }
+        }
+
+        .ajax-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            /* Transparent background */
+            z-index: 9999;
+            /* Ensure it stays on top */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            visibility: hidden;
+            /* Initially hidden */
+            opacity: 0;
+            transition: visibility 0.3s, opacity 0.3s;
+        }
+
+        .ajax-loader.show {
+            visibility: visible;
+            /* Show the loader */
+            opacity: 1;
+        }
+
+        /* Base styles for all custom alerts */
+        .custom-alert {
+            color: #fff;
+            /* White text for better contrast */
+            border: none;
+            /* Remove default border */
+            padding: 1rem;
+            font-size: 1rem;
+            border-radius: 0.5rem;
+            /* Rounded corners */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            /* Subtle shadow */
+        }
+
+        /* Gradient for success alert (pink to blue) */
+        .custom-alert.alert-success {
+            background: linear-gradient(90deg, #ff7eb3, #8ec5fc);
+            /* Pink to blue gradient */
+        }
+
+        /* Optionally customize other alert types */
+        .custom-alert.alert-danger {
+            background: linear-gradient(90deg, #ff7f7f, #ffafaf);
+            /* Red gradient */
+        }
+
+        .custom-alert.alert-warning {
+            background: linear-gradient(90deg, #fff4a3, #ffeaa1);
+            /* Yellow gradient */
+        }
+
+        .custom-alert.alert-info {
+            background: linear-gradient(90deg, #a3e8ff, #91cfff);
+            /* Light blue gradient */
+        }
+
+        /* Ensure text alignment for readability */
+        .custom-alert {
+            text-align: center;
         }
     </style>
 </head>
@@ -377,25 +530,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
     <div class="container mt-5">
         <?php displaySessionMessage(); ?>
         <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" class="complete-profile" enctype="multipart/form-data">
+
             <!-- Step 1:  Add Photo -->
             <div class="step active position-relative" id="step1">
                 <h1 class="mt-5 text-center step-num st-1">1</h1>
                 <h5 class="text-center  step-head">Add Your Best Photo</h5>
                 <div class="file-upload-wrapper">
-                    <!-- File Upload Input -->
+
                     <div class="file-upload-input mt-5">
                         <div class="file-upload-icon">📁</div>
                         <div class="file-upload-text">Drag and drop or click to upload</div>
                         <div class="file-upload-subtext">Supports JPEG, PNG, JPG</div>
-                        <input type="file" id="fileInput" name="uploadedFile" accept=".jpeg, .png, jpg" required>
+                        <input type="file" id="fileInput" name="profile_pic_1" accept=".jpeg, .png, jpg" required>
                     </div>
 
-                    <!-- Placeholder for showing uploaded file name -->
                     <div id="fileName" class="file-name"></div>
                 </div>
                 <p class="text-center mt-5">How to choose the right photo from the gallery</p>
                 <div class="row justify-content-center">
-                    <!-- Left-aligned list items -->
+
                     <div class="col-md-4">
                         <ul>
                             <li>Recent photo of just you</li>
@@ -403,7 +556,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
                             <li>Good quality, Bright and clear</li>
                         </ul>
                     </div>
-                    <!-- Right-aligned list items -->
+
                     <div class="col-md-4">
                         <ul>
                             <li>No celebrity/ fake uploads</li>
@@ -413,165 +566,526 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
                     </div>
                 </div>
 
-                <!-- Button positioned in the bottom-right corner -->
-                <div class="step-buttons stp-main position-absolute end-0 ">
+                <div class="step-buttons position-absolute translate-middle-x start-50">
                     <button type="button" class="btn btn-lg btn-nxt" id="nextToStep2">Next <i class="bi bi-arrow-right"></i> </button>
                 </div>
+
             </div>
 
-            <!-- Step 2: Age Group -->
-            <div class="step mt-5" id="step2">
+            <!-- Step 2: RelationShip -->
+            <div class="step" id="step2">
                 <h1 class="mt-5 text-center step-num st-1">2</h1>
-                <h3 class="text-center  ">What age group best fits your dating preferences?</h3>
-                <p class="text-center ">Refine your search to find individuals who are within the age range that
-                </p>
-                <p class="text-center ">you find most compatible.</p>
+                <h3 class="text-center">What is your marital status?</h3>
+                <p class="text-center">Your marital status helps refine your profile and match preferences. You can</p>
+                <p class="text-center">update this information at any time.</p>
                 <div class="container mt-5">
                     <div class="row justify-content-center">
                         <div class="col-sm-8 mb-3 mb-sm-0">
-                            <div class="card text-center border-0"> <!-- Added border-0 class -->
+                            <div class="card border-0"> <!-- Added border-0 class -->
                                 <div class="card-body card-body-st2 mb-5">
-                                    <!-- age 1 -->
-                                    <div class="row ">
-                                        <div class="col-6">
-                                            <div class="form-group mb-3">
-
-                                                <label for="ageFrom"></label>
-                                                <select class="form-select" name="ageFrom" id="option1" required>
-                                                    <option selected value="18">18</option>
-                                                    <option value="19">19</option>
-                                                    <option value="20">20</option>
-                                                    <option value="21">21</option>
-                                                    <option value="22">22</option>
-                                                    <option value="23">23</option>
-                                                    <option value="24">24</option>
-                                                    <option value="25">25</option>
-                                                    <option value="26">26</option>
-                                                    <option value="27">27</option>
-                                                    <option value="28">28</option>
-                                                    <option value="29">29</option>
-                                                    <option value="30">30</option>
-                                                    <option value="31">31</option>
-                                                    <option value="32">32</option>
-                                                    <option value="33">33</option>
-                                                    <option value="34">34</option>
-                                                    <option value="35">35</option>
-                                                    <option value="36">36</option>
-                                                    <option value="37">37</option>
-                                                    <option value="38">38</option>
-                                                    <option value="39">39</option>
-                                                    <option value="40">40</option>
-                                                    <option value="41">41</option>
-                                                    <option value="42">42</option>
-                                                    <option value="43">43</option>
-                                                    <option value="44">44</option>
-                                                    <option value="45">45</option>
-                                                    <option value="46">46</option>
-                                                    <option value="47">47</option>
-                                                    <option value="48">48</option>
-                                                    <option value="49">49</option>
-                                                    <option value="50">50</option>
-                                                    <option value="51">51</option>
-                                                    <option value="52">52</option>
-                                                    <option value="53">53</option>
-                                                    <option value="54">54</option>
-                                                    <option value="55">55</option>
-                                                    <option value="56">56</option>
-                                                    <option value="57">57</option>
-                                                    <option value="58">58</option>
-                                                    <option value="59">59</option>
-                                                    <option value="60">60</option>
-                                                    <option value="61">61</option>
-                                                    <option value="62">62</option>
-                                                    <option value="63">63</option>
-                                                    <option value="64">64</option>
-                                                    <option value="65">65</option>
-                                                    <option value="66">66</option>
-                                                    <option value="67">67</option>
-                                                    <option value="68">68</option>
-                                                    <option value="69">69</option>
-                                                    <option value="70">70 </option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <!-- age2 -->
-                                        <div class="col-6">
-                                            <div class="form-group mb-3">
-                                                <label for="ageTo"></label>
-                                                <select class="form-select" name="ageTo" id="option1" required>
-                                                    <option value="18" selected>18</option>
-                                                    <option value="19">19</option>
-                                                    <option value="20">20</option>
-                                                    <option value="21">21</option>
-                                                    <option value="22">22</option>
-                                                    <option value="23">23</option>
-                                                    <option value="24">24</option>
-                                                    <option value="25">25</option>
-                                                    <option value="26">26</option>
-                                                    <option value="27">27</option>
-                                                    <option value="28">28</option>
-                                                    <option value="29">29</option>
-                                                    <option value="30">30</option>
-                                                    <option value="31">31</option>
-                                                    <option value="32">32</option>
-                                                    <option value="33">33</option>
-                                                    <option value="34">34</option>
-                                                    <option value="35">35</option>
-                                                    <option value="36">36</option>
-                                                    <option value="37">37</option>
-                                                    <option value="38">38</option>
-                                                    <option value="39">39</option>
-                                                    <option value="40">40</option>
-                                                    <option value="41">41</option>
-                                                    <option value="42">42</option>
-                                                    <option value="43">43</option>
-                                                    <option value="44">44</option>
-                                                    <option value="45">45</option>
-                                                    <option value="46">46</option>
-                                                    <option value="47">47</option>
-                                                    <option value="48">48</option>
-                                                    <option value="49">49</option>
-                                                    <option value="50">50</option>
-                                                    <option value="51">51</option>
-                                                    <option value="52">52</option>
-                                                    <option value="53">53</option>
-                                                    <option value="54">54</option>
-                                                    <option value="55">55</option>
-                                                    <option value="56">56</option>
-                                                    <option value="57">57</option>
-                                                    <option value="58">58</option>
-                                                    <option value="59">59</option>
-                                                    <option value="60">60</option>
-                                                    <option value="61">61</option>
-                                                    <option value="62">62</option>
-                                                    <option value="63">63</option>
-                                                    <option value="64">64</option>
-                                                    <option value="65">65</option>
-                                                    <option value="66">66</option>
-                                                    <option value="67">67</option>
-                                                    <option value="68">68</option>
-                                                    <option value="69">69</option>
-                                                    <option value="70">70 </option>
-                                                </select>
-                                            </div>
-                                        </div>
-
+                                    <!-- Marital Status Options -->
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="maritalStatus" type="radio" id="unmarried" value="single">
+                                        <label class="form-check-label" for="single">Unmarried</label>
                                     </div>
-                                    <!--  -->
+                                    <hr>
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="maritalStatus" type="radio" id="married" value="married">
+                                        <label class="form-check-label" for="married">Married</label>
+                                    </div>
+                                    <hr>
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="maritalStatus" type="radio" id="widow" value="widowed">
+                                        <label class="form-check-label" for="widowed">Widow/Widower</label>
+                                    </div>
+                                    <hr>
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="maritalStatus" type="radio" id="divorced" value="divorced">
+                                        <label class="form-check-label" for="divorced">Divorced</label>
+                                    </div>
+                                    <hr>
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="maritalStatus" type="radio" id="saperated" value="separated">
+                                        <label class="form-check-label" for="separated">Saperated</label>
+                                    </div>
+                                    <hr>
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="maritalStatus" type="radio" id="other" value="other">
+                                        <label class="form-check-label" for="other">Other</label>
+                                    </div>
+                                    <hr>
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="maritalStatus" type="radio" id="other" value="'prefer not to say">
+                                        <label class="form-check-label" for="other">Other</label>
+                                    </div>
+
+
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="step-buttons  position-absolute end-0 ">
-                        <button type="button" class="btn btn-secondary btn-lg btn-pre " id="prevToStep1">Back</button>
+
+                    <div class="step-buttons position-absolute translate-middle-x start-50">
+                        <button type="button" class="btn btn-secondary btn-lg btn-pre me-3" id="prevToStep1">Back</button>
                         <button type="button" class="btn btn-lg btn-nxt" id="nextToStep3">Next <i class="bi bi-arrow-right"></i></button>
                     </div>
                 </div>
             </div>
 
-            <!-- Step 3: Location  -->
+            <!-- Step 3: Nationality  -->
             <div class="step" id="step3">
                 <h1 class="mt-5 text-center step-num st-1">3</h1>
+                <h3 class="text-center">What is your nationality?</h3>
+                <p class="text-center">Let us know your nationality to better understand your preferences.</p>
+
+                <div class="container mt-5">
+                    <div class="row justify-content-center">
+                        <div class="col-sm-8 mb-3 col-md-12 mb-sm-0">
+                            <div class="card text-center border-0"> <!-- Added border-0 class -->
+                                <div class="card-body card-body-st2 mb-5">
+                                    <!--  -->
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <div class="form-group mb-3">
+                                                <label for="country"></label>
+                                                <select class="form-select" name="yourCountry" id="yourCountry" required>
+                                                    <option selected>Select Country</option>
+                                                    <?php foreach ($countries as $country): ?>
+                                                        <option value="<?php echo $country['id']; ?>">
+                                                            <?php echo $country['country_name']; ?>
+                                                        </option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-group mb-3">
+                                                <label for="state"></label>
+                                                <select class="form-select" name="yourState" id="yourState" required>
+                                                    <option selected>Select State</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-group mb-3">
+                                                <label for="city"></label>
+                                                <select class="form-select" name="yourCity" id="yourCity" required>
+                                                    <option selected>Select City</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!--  -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-buttons position-absolute translate-middle-x start-50">
+                        <button type="button" class="btn btn-secondary btn-lg btn-pre me-3" id="prevToStep2">Back</button>
+                        <button type="button" class="btn btn-lg btn-nxt" id="nextToStep4">Next <i class="bi bi-arrow-right"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4: describes your beliefs-->
+            <div class="step" id="step4">
+                <h1 class="mt-5 text-center step-num st-1">4</h1>
+                <h3 class="text-center">Which of the following best describes your beliefs?</h3>
+                <div class="container mt-5">
+                    <div class="row justify-content-center">
+                        <div class="col-sm-8 mb-3 mb-sm-0">
+                            <div class="card  border-0"> <!-- Added border-0 class -->
+                                <div class="card-body card-body-st2 mb-5">
+                                    <?php if (!empty($religion)): ?>
+                                        <?php foreach ($religion as $rel): ?>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="beliefs" value="<?php echo htmlspecialchars($rel['id']); ?>" id="<?php echo htmlspecialchars($rel['id']); ?>">
+                                                <label class="form-check-label" for="religion">
+                                                    <?php echo htmlspecialchars($rel['religion_name']); ?>
+                                                </label>
+                                            </div>
+                                            <hr>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <p>No religions found.</p>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step-buttons position-absolute translate-middle-x start-50">
+                        <button type="button" class="btn btn-secondary btn-lg btn-pre me-3" id="prevToStep3">Back</button>
+                        <button type="button" class="btn btn-lg btn-nxt" id="nextToStep5">Next <i class="bi bi-arrow-right"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5: Your Caste -->
+            <div class="step" id="step5">
+                <h1 class="mt-5 text-center step-num st-1">5</h1>
+                <h3 class="text-center">What is your caste?</h3>
+                <p class="text-center">Let us know your caste to better understand your cultural background.</p>
+
+                <div class="container mt-5">
+                    <div class="row justify-content-center">
+                        <div class="col-sm-8 mb-3 col-md-6">
+                            <div class="card text-center border-0">
+                                <div class="card-body card-body-st2 mb-5">
+                                    <!-- Caste Dropdown -->
+                                    <div class="form-group mb-3">
+                                        <label for="caste" class="text-start d-block">Select your caste:</label>
+                                        <select class="form-select" name="caste" id="caste" required>
+                                            <option selected>Select Caste</option>
+                                            <?php foreach ($user_cast as $cast): ?>
+                                                <option value="<?php echo $cast['id']; ?>">
+                                                    <?php echo $cast['cast_name']; ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-buttons position-absolute translate-middle-x start-50">
+                        <button type="button" class="btn btn-secondary btn-lg btn-pre me-3" id="prevToStep4">Back</button>
+                        <button type="button" class="btn btn-lg btn-nxt" id="nextToStep6">Next <i class="bi bi-arrow-right"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 6: Houseing situation -->
+            <div class="step" id="step6">
+                <h1 class="mt-5 text-center step-num st-1">6</h1>
+                <h3 class="text-center">What is your housing situation?</h3>
+                <p class="text-center">Please let us know whether your house is rented or owned, and provide your address.</p>
+
+                <div class="container mt-5">
+                    <div class="row justify-content-center">
+                        <div class="col-sm-8 mb-3 col-md-6">
+                            <div class="card text-center border-0">
+                                <div class="card-body card-body-st2 mb-5">
+                                    <!-- House Ownership Question -->
+                                    <div class="form-group row mb-3 text-start">
+                                        <label for="houseStatus" class="d-block">Is your house rented or owned?</label>
+                                        <div class="mb-3 col-6 col-md-6">
+                                            <input class="form-check-input me-2" type="radio" name="houseStatus" id="owned" value="owned" required>
+                                            <label class="form-check-label" for="owned">Owned</label>
+                                        </div>
+                                        <div class="mb-3 col-6 col-md-6">
+                                            <input class="form-check-input me-2" type="radio" name="houseStatus" id="rented" value="rented" required>
+                                            <label class="form-check-label" for="rented">Rented</label>
+                                        </div>
+                                    </div>
+
+                                    <!-- House Address Field -->
+                                    <div class="form-group mb-3 text-start">
+                                        <label for="houseAddress" class="d-block">House Address:</label>
+                                        <textarea class="form-control" id="houseAddress" name="houseAddress" rows="3" placeholder="Enter your house address" required></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-buttons position-absolute translate-middle-x start-50">
+                        <button type="button" class="btn btn-secondary btn-lg btn-pre me-3" id="prevToStep5">Back</button>
+                        <button type="button" class="btn btn-lg btn-nxt" id="nextToStep7">Next <i class="bi bi-arrow-right"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 7: Alcohol Drinking of Soulmate -->
+            <div class="step" id="step7">
+                <h1 class="mt-5 text-center step-num st-1">7</h1>
+                <h3 class="text-center">How often do you drink alcohol?</h3>
+                <div class="container mt-5">
+                    <div class="row justify-content-center">
+                        <div class="col-sm-8 mb-3 mb-sm-0">
+                            <div class="card  border-0"> <!-- Added border-0 class -->
+                                <div class="card-body card-body-st2 mb-5">
+
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="drinkAlcohol" value="do drink" id="do drink">
+                                        <label class="form-check-label" for="do drink">
+                                            Do drink </label>
+                                    </div>
+                                    <hr>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="drinkAlcohol" value="occasionally drink" id="occasionally drink">
+                                        <label class="form-check-label" for="occasionally drink">
+                                            Occasionally drink </label>
+                                    </div>
+                                    <hr>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="drinkAlcohol" value="do not drink" id="do not drink">
+                                        <label class="form-check-label" for="do not drink">
+                                            Don't drink</label>
+                                    </div>
+                                    <hr>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="drinkAlcohol" value="prefer not to say" id="prefer not to say">
+                                        <label class="form-check-label" for="prefer not to say">
+                                            Prefre not to say </label>
+                                    </div>
+                                    <hr>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step-buttons position-absolute translate-middle-x start-50">
+                        <button type="button" class="btn btn-secondary btn-lg btn-pre me-3" id="prevToStep6">Back</button>
+                        <button type="button" class="btn btn-lg btn-nxt" id="nextToStep8">Next <i class="bi bi-arrow-right"></i></button>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Step 8: Smoking -->
+            <div class="step" id="step8">
+                <h1 class="mt-5 text-center step-num st-1">8</h1>
+                <h3 class="text-center">Do you smoke?</h3>
+                <div class="container mt-5">
+                    <div class="row justify-content-center">
+                        <div class="col-sm-8 mb-3 mb-sm-0">
+                            <div class="card  border-0"> <!-- Added border-0 class -->
+                                <div class="card-body card-body-st2 mb-5">
+
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="smoking" value="do smoke" id="do smoke">
+                                        <label class="form-check-label" for="do smoke">
+                                            Do smoke </label>
+                                    </div>
+                                    <hr>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="smoking" value="occasionally smoke" id="occasionally smoke">
+                                        <label class="form-check-label" for="occasionally smoke">
+                                            Occasionally smoke</label>
+                                    </div>
+                                    <hr>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="smoking" value="do not smoke" id="do not smoke">
+                                        <label class="form-check-label" for="do not smoke">
+                                            Don't smoke</label>
+                                    </div>
+                                    <hr>
+
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="smoking" value="prefer not to say" id="prefer not to say">
+                                        <label class="form-check-label" for="prefer not to say">
+                                            Prefre not to say </label>
+                                    </div>
+                                    <hr>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step-buttons position-absolute translate-middle-x start-50">
+                        <button type="button" class="btn btn-secondary btn-lg btn-pre me-3" id="prevToStep7">Back</button>
+                        <button type="button" class="btn btn-lg btn-nxt" id="nextToStep9">Next <i class="bi bi-arrow-right"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 9: childeren -->
+            <div class="step" id="step9">
+                <h1 class="mt-5 text-center step-num st-1">9</h1>
+                <h3 class="text-center  ">Do you want (more) children?</h3>
+                <div class="container mt-5">
+                    <div class="row justify-content-center">
+                        <div class="col-sm-8 mb-3 mb-sm-0">
+                            <div class="card  border-0"> <!-- Added border-0 class -->
+                                <div class="card-body card-body-st2 mb-5">
+                                    <!--  -->
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="children" value="yes" id="yes">
+                                        <label class="form-check-label" for="yes">
+                                            Yes </label>
+                                    </div>
+                                    <hr>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="children" value="not sure" id="not sure">
+                                        <label class="form-check-label" for="not sure">
+                                            Not Sure</label>
+                                    </div>
+                                    <hr>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="children" value="no" id="no">
+                                        <label class="form-check-label" for="no">
+                                            No</label>
+                                    </div>
+                                    <hr>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="children" value="prefer not to say" id="prefer not to say">
+                                        <label class="form-check-label" for="prefer not to say">
+                                            No</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step-buttons position-absolute translate-middle-x start-50">
+                        <button type="button" class="btn btn-secondary btn-lg btn-pre me-3" id="prevToStep8">Back</button>
+                        <button type="button" class="btn btn-lg btn-nxt" id="nextToStep10">Next <i class="bi bi-arrow-right"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 10: appearance  -->
+            <div class="step" id="step10">
+                <h1 class="mt-5 text-center step-num st-1">10</h1>
+                <h3 class="text-center">Continue the statement. I consider my appearance as:</h3>
+                <div class="container mt-5">
+                    <div class="row justify-content-center">
+                        <div class="col-sm-8 mb-3 mb-sm-0">
+                            <div class="card  border-0"> <!-- Added border-0 class -->
+                                <div class="card-body card-body-st2 mb-5">
+                                    <!--  -->
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="appearance" value="below average" id="below average">
+                                        <label class="form-check-label" for="below average">
+                                            Below average </label>
+                                    </div>
+                                    <hr>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="appearance" value="average" id="average">
+                                        <label class="form-check-label" for="average">
+                                            Average</label>
+                                    </div>
+                                    <hr>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="appearance" value="attractive" id="attractive">
+                                        <label class="form-check-label" for="attractive">
+                                            Attractive</label>
+                                    </div>
+                                    <hr>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="appearance" value="very attractive" id="very attractive">
+                                        <label class="form-check-label" for="very attractive">
+                                            Very attractive</label>
+                                    </div>
+                                    <hr>
+                                    <!--  -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step-buttons position-absolute translate-middle-x start-50">
+                        <button type="button" class="btn btn-secondary btn-lg btn-pre me-3" id="prevToStep9">Back</button>
+                        <button type="button" class="btn btn-lg btn-nxt" id="nextToStep11">Next <i class="bi bi-arrow-right"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 11: body type -->
+            <div class="step" id="step11">
+                <h1 class="mt-5 text-center step-num st-1">11</h1>
+                <h3 class="text-center">How would you describe your body type?</h3>
+                <div class="container mt-5">
+                    <div class="row justify-content-center">
+                        <div class="col-sm-8 mb-3 mb-sm-0">
+                            <div class="card  border-0"> <!-- Added border-0 class -->
+                                <div class="card-body card-body-st2 mb-5">
+                                    <!--  -->
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="bodyType" value="petite" id="petite">
+                                        <label class="form-check-label" for="petite">
+                                            Petite </label>
+                                    </div>
+                                    <hr>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="bodyType" id="slim" value="slim">
+                                        <label class="form-check-label" for="slim">
+                                            Slim</label>
+                                    </div>
+                                    <hr>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="bodyType" id="average" value="average">
+                                        <label class="form-check-label" for="average">
+                                            Average</label>
+                                    </div>
+                                    <hr>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="bodyType" id="few extra pounds" value="few extra pounds">
+                                        <label class="form-check-label" for="few extra pounds">
+                                            Few Extra Pounds </label>
+                                    </div>
+                                    <hr>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="bodyType" id="full figured" value="full figured">
+                                        <label class="form-check-label" for="full figured">
+                                            Full Figured </label>
+                                    </div>
+                                    <hr>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="bodyType" id="large and lovely" value="large and lovely">
+                                        <label class="form-check-label" for="large and lovely">
+                                            Large and Lovely</label>
+                                    </div>
+                                    <hr>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step-buttons position-absolute translate-middle-x start-50">
+                        <button type="button" class="btn btn-secondary btn-lg btn-pre me-3" id="prevToStep10">Back</button>
+                        <button type="button" class="btn btn-lg btn-nxt" id="nextToStep12">Next <i class="bi bi-arrow-right"></i></button>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Partner Requirements -->
+            <!-- Step 12: Age Group -->
+            <div class="step mt-5" id="step12">
+                <h1 class="mt-5 text-center step-num st-1">12</h1>
+                <h3 class="text-center">What age group best fits your soulmate preferences?</h3>
+                <p class="text-center">Refine your search to find individuals who are within the age range that</p>
+                <p class="text-center">you find most compatible.</p>
+                <div class="container mt-5">
+                    <div class="row justify-content-center">
+                        <div class="col-sm-8 mb-3 mb-sm-0">
+                            <div class="card text-center border-0">
+                                <div class="card-body card-body-st2 mb-5">
+
+                                    <div class="row">
+
+                                        <div class="col-6">
+                                            <div class="form-group mb-3">
+                                                <label for="ageFrom" class="text-start d-block">From:</label>
+                                                <select class="form-select" name="ageFrom" id="ageFrom" required>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-6">
+                                            <div class="form-group mb-3">
+                                                <label for="ageTo" class="text-start d-block">To:</label>
+                                                <select class="form-select" name="ageTo" id="ageTo" required>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step-buttons position-absolute translate-middle-x start-50">
+                        <button type="button" class="btn btn-secondary btn-lg btn-pre me-3" id="prevToStep11">Back</button>
+                        <button type="button" class="btn btn-lg btn-nxt" id="nextToStep13">Next <i class="bi bi-arrow-right"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 13: Partner Location  -->
+            <div class="step" id="step13">
+                <h1 class="mt-5 text-center step-num st-1">13</h1>
                 <h3 class="text-center  ">What is the preferred location for finding your partner?</h3>
                 <p class="text-center ">Are you seeking someone nearby for convenience or open to exploring
                 </p>
@@ -583,569 +1097,213 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
                             <div class="card text-center border-0"> <!-- Added border-0 class -->
                                 <div class="card-body card-body-st2 mb-5">
                                     <!--  -->
-                                    <div class="row ">
+                                    <div class="row">
                                         <div class="col-4">
                                             <div class="form-group mb-3">
-
                                                 <label for="country"></label>
-                                                <select class="form-select" name="country" id="option1" required>
+                                                <select class="form-select" name="preferredCountry" id="preferredCountry" required>
                                                     <option selected>Select Country</option>
                                                     <?php foreach ($countries as $country): ?>
-                                                        <option value="<?php echo $country['id']; ?>"><?php echo $country['country_name']; ?></option>
-                                                        <?php endforeach; ?>>
+                                                        <option value="<?php echo $country['id']; ?>">
+                                                            <?php echo $country['country_name']; ?>
+                                                        </option>
+                                                    <?php endforeach; ?>
                                                 </select>
                                             </div>
                                         </div>
-
                                         <div class="col-4">
                                             <div class="form-group mb-3">
-
-                                                <label for="country"></label>
-                                                <select class="form-select" name="state" id="option1" required>
+                                                <label for="state"></label>
+                                                <select class="form-select" name="preferredState" id="preferredState" required>
                                                     <option selected>Select State</option>
-                                                    <?php foreach ($states as $state): ?>
-                                                        <option value="<?php echo $state['id']; ?>"><?php echo $state['state_name']; ?></option>
-                                                        <?php endforeach; ?>>
                                                 </select>
                                             </div>
                                         </div>
-
-
                                         <div class="col-4">
                                             <div class="form-group mb-3">
-
-                                                <label for="city"> </label>
-                                                <select class="form-select" name="city" id="city" required>
-                                                    <option selected>Select city</option>
-                                                    <?php foreach ($cities as $city): ?>
-                                                        <option value="<?php echo $city['id']; ?>"><?php echo $city['city_name']; ?></option>
-                                                        <?php endforeach; ?>>
+                                                <label for="city"></label>
+                                                <select class="form-select" name="preferredCity" id="preferredCity" required>
+                                                    <option selected>Select City</option>
                                                 </select>
                                             </div>
                                         </div>
-
-
                                     </div>
+
                                     <!--  -->
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="step-buttons  position-absolute end-0 ">
-                        <button type="button" class="btn btn-secondary btn-lg btn-pre " id="prevToStep2">Back</button>
-                        <button type="button" class="btn btn-lg btn-nxt " id="nextToStep4">Next <i class="bi bi-arrow-right"></i></button>
+                    <div class="step-buttons position-absolute translate-middle-x start-50">
+                        <button type="button" class="btn btn-secondary btn-lg btn-pre me-4" id="prevToStep12">Back</button>
+                        <button type="button" class="btn btn-lg btn-nxt" id="nextToStep14">Next <i class="bi bi-arrow-right"></i></button>
                     </div>
                 </div>
             </div>
-            <!-- Step 4: RelationShip -->
-            <div class="step" id="step4">
-                <h1 class="mt-5 text-center step-num st-1">4</h1>
-                <h3 class="text-center  ">What type of relationship are you looking for?</h3>
-                <p class="text-center ">Honesty helps everyone and you find what they are looking for. You can
-                </p>
-                <p class="text-center ">change your preferences at any time.</p>
+
+            <!-- Step 14: Minimum Qualifications of Soulamte -->
+            <div class="step" id="step14">
+                <h1 class="mt-5 text-center step-num st-1">14</h1>
+                <h3 class="text-center">What should be the minimum qualification of your soulmate?</h3>
+                <p class="text-center">Select the minimum educational qualification that you expect for your partner.</p>
+
+                <div class="container mt-5">
+                    <div class="row justify-content-center">
+                        <div class="col-sm-8 mb-3 col-md-6">
+                            <div class="card text-center border-0">
+                                <div class="card-body card-body-st2 mb-5">
+                                    <!-- Minimum Qualification Dropdown -->
+                                    <div class="form-group mb-3">
+                                        <label for="preferredQualification" class="text-start d-block">Select Qualification:</label>
+                                        <select class="form-select" name="preferredQualification" id="preferredQualification" required>
+                                            <option selected>Select Qualification</option>
+                                            <?php foreach ($qualifications as $qualification): ?>
+                                                <option value="<?php echo $qualification['id']; ?>">
+                                                    <?php echo $qualification['qualification_name']; ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-buttons position-absolute translate-middle-x start-50">
+                        <button type="button" class="btn btn-secondary btn-lg btn-pre me-3" id="prevToStep13">Back</button>
+                        <button type="button" class="btn btn-lg btn-nxt" id="nextToStep15">Next <i class="bi bi-arrow-right"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 15: Caste of Soulmate -->
+            <div class="step" id="step15">
+                <h1 class="mt-5 text-center step-num st-1">15</h1>
+                <h3 class="text-center">What should be the caste of your soulmate?</h3>
+                <p class="text-center">Let us know your preference regarding caste for your soulmate.</p>
+
+                <div class="container mt-5">
+                    <div class="row justify-content-center">
+                        <div class="col-sm-8 mb-3 col-md-6">
+                            <div class="card text-center border-0">
+                                <div class="card-body card-body-st2 mb-5">
+                                    <!-- Caste Options -->
+                                    <div class="form-group">
+                                        <label for="soulmateCaste" class="text-start d-block">Select Caste:</label>
+                                        <select class="form-select" name="soulmateCaste" id="soulmateCaste" required>
+                                            <option selected disabled>Select Caste</option>
+                                            <?php foreach ($user_cast as $cast): ?>
+                                                <option value="<?php echo $cast['id']; ?>">
+                                                    <?php echo $cast['cast_name']; ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                            <option value="0">Any Caste</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-buttons position-absolute translate-middle-x start-50">
+                        <button type="button" class="btn btn-secondary btn-lg btn-pre me-3" id="prevToStep14">Back</button>
+                        <button type="button" class="btn btn-lg btn-nxt" id="nextToStep16">Next <i class="bi bi-arrow-right"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 16: Matrital stutus of soulmate -->
+            <div class="step" id="step16">
+                <h1 class="mt-5 text-center step-num st-1">16</h1>
+                <h3 class="text-center">What should be the marital status of your soulmate?</h3>
+                <p class="text-center">Please choose the marital status you prefer for your soulmate.</p>
+
                 <div class="container mt-5">
                     <div class="row justify-content-center">
                         <div class="col-sm-8 mb-3 mb-sm-0">
-                            <div class="card  border-0"> <!-- Added border-0 class -->
+                            <div class="card border-0"> <!-- Added border-0 class -->
                                 <div class="card-body card-body-st2 mb-5">
-                                    <!--  -->
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" name="relationshipLooking" type="checkbox" id="marriage" value="marriage">
-                                        <label class="form-check-label" for="marriage">Marriage</label>
+                                    <!-- Marital Status Options -->
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="soulmateMaritalStatus" type="radio" id="unmarried" value="single">
+                                        <label class="form-check-label" for="single">Unmarried</label>
                                     </div>
                                     <hr>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="checkbox" name="relationshipLooking" id="friendship" value="friendship">
-                                        <label class="form-check-label" for="friendship">Friendship</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="soulmateMaritalStatus" type="radio" id="married" value="married">
+                                        <label class="form-check-label" for="married">Married</label>
                                     </div>
                                     <hr>
-                                    <!--  -->
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="soulmateMaritalStatus" type="radio" id="widow" value="widowed">
+                                        <label class="form-check-label" for="widowed">Widow/Widower</label>
+                                    </div>
+                                    <hr>
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="soulmateMaritalStatus" type="radio" id="divorced" value="divorced">
+                                        <label class="form-check-label" for="divorced">Divorced</label>
+                                    </div>
+                                    <hr>
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="soulmateMaritalStatus" type="radio" id="saperated" value="separated">
+                                        <label class="form-check-label" for="separated">Saperated</label>
+                                    </div>
+                                    <hr>
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="soulmateMaritalStatus" type="radio" id="other" value="other">
+                                        <label class="form-check-label" for="other">Other</label>
+                                    </div>
+                                    <hr>
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="soulmateMaritalStatus" type="radio" id="other" value="'prefer not to say">
+                                        <label class="form-check-label" for="other">Other</label>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="step-buttons  position-absolute end-0 ">
-                        <button type="button" class="btn btn-secondary btn-lg btn-pre " id="prevToStep3">Back</button>
-                        <button type="button" class="btn btn-lg btn-nxt " id="nextToStep5">Next <i class="bi bi-arrow-right"></i></button>
-                    </div>
-                </div>
-            </div>
-    </div> <!--main container end-->
-    <!-- Step 5: Ethnicity -->
-    <div class="step" id="step5">
-        <h1 class="mt-5 text-center step-num st-1">5</h1>
-        <h3 class="text-center  ">Your ethnicity is mostly ...</h3>
-        <div class="container mt-5">
-            <div class="row justify-content-center">
-                <div class="col-sm-8 mb-3 mb-sm-0">
-                    <div class="card  border-0"> <!-- Added border-0 class -->
-                        <div class="card-body card-body-st2 mb-5">
-                            <!--  -->
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="ethnicity" id="arab(middle eastern)" value="arab(middle eastern)">
-                                <label class="form-check-label" for="arab(middle eastern)">
-                                    Arab (Middle Eastern) </label>
-                            </div>
-                            <hr>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="ethnicity" id="asian" value="asian">
-                                <label class="form-check-label" for="asian">
-                                    Asian </label>
-                            </div>
-                            <hr>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="ethnicity" id="black" value="black">
-                                <label class="form-check-label" for="black">
-                                    Black</label>
-                            </div>
-                            <hr>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="ethnicity" value="caucasian(white)" id="caucasian(white)">
-                                <label class="form-check-label" for="caucasian(white)">
-                                    Caucasian (White) </label>
-                            </div>
-                            <hr>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="ethnicity" value="hispanic/latino" id="hispanic/latino">
-                                <label class="form-check-label" for="hispanic/latino">
-                                    Hispanic/Latino </label>
-                            </div>
-                            <hr>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="ethnicity" value="indain" id="indain">
-                                <label class="form-check-label" for="indain">
-                                    Indain </label>
-                            </div>
-                            <hr>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="ethnicity" value="pacific islander" id="pacific islander">
-                                <label class="form-check-label" for="pacific islander">
-                                    Pacific Islander </label>
-                            </div>
-                            <hr>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="ethnicity" value="other" id="other">
-                                <label class="form-check-label" for="other">
-                                    Other </label>
-                            </div>
-                            <hr>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="ethnicity" value="mixed" id="mixed">
-                                <label class="form-check-label" for="mixed">
-                                    Mixed </label>
-                            </div>
-                            <hr>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="ethnicity" value="prefer not to say" id="prefer not to say">
-                                <label class="form-check-label" for="prefer not to say">
-                                    Prefre not to say </label>
-                            </div>
-                            <hr>
+                    <div class="step-buttons position-absolute translate-middle-x start-50">
+                        <button type="button" class="btn btn-secondary btn-lg btn-pre me-3" id="prevToStep15">Back</button>
+                        <button type="submit" class="btn btn-lg btn-nxt" name="saveProfileData" id="saveProfileData" value="saveProfileData">Submit</button>
 
-                            <!--  -->
-                        </div>
+                        <!-- <button type="button" class="btn btn-lg btn-nxt" id="nextToStep17">Next <i class="bi bi-arrow-right"></i></button> -->
                     </div>
                 </div>
             </div>
 
-
-
-            <div class="step-buttons  position-absolute end-0 ">
-                <button type="button" class="btn btn-secondary btn-lg btn-pre " id="prevToStep4">Back</button>
-                <button type="button" class="btn btn-lg btn-nxt " id="nextToStep6">Next <i class="bi bi-arrow-right"></i></button>
-            </div>
-        </div>
-    </div>
-    </div>
-    <!-- Step 6:  describes your beliefs-->
-    <div class="step" id="step6">
-        <h1 class="mt-5 text-center step-num st-1">6</h1>
-        <h3 class="text-center  ">Which of the following best describes your beliefs?</h3>
-        <div class="container mt-5">
-            <div class="row justify-content-center">
-                <div class="col-sm-8 mb-3 mb-sm-0">
-                    <div class="card  border-0"> <!-- Added border-0 class -->
-                        <div class="card-body card-body-st2 mb-5">
-                            <!--  -->
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="beliefs" value="islam-sunni" id="islam-sunni">
-                                <label class="form-check-label" for="islam-sunni">
-                                    Islam - Sunni
-                                </label>
-                            </div>
-                            <hr>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="beliefs" value="islam-shiite" id="islam-shiite">
-                                <label class="form-check-label" for="islam-shiite">
-                                    Islam - Shiite
-                                </label>
-                            </div>
-                            <hr>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="beliefs" value="islam-sufism" id="islam-sufism">
-                                <label class="form-check-label" for="islam-sufism">
-                                    Islam - Sufism
-                                </label>
-                            </div>
-                            <hr>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="beliefs" value="islam-ahmadiyya" id="islam-ahmadiyya">
-                                <label class="form-check-label" for="islam-ahmadiyya">
-                                    Islam - Ahmadiyya
-                                </label>
-                            </div>
-                            <hr>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="beliefs" value="islam-other" id="islam-other">
-                                <label class="form-check-label" for="islam-other">
-                                    Islam - Other
-                                </label>
-                            </div>
-                            <hr>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="beliefs" value="willing to revert" id="willing-to-revert">
-                                <label class="form-check-label" for="willing-to-revert">
-                                    Willing to revert
-                                </label>
-                            </div>
-                            <hr>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="beliefs" value="other" id="other">
-                                <label class="form-check-label" for="other">
-                                    Other
-                                </label>
-                            </div>
-                            <hr>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="beliefs" value="prefer not to say" id="prefer-not-to-say">
-                                <label class="form-check-label" for="prefer-not-to-say">
-                                    Prefer not to say
-                                </label>
-                            </div>
-
-                            <hr>
-
-                            <!--  -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-
-            <div class="step-buttons  position-absolute end-0 ">
-                <button type="button" class="btn btn-secondary btn-lg btn-pre " id="prevToStep5">Back</button>
-                <button type="button" class="btn btn-lg btn-nxt " id="nextToStep7">Next <i class="bi bi-arrow-right"></i></button>
-            </div>
-        </div>
-    </div>
-    </div>
-    <!-- Step 7: Alcohol -->
-    <div class="step" id="step7">
-        <h1 class="mt-5 text-center step-num st-1">7</h1>
-        <h3 class="text-center  ">How often do you drink alcohol?</h3>
-        <div class="container mt-5">
-            <div class="row justify-content-center">
-                <div class="col-sm-8 mb-3 mb-sm-0">
-                    <div class="card  border-0"> <!-- Added border-0 class -->
-                        <div class="card-body card-body-st2 mb-5">
-                            <!--  -->
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="drinkAlcohol" value="do drink" id="do drink">
-                                <label class="form-check-label" for="do drink">
-                                    Do drink </label>
-                            </div>
-                            <hr>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="drinkAlcohol" value="occasionally drink" id="occasionally drink">
-                                <label class="form-check-label" for="occasionally drink">
-                                    Occasionally drink </label>
-                            </div>
-                            <hr>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="drinkAlcohol" value="do not drink" id="do not drink">
-                                <label class="form-check-label" for="do not drink">
-                                    Don't drink</label>
-                            </div>
-                            <hr>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="drinkAlcohol" value="prefer not to say" id="prefer not to say">
-                                <label class="form-check-label" for="prefer not to say">
-                                    Prefre not to say </label>
-                            </div>
-                            <hr>
-                            <!--  -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="step-buttons  position-absolute end-0 ">
-                <button type="button" class="btn btn-secondary btn-lg btn-pre " id="prevToStep6">Back</button>
-                <button type="button" class="btn btn-lg btn-nxt " id="nextToStep8">Next <i class="bi bi-arrow-right"></i></button>
-            </div>
-        </div>
-    </div>
-    </div>
-    <!-- Step 8: Smoking -->
-    <div class="step" id="step8">
-        <h1 class="mt-5 text-center step-num st-1">8</h1>
-        <h3 class="text-center  ">Do you smoke?</h3>
-        <div class="container mt-5">
-            <div class="row justify-content-center">
-                <div class="col-sm-8 mb-3 mb-sm-0">
-                    <div class="card  border-0"> <!-- Added border-0 class -->
-                        <div class="card-body card-body-st2 mb-5">
-                            <!--  -->
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="smoking" value="do smoke" id="do smoke">
-                                <label class="form-check-label" for="do smoke">
-                                    Do smoke </label>
-                            </div>
-                            <hr>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="smoking" value="occasionally smoke" id="occasionally smoke">
-                                <label class="form-check-label" for="occasionally smoke">
-                                    Occasionally smoke</label>
-                            </div>
-                            <hr>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="smoking" value="do not smoke" id="do not smoke">
-                                <label class="form-check-label" for="do not smoke">
-                                    Don't smoke</label>
-                            </div>
-                            <hr>
-
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="smoking" value="prefer not to say" id="prefer not to say">
-                                <label class="form-check-label" for="prefer not to say">
-                                    Prefre not to say </label>
-                            </div>
-                            <hr>
-                            <!--  -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="step-buttons  position-absolute end-0 ">
-                <button type="button" class="btn btn-secondary btn-lg btn-pre " id="prevToStep7">Back</button>
-                <button type="button" class="btn btn-lg btn-nxt " id="nextToStep9">Next <i class="bi bi-arrow-right"></i></button>
-            </div>
-        </div>
-    </div>
-    </div>
-    <!-- Step 9: childeren -->
-    <div class="step" id="step9">
-        <h1 class="mt-5 text-center step-num st-1">9</h1>
-        <h3 class="text-center  ">Do you want (more) children?</h3>
-        <div class="container mt-5">
-            <div class="row justify-content-center">
-                <div class="col-sm-8 mb-3 mb-sm-0">
-                    <div class="card  border-0"> <!-- Added border-0 class -->
-                        <div class="card-body card-body-st2 mb-5">
-                            <!--  -->
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="children" value="yes" id="yes">
-                                <label class="form-check-label" for="yes">
-                                    Yes </label>
-                            </div>
-                            <hr>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="children" value="not sure" id="not sure">
-                                <label class="form-check-label" for="not sure">
-                                    Not Sure</label>
-                            </div>
-                            <hr>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="children" value="no" id="no">
-                                <label class="form-check-label" for="no">
-                                    No</label>
-                            </div>
-                            <hr>
-                            <!--  -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="step-buttons  position-absolute end-0 ">
-                <button type="button" class="btn btn-secondary btn-lg btn-pre " id="prevToStep8">Back</button>
-                <button type="button" class="btn btn-lg btn-nxt " id="nextToStep10">Next <i class="bi bi-arrow-right"></i></button>
-            </div>
-        </div>
-    </div>
-    </div>
-    <!-- Step 10: marital status -->
-    <div class="step" id="step10">
-        <h1 class="mt-5 text-center step-num st-1">10</h1>
-        <h3 class="text-center">What's your current marital status?</h3>
-        <div class="container mt-5">
-            <div class="row justify-content-center">
-                <div class="col-sm-8 mb-3 mb-sm-0">
-                    <div class="card  border-0"> <!-- Added border-0 class -->
-                        <div class="card-body card-body-st2 mb-5">
-                            <!--  -->
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="maritalStatus" value="single" id="single">
-                                <label class="form-check-label" for="single">
-                                    Single </label>
-                            </div>
-                            <hr>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="maritalStatus" value="separated" id="separated">
-                                <label class="form-check-label" for="separated">
-                                    Separated</label>
-                            </div>
-                            <hr>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="maritalStatus" value="widowed" id="widowed">
-                                <label class="form-check-label" for="widowed">
-                                    Widowed</label>
-                            </div>
-                            <hr>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="maritalStatus" value="divorced" id="divorced">
-                                <label class="form-check-label" for="divorced">
-                                    Divorced</label>
-                            </div>
-                            <hr>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="maritalStatus" value="other" id="other">
-                                <label class="form-check-label" for="other">
-                                    Other</label>
-                            </div>
-                            <hr>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="maritalStatus" value="prefer not to say" id="prefer not to say">
-                                <label class="form-check-label" for="prefer not to say">
-                                    Prefer not to say</label>
-                            </div>
-                            <hr>
-                            <!--  -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="step-buttons  position-absolute end-0 ">
-                <button type="button" class="btn btn-secondary btn-lg btn-pre " id="prevToStep9">Back</button>
-                <button type="button" class="btn btn-lg btn-nxt " id="nextToStep11">Next <i class="bi bi-arrow-right"></i></button>
-            </div>
-        </div>
-    </div>
-    </div>
-    <!-- Step 11: appearance  -->
-    <div class="step" id="step11">
-        <h1 class="mt-5 text-center step-num st-1">11</h1>
-        <h3 class="text-center">Continue the statement. I consider my appearance as:</h3>
-        <div class="container mt-5">
-            <div class="row justify-content-center">
-                <div class="col-sm-8 mb-3 mb-sm-0">
-                    <div class="card  border-0"> <!-- Added border-0 class -->
-                        <div class="card-body card-body-st2 mb-5">
-                            <!--  -->
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="appearance" value="below average" id="below average">
-                                <label class="form-check-label" for="below average">
-                                    Below average </label>
-                            </div>
-                            <hr>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="appearance" value="average" id="average">
-                                <label class="form-check-label" for="average">
-                                    Average</label>
-                            </div>
-                            <hr>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="appearance" value="attractive" id="attractive">
-                                <label class="form-check-label" for="attractive">
-                                    Attractive</label>
-                            </div>
-                            <hr>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="appearance" value="very attractive" id="very attractive">
-                                <label class="form-check-label" for="very attractive">
-                                    Very attractive</label>
-                            </div>
-                            <hr>
-                            <!--  -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="step-buttons  position-absolute end-0 ">
-                <button type="button" class="btn btn-secondary btn-lg btn-pre " id="prevToStep10">Back</button>
-                <button type="button" class="btn btn-lg btn-nxt " id="nextToStep12">Next <i class="bi bi-arrow-right"></i></button>
-            </div>
-        </div>
-    </div>
-    </div>
-    <!-- Step 12: body type -->
-    <div class="step" id="step12">
-        <h1 class="mt-5 text-center step-num st-1">12</h1>
-        <h3 class="text-center">How would you describe your body type?</h3>
-        <div class="container mt-5">
-            <div class="row justify-content-center">
-                <div class="col-sm-8 mb-3 mb-sm-0">
-                    <div class="card  border-0"> <!-- Added border-0 class -->
-                        <div class="card-body card-body-st2 mb-5">
-                            <!--  -->
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="bodyType" value="petite" id="petite">
-                                <label class="form-check-label" for="petite">
-                                    Petite </label>
-                            </div>
-                            <hr>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="bodyType" id="slim" value="slim">
-                                <label class="form-check-label" for="slim">
-                                    Slim</label>
-                            </div>
-                            <hr>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="bodyType" id="average" value="average">
-                                <label class="form-check-label" for="average">
-                                    Average</label>
-                            </div>
-                            <hr>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="bodyType" id="few extra pounds" value="few extra pounds">
-                                <label class="form-check-label" for="few extra pounds">
-                                    Few Extra Pounds </label>
-                            </div>
-                            <hr>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="bodyType" id="full figured" value="full figured">
-                                <label class="form-check-label" for="full figured">
-                                    Full Figured </label>
-                            </div>
-                            <hr>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="bodyType" id="large and lovely" value="large and lovely">
-                                <label class="form-check-label" for="large and lovely">
-                                    Large and Lovely</label>
-                            </div>
-                            <hr>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="step-buttons  position-absolute end-0 ">
-                <button type="button" class="btn btn-secondary btn-lg btn-pre " id="prevToStep11">Back</button>
-                <button type="submit" class="btn btn-lg btn-nxt " name="submit" id="submit" value="submit">Submit </button>
-            </div>
-        </div>
-    </div>
-    </div>
-    </form>
+        </form>
     </div>
     <div class="progress">
         <div id="progressBar" class="progress-bar progress-bar-striped prg" role="progressbar" style="width: 10%;" aria-valuenow="33" aria-valuemin="0" aria-valuemax="100"></div>
     </div>
+    <div id="ajaxLoader" class="ajax-loader">
+        <div class="spinner-border text-light" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Show loader before AJAX call
+            $(document).ajaxStart(function() {
+                $('#ajaxLoader').addClass('show');
+            });
+
+            // Hide loader after AJAX call completes
+            $(document).ajaxStop(function() {
+                $('#ajaxLoader').removeClass('show');
+            });
+        });
+    </script>
     <script>
         // Multi-step form logic
         let currentStep = 1; // Track the current step
-        const totalSteps = 12; // Total number of steps
+        const totalSteps = 16; // Total number of steps
 
         function updateProgressBar() {
             const progressBar = document.getElementById('progressBar');
@@ -1154,13 +1312,163 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
             progressBar.setAttribute('aria-valuenow', percentage);
         }
 
+        // Function to validate the current step and show error message if needed
+        function validateStep(stepNumber) {
+            let isValid = true; // Flag to indicate if the step is valid
+
+            // Implement validation logic for each step
+            switch (stepNumber) {
+                case 1: // Step 1: Photo upload
+                    if (!document.getElementById('fileInput').value) {
+                        alert('Please upload a photo.');
+                        isValid = false;
+                    }
+                    break;
+                case 2:
+                    const maritalStatusRadios = Array.from(document.querySelectorAll('input[name="maritalStatus"]'));
+                    if (!maritalStatusRadios.some(radio => radio.checked)) {
+                        alert('Please select your marital status.');
+                        isValid = false;
+                    }
+                    break;
+                case 3: // Step 3: Nationality
+                    if (document.getElementById('yourCountry').value === 'Select yourCountry') {
+                        alert('Please select your yourCountry.');
+                        isValid = false;
+                    }
+                    break;
+                case 4:
+                    const beliefsRadios = Array.from(document.querySelectorAll('input[name="beliefs"]'));
+                    if (!beliefsRadios.some(radio => radio.checked)) {
+                        alert('Please select your religion or belief.');
+                        isValid = false;
+                    }
+                    break;
+                case 5: // Step 3: Nationality
+                    if (document.getElementById('caste').value === 'Select Caste') {
+                        alert('Please select your caste.');
+                        isValid = false;
+                    }
+
+                    break;
+                case 6:
+                    const houseAddress = document.getElementById('houseAddress');
+                    const houseStatus = Array.from(document.querySelectorAll('input[name="houseStatus"]'));
+
+                    if (!houseStatus.some(radio => radio.checked)) {
+                        alert('Please select your house status.');
+                        isValid = false;
+                    }
+
+                    if (!houseAddress) {
+                        alert('House address element not found.');
+                        isValid = false;
+                    } else if (!houseAddress.value) {
+                        alert('Please enter your house address.');
+                        houseAddress.focus();
+                        isValid = false;
+                    }
+                    break;
+                case 7:
+                    const drinkAlcohol = Array.from(document.querySelectorAll('input[name="drinkAlcohol"]'));
+                    if (!drinkAlcohol.some(radio => radio.checked)) {
+                        alert('Please answer the given question.');
+                        isValid = false;
+                    }
+                    break;
+                case 8:
+                    const smoking = Array.from(document.querySelectorAll('input[name="smoking"]'));
+                    if (!smoking.some(radio => radio.checked)) {
+                        alert('Please answer the given question.');
+                        isValid = false;
+                    }
+                    break;
+                case 9:
+                    const children = Array.from(document.querySelectorAll('input[name="children"]'));
+                    if (!children.some(radio => radio.checked)) {
+                        alert('Please answer the given question.');
+                        isValid = false;
+                    }
+                    break;
+                case 10:
+                    const appearance = Array.from(document.querySelectorAll('input[name="appearance"]'));
+                    if (!appearance.some(radio => radio.checked)) {
+                        alert('Please answer the given question.');
+                        isValid = false;
+                    }
+                    break;
+                case 11:
+                    const bodyType = Array.from(document.querySelectorAll('input[name="bodyType"]'));
+                    if (!bodyType.some(radio => radio.checked)) {
+                        alert('Please answer the given question.');
+                        isValid = false;
+                    }
+                    break;
+                case 12:
+                    if (document.getElementById('ageFrom').value === 'Select ageFrom') {
+                        alert('Please select your ageFrom.');
+                        isValid = false;
+                    }
+                    if (document.getElementById('ageTo').value === 'Select ageTo') {
+                        alert('Please select your ageTo.');
+                        isValid = false;
+                    }
+                    break;
+                case 13:
+                    const countrySelect = document.getElementById('preferredCountry');
+                    const stateSelect = document.getElementById('preferredState');
+                    const citySelect = document.getElementById('preferredCity');
+
+                    if (countrySelect && stateSelect && citySelect) {
+                        if (countrySelect.selectedIndex === 0) {
+                            alert('Please select the country of your soulmate.');
+                            isValid = false;
+                        } else if (stateSelect.selectedIndex === 0) {
+                            alert('Please select the state of your soulmate.');
+                            isValid = false;
+                        } else if (citySelect.selectedIndex === 0) {
+                            alert('Please select the city of your soulmate.');
+                            isValid = false;
+                        }
+                    } else {
+                        alert('Error: Elements not found.');
+                        isValid = false;
+                    }
+                    break;
+                case 14:
+                    if (document.getElementById('preferredQualification').value === 'Select Qualification') {
+                        alert('Please select the qualification of your soulmate.');
+                        isValid = false;
+                    }
+                    break;
+                case 15:
+                    if (document.getElementById('soulmateCaste').value === 'Select Caste') {
+                        alert('Please select the soulmateCaste of your soulmate.');
+                        isValid = false;
+                    }
+                    break;
+                    // ... similar checks for other steps
+                case 16: // Step 16: Soulmate Marital Status
+                    const soulmateMaritalStatusRadios = document.querySelectorAll('input[name="soulmateMaritalStatus"]');
+                    if (!soulmateMaritalStatusRadios.some(radio => radio.checked)) {
+                        alert('Please select your desired soulmate\'s marital status.');
+                        isValid = false;
+                    }
+                    break;
+            }
+
+            return isValid;
+        }
+
         // Event listener for next buttons
         for (let step = 1; step < totalSteps; step++) {
             document.getElementById(`nextToStep${step + 1}`).addEventListener('click', function() {
-                document.getElementById(`step${step}`).classList.remove('active');
-                document.getElementById(`step${step + 1}`).classList.add('active');
-                currentStep++;
-                updateProgressBar();
+                if (validateStep(step)) {
+                    document.getElementById(`step${step}`).classList.remove('active');
+                    document.getElementById(`step${step + 1}`).classList.add('active');
+                    currentStep++;
+                    updateProgressBar();
+                }
             });
         }
 
@@ -1189,6 +1497,174 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
             }
         });
     </script>
+
+    <script>
+        // Get the 'ageFrom' and 'ageTo' select elements
+        const ageFromSelect = document.getElementById("ageFrom");
+        const ageToSelect = document.getElementById("ageTo");
+
+        // Function to populate the select elements with age options
+        function populateAgeOptions(selectElement, startAge, endAge) {
+            for (let age = startAge; age <= endAge; age++) {
+                const option = document.createElement("option");
+                option.value = age;
+                option.textContent = age;
+                selectElement.appendChild(option);
+            }
+        }
+
+        // Populate both selects with ages 18 to 75
+        populateAgeOptions(ageFromSelect, 18, 75);
+        populateAgeOptions(ageToSelect, 18, 75);
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            // When a country is selected
+            $('#preferredCountry').on('change', function() {
+                let countryId = $(this).val();
+
+                if (countryId) {
+                    setTimeout(() => {
+                        $.ajax({
+                            url: 'ajaxGetStates.php',
+                            type: 'POST',
+                            data: {
+                                country_id: countryId
+                            },
+                            dataType: 'json',
+                            success: function(states) {
+                                let stateDropdown = $('#preferredState');
+                                stateDropdown.empty();
+                                stateDropdown.append('<option selected>Select State</option>');
+
+                                $.each(states, function(key, state) {
+                                    stateDropdown.append(
+                                        '<option value="' + state.id + '">' + state.state_name + '</option>'
+                                    );
+                                });
+
+                                $('#preferredCity').empty(); // Clear cities when country changes
+                                $('#preferredCity').append('<option selected>Select City</option>');
+                            },
+                        });
+                    }, 1000);
+                } else {
+                    $('#preferredState').empty();
+                    $('#preferredState').append('<option selected>Select State</option>');
+
+                    $('#preferredCity').empty();
+                    $('#preferredCity').append('<option selected>Select City</option>');
+                }
+            });
+
+            // When a state is selected
+            $('#preferredState').on('change', function() {
+                let stateId = $(this).val();
+
+                if (stateId) {
+                    setTimeout(() => {
+                        $.ajax({
+                            url: 'ajaxGetCities.php',
+                            type: 'POST',
+                            data: {
+                                state_id: stateId
+                            },
+                            dataType: 'json',
+                            success: function(cities) {
+                                let cityDropdown = $('#preferredCity');
+                                cityDropdown.empty();
+                                cityDropdown.append('<option selected>Select City</option>');
+
+                                $.each(cities, function(key, city) {
+                                    cityDropdown.append(
+                                        '<option value="' + city.id + '">' + city.city_name + '</option>'
+                                    );
+                                });
+                            },
+                        });
+                    }, 1000);
+                } else {
+                    $('#preferredCity').empty();
+                    $('#preferredCity').append('<option selected>Select City</option>');
+                }
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            // When a country is selected
+            $('#yourCountry').on('change', function() {
+                let countryId = $(this).val();
+
+                if (countryId) {
+                    setTimeout(() => {
+                        $.ajax({
+                            url: 'ajaxGetStates.php',
+                            type: 'POST',
+                            data: {
+                                country_id: countryId
+                            },
+                            dataType: 'json',
+                            success: function(states) {
+                                let stateDropdown = $('#yourState');
+                                stateDropdown.empty();
+                                stateDropdown.append('<option selected>Select State</option>');
+
+                                $.each(states, function(key, state) {
+                                    stateDropdown.append(
+                                        '<option value="' + state.id + '">' + state.state_name + '</option>'
+                                    );
+                                });
+
+                                $('#yourCity').empty(); // Clear cities when country changes
+                                $('#yourCity').append('<option selected>Select City</option>');
+                            },
+                        });
+                    }, 1000);
+                } else {
+                    $('#yourState').empty();
+                    $('#yourState').append('<option selected>Select State</option>');
+
+                    $('#yourCity').empty();
+                    $('#yourCity').append('<option selected>Select City</option>');
+                }
+            });
+
+            // When a state is selected
+            $('#yourState').on('change', function() {
+                let stateId = $(this).val();
+
+                if (stateId) {
+                    setTimeout(() => {
+                        $.ajax({
+                            url: 'ajaxGetCities.php',
+                            type: 'POST',
+                            data: {
+                                state_id: stateId
+                            },
+                            dataType: 'json',
+                            success: function(cities) {
+                                let cityDropdown = $('#yourCity');
+                                cityDropdown.empty();
+                                cityDropdown.append('<option selected>Select City</option>');
+
+                                $.each(cities, function(key, city) {
+                                    cityDropdown.append(
+                                        '<option value="' + city.id + '">' + city.city_name + '</option>'
+                                    );
+                                });
+                            },
+                        });
+                    }, 1000);
+                } else {
+                    $('#yourCity').empty();
+                    $('#yourCity').append('<option selected>Select City</option>');
+                }
+            });
+        });
+    </script>
+
 </body>
 
 </html>

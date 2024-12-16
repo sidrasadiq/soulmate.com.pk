@@ -147,6 +147,47 @@
                 padding: 20px;
             }
         }
+
+        /* Base styles for all custom alerts */
+        .custom-alert {
+            color: #fff;
+            /* White text for better contrast */
+            border: none;
+            /* Remove default border */
+            padding: 1rem;
+            font-size: 1rem;
+            border-radius: 0.5rem;
+            /* Rounded corners */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            /* Subtle shadow */
+        }
+
+        /* Gradient for success alert (pink to blue) */
+        .custom-alert.alert-success {
+            background: linear-gradient(90deg, #ff7eb3, #8ec5fc);
+            /* Pink to blue gradient */
+        }
+
+        /* Optionally customize other alert types */
+        .custom-alert.alert-danger {
+            background: linear-gradient(90deg, #ff7f7f, #ffafaf);
+            /* Red gradient */
+        }
+
+        .custom-alert.alert-warning {
+            background: linear-gradient(90deg, #fff4a3, #ffeaa1);
+            /* Yellow gradient */
+        }
+
+        .custom-alert.alert-info {
+            background: linear-gradient(90deg, #a3e8ff, #91cfff);
+            /* Light blue gradient */
+        }
+
+        /* Ensure text alignment for readability */
+        .custom-alert {
+            text-align: center;
+        }
     </style>
 </head>
 
