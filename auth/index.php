@@ -428,8 +428,9 @@ if (isset($_SESSION['user_id'])) {
             AND profiles.is_profile_complete = 1
             AND profiles.gender = ?
             AND profiles.marital_status = ?
-
-            AND profiles.qualification_id = ?
+            AND profiles.date_of_birth BETWEEN DATE_SUB(CURDATE(), INTERVAL ? YEAR)
+                                            AND DATE_SUB(CURDATE(), INTERVAL ? YEAR)
+            AND (profiles.qualification_id = ? OR profiles.qualification_id IS NULL)
             AND profiles.country_id = ?
             AND profiles.state_id = ?
             AND profiles.city_id = ?
@@ -437,18 +438,19 @@ if (isset($_SESSION['user_id'])) {
 
     $stmt = $conn->prepare($query);
     $stmt->bind_param(
-        "issiiiii",
+        "issiiiiiii",
         $userId,
         $oppositeGender,
         $requirements['preferred_marital_status'],
-        // $requirements['preferred_age_to'],
-        // $requirements['preferred_age_from'],
+        $requirements['preferred_age_from'], // Youngest age first
+        $requirements['preferred_age_to'],   // Oldest age second
         $requirements['preferred_education_level_id'],
         $requirements['preferred_country_id'],
         $requirements['preferred_state_id'],
         $requirements['preferred_city_id'],
         $requirements['preferred_cast_id']
     );
+
 
     $stmt->execute();
     $result = $stmt->get_result();
@@ -493,6 +495,7 @@ if (isset($_SESSION['user_id'])) {
             <?php endif; ?>
         </div>
     </div>
+
 
     <?php include 'userlayout/footer.php'; ?>
 
