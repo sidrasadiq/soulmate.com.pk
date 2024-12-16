@@ -242,10 +242,6 @@ function sendVerificationEmail($userEmail, $username)
     }
 }
 
-
-/**
- * Function to send a welcome email using PHPMailer
- */
 function sendWelcomeEmail($to, $username)
 {
     global $mailHost, $mailUsername, $mailPassword, $mailPort; // Email configuration from `config.php`
