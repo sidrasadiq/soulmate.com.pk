@@ -196,7 +196,7 @@ CREATE TABLE profiles (
     annual_income INT,
     family_background TEXT,
     living_arrangements ENUM('with_family', 'alone'),
-    language VARCHAR(50),
+    mother_tongue VARCHAR(50),
     is_employed BOOLEAN DEFAULT FALSE,
     employment_place VARCHAR(100),
     designation VARCHAR(100),

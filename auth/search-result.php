@@ -1,7 +1,5 @@
  <?php
 
-    session_start();
-
     // Include required files
     include 'layouts/config.php';
     include 'layouts/session.php';  // Ensure session_start() is called here

@@ -1,6 +1,6 @@
 <?php
 ob_start();
-// Start a session if not already started
+// Start session if not already started
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -8,14 +8,4 @@ if (session_status() === PHP_SESSION_NONE) {
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     header("location: login.php");
     exit;
-}
-
-// Function to display session messages using Toastr
-function showSessionMessage()
-{
-    if (isset($_SESSION['message'])) {
-        $message = $_SESSION['message'];
-        echo "<script>toastr.{$message['type']}('{$message['content']}');</script>";
-        unset($_SESSION['message']); // Clear the message after showing it
-    }
 }
