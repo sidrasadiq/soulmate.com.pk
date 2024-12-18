@@ -486,7 +486,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['btnUpdatePersonalInfo'
                                                 <?php foreach ($countries as $country): ?>
                                                     <option value="<?php echo $country['id']; ?>"
                                                         <?php echo $profile['country_id'] == $country['id'] ? 'selected' : ''; ?>>
-                                                        <?php echo htmlspecialchars($country['country_name']); ?>
+                                                        <?php echo $country['country_name']; ?>
                                                     </option>
                                                 <?php endforeach; ?>
                                             </select>
@@ -500,7 +500,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['btnUpdatePersonalInfo'
                                                 <?php foreach ($states as $state): ?>
                                                     <option value="<?php echo $state['id']; ?>"
                                                         <?php echo $profile['state_id'] == $state['id'] ? 'selected' : ''; ?>>
-                                                        <?php echo htmlspecialchars($state['state_name']); ?>
+                                                        <?php echo $state['state_name']; ?>
                                                     </option>
                                                 <?php endforeach; ?>
                                             </select>
@@ -514,7 +514,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['btnUpdatePersonalInfo'
                                                 <?php foreach ($cities as $city): ?>
                                                     <option value="<?php echo $city['id']; ?>"
                                                         <?php echo $profile['city_id'] == $city['id'] ? 'selected' : ''; ?>>
-                                                        <?php echo htmlspecialchars($city['city_name']); ?>
+                                                        <?php echo $city['city_name']; ?>
                                                     </option>
                                                 <?php endforeach; ?>
                                             </select>
@@ -528,7 +528,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['btnUpdatePersonalInfo'
                                                 <?php foreach ($religions as $religion): ?>
                                                     <option value="<?php echo $religion['id']; ?>"
                                                         <?php echo $profile['religion_id'] == $religion['id'] ? 'selected' : ''; ?>>
-                                                        <?php echo htmlspecialchars($religion['religion_name']); ?>
+                                                        <?php echo $religion['religion_name']; ?>
                                                     </option>
                                                 <?php endforeach; ?>
                                             </select>
@@ -575,13 +575,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['btnUpdatePersonalInfo'
                                         <div class="col-lg-4 mb-3">
                                             <label for="height" class="form-label text-muted">Height (cm):</label>
                                             <input type="number" id="height" name="height" class="form-control"
-                                                value="<?php echo htmlspecialchars($profile['height']); ?>" step="0.01" min="0" required>
+                                                value="<?php echo $profile['height']; ?>" step="0.01" min="0" required>
                                         </div>
 
                                         <div class="col-lg-4 mb-3">
                                             <label for="weight" class="form-label text-muted">Weight (kg):</label>
                                             <input type="number" id="weight" name="weight" class="form-control"
-                                                value="<?php echo htmlspecialchars($profile['weight']); ?>">
+                                                value="<?php echo $profile['weight']; ?>">
                                         </div>
 
                                         <!-- Display 'drinkAlcohol' dropdown -->
