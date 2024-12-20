@@ -243,13 +243,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['btnUpdatePersonalInfo'
             throw new Exception("Invalid CNIC format.");
         }
 
-        if (!preg_match("/^[0-9]{10}$/", $contact_number)) {
-            throw new Exception("Invalid contact number format.");
-        }
+        // if (!preg_match("/^[0-9]{10}$/", $contact_number)) {
+        //     throw new Exception("Invalid contact number format.");
+        // }
 
-        if (!empty($whatsapp_contact) && !preg_match("/^[0-9]{10}$/", $whatsapp_contact)) {
-            throw new Exception("Invalid WhatsApp contact format.");
-        }
+        // if (!empty($whatsapp_contact) && !preg_match("/^[0-9]{10}$/", $whatsapp_contact)) {
+        //     throw new Exception("Invalid WhatsApp contact format.");
+        // }
 
         // Prepare the SQL query to update the profile
         $query =
@@ -268,7 +268,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['btnUpdatePersonalInfo'
 
         // Bind the parameters to the prepared statement
         $stmt->bind_param(
-            "sssssssssiiiiissdddssi",
+            "sssssssssiiiisssddssi",
             $first_name,
             $last_name,
             $gender,
@@ -297,45 +297,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['btnUpdatePersonalInfo'
             error_log("SQL Error: " . $stmt->error);
             throw new Exception("Error executing query.");
         }
-        error_log("Query: $query\nVariables: " . print_r([
-            $first_name,
-            $last_name,
-            $gender,
-            $date_of_birth,
-            $mother_tongue,
-            $bio,
-            $contact_number,
-            $whatsapp_contact,
-            $cnic,
-            $country_id,
-            $state_id,
-            $city_id,
-            $religion_id,
-            $marital_status,
-            $my_appearance,
-            $body_type,
-            $height,
-            $weight,
-            $drinkAlcohol,
-            $smoking,
-            $user_id
-        ], true));
 
         // Commit the transaction
         $conn->commit();
 
         // Set success message
-        $_SESSION['message'] = ['type' => 'success', 'content' => 'Profile updated successfully.'];
+        $_SESSION['message'][] = ["type" => "success", "content" => "Profile Updated Successfully!"];
 
         // Redirect to the profile page
-        header("Location: index.php");
+        header("Location: editProfile.php");
         exit();
     } catch (Exception $e) {
         // Rollback the transaction if something goes wrong
         $conn->rollback();
 
         // Set error message in session
-        $_SESSION['message'] = ['type' => 'error', 'content' => 'Error updating profile: ' . $e->getMessage()];
+        $_SESSION['message'][] = ["type" => "danger", "content" => "Error updating profile: "  . $e->getMessage()];
 
         // Redirect back to the form or show an error
         header("Location: editprofile.php");
@@ -382,8 +359,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['btnUpdatePersonalInfo'
             color: #4CA8F0 !important;
         }
 
-        .container {
-            margin-left: 13px;
+        /* Base styles for all custom alerts */
+        .custom-alert {
+            color: #fff;
+            /* White text for better contrast */
+            border: none;
+            /* Remove default border */
+            padding: 1rem;
+            font-size: 1rem;
+            border-radius: 0.5rem;
+            /* Rounded corners */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            /* Subtle shadow */
+        }
+
+        /* Gradient for success alert (pink to blue) */
+        .custom-alert.alert-success {
+            background: linear-gradient(90deg, #ff7eb3, #8ec5fc);
+            /* Pink to blue gradient */
+        }
+
+        /* Optionally customize other alert types */
+        .custom-alert.alert-danger {
+            background: linear-gradient(90deg, #ff7f7f, #ffafaf);
+            /* Red gradient */
+        }
+
+        .custom-alert.alert-warning {
+            background: linear-gradient(90deg, #fff4a3, #ffeaa1);
+            /* Yellow gradient */
+        }
+
+        .custom-alert.alert-info {
+            background: linear-gradient(90deg, #a3e8ff, #91cfff);
+            /* Light blue gradient */
+        }
+
+        /* Ensure text alignment for readability */
+        .custom-alert {
+            text-align: center;
         }
     </style>
 
