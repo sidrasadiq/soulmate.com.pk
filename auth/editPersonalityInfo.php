@@ -101,7 +101,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
         if ($stmt = $conn->prepare($sql)) {
             // Bind the parameters
             $stmt->bind_param(
-                "ssssssssssssi",
+                "sssssssssssiii",
                 $favorite_movie,
                 $favorite_book,
                 $sort_of_music,
