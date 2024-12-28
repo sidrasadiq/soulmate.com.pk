@@ -296,49 +296,52 @@
       <div class="row">
         <div class="col-sm-12 col-md-6 col-lg-6 col-12 mt-5" data-aos="fade-left" data-aos-offset="200">
           <div class="card p-4 shadow-sm">
-            <form>
+            <form action="process_contact_form.php" method="POST" id="contactForm">
               <div class="row g-3">
                 <div class="col-md-6">
                   <label for="firstName" class="form-label">First Name <span class="text-danger">*</span></label>
-                  <input type="text" class="form-control" id="firstName" placeholder="First Name" required>
+                  <input type="text" class="form-control" id="firstName" name="first_name" placeholder="First Name" required>
                 </div>
 
                 <div class="col-md-6">
                   <label for="lastName" class="form-label">Last Name <span class="text-danger">*</span></label>
-                  <input type="text" class="form-control" id="lastName" placeholder="Last Name" required>
+                  <input type="text" class="form-control" id="lastName" name="last_name" placeholder="Last Name" required>
                 </div>
 
-                <div class="">
+                <div class="col-md-12">
                   <label for="city" class="form-label">City Name</label>
-                  <input type="text" class="form-control" id="city" placeholder="city">
+                  <input type="text" class="form-control" id="city" name="city" placeholder="City">
                 </div>
-
               </div>
+
               <div class="row g-3 my-3">
                 <div class="col-md-6">
                   <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
-                  <input type="email" class="form-control" id="email" placeholder="Email" required>
+                  <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
                 </div>
                 <div class="col-md-6">
                   <label for="telephone" class="form-label">Telephone</label>
-                  <input type="tel" class="form-control" id="telephone" placeholder="Telephone">
+                  <input type="tel" class="form-control" id="telephone" name="telephone" placeholder="Telephone">
                 </div>
               </div>
+
               <div class="mb-3">
                 <label for="subject" class="form-label">Subject <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="subject" placeholder="Subject" required>
+                <input type="text" class="form-control" id="subject" name="subject" placeholder="Subject" required>
               </div>
+
               <div class="mb-3">
                 <label for="message" class="form-label">Message <span class="text-danger">*</span></label>
-                <textarea class="form-control" id="message" rows="4" placeholder="Message" required></textarea>
+                <textarea class="form-control" id="message" name="message" rows="4" placeholder="Message" required></textarea>
               </div>
+
               <div class="text-muted mb-3">
                 <small>Note: Fields marked with <span class="text-danger">*</span> are required.</small>
               </div>
-              <a href="auth/signup.php">
-                <button type="submit" class="btn btn-primary w-100">Send Message</button>
-              </a>
+
+              <button type="submit" class="btn btn-primary w-100">Send Message</button>
             </form>
+
           </div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-6 col-12 m-auto text-end" data-aos="fade-right" data-aos-offset="200">
