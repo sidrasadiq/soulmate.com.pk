@@ -593,8 +593,6 @@ try {
             <?php endif; ?>
         </div>
     </div>
-
-
     <?php include 'userlayout/footer.php'; ?>
 
     <script>
