@@ -232,6 +232,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['btnUpdatePersonalInfo'
         $weight = (float) $_POST['weight'];
         $drinkAlcohol = $_POST['drinkAlcohol'];
         $smoking = $_POST['smoking'];
+        $is_complete = 1;
 
         // Validate required fields
         if (empty($first_name) || empty($last_name) || empty($gender) || empty($date_of_birth) || empty($contact_number)) {
@@ -257,7 +258,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['btnUpdatePersonalInfo'
                 first_name = ?, last_name = ?, gender = ?, date_of_birth = ?, mother_tongue = ?, bio = ?, 
                 contact_number = ?, whatsapp_contact = ?, cnic = ?, country_id = ?, state_id = ?, city_id = ?, 
                 religion_id = ?, marital_status = ?, my_appearance = ?, body_type = ?, height = ?, weight = ?, 
-                drinkAlcohol = ?, smoking = ?
+                drinkAlcohol = ?, smoking = ?, is_complete
             WHERE user_id = ?;
         ";
 
@@ -268,7 +269,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['btnUpdatePersonalInfo'
 
         // Bind the parameters to the prepared statement
         $stmt->bind_param(
-            "sssssssssiiiisssddssi",
+            "sssssssssiiiisssddssi1",
             $first_name,
             $last_name,
             $gender,
@@ -289,6 +290,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['btnUpdatePersonalInfo'
             $weight,
             $drinkAlcohol,
             $smoking,
+            $is_complete,
             $user_id
         );
 
