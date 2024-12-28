@@ -27,7 +27,7 @@
                     <ul class="dropdown-menu dropdown-menu-end text-small">
                         <li><a class="dropdown-item" href="showprofile.php?id=<?php echo urlencode($_SESSION['user_id']); ?>">View Profile</a></li>
                         <li><a class="dropdown-item" href="uploadImages.php">Profile Pictures</a></li>
-                        <li><a class="dropdown-item" href="editprofile.php">Edit Profile</a></li>
+                        <li><a class="dropdown-item" href="editProfile.php">Edit Profile</a></li>
                         <li><a class="dropdown-item" href="editPersonalityInfo.php">Personality Questions</a></li>
                         <li>
                             <hr class="dropdown-divider">
