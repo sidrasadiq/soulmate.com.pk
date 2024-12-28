@@ -35,7 +35,7 @@
             <select name="religion" class="form-select" aria-label="Religion">
                 <option selected disabled>Religion</option>
                 <?php foreach ($religions as $religion): ?>
-                    <option value="<?php echo htmlspecialchars($religion['religion_name']); ?>">
+                    <option value="<?php echo htmlspecialchars($religion['id']); ?>">
                         <?php echo htmlspecialchars($religion['religion_name']); ?>
                     </option>
                 <?php endforeach; ?>
@@ -56,7 +56,7 @@
             <select name="country" class="form-select" aria-label="Country">
                 <option selected disabled>Select Country</option>
                 <?php foreach ($countries as $country): ?>
-                    <option value="<?php echo htmlspecialchars($country['country_code']); ?>">
+                    <option value="<?php echo htmlspecialchars($country['id']); ?>">
                         <?php echo htmlspecialchars($country['country_name']); ?>
                     </option>
                 <?php endforeach; ?>
