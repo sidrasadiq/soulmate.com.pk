@@ -298,7 +298,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["saveProfileData"])) {
 
         $_SESSION['message'][] = array(
             "type" => "success",
-            "content" => "<b>Success!</b> Profile and soulmate requirements updated successfully."
+            "content" => "Profile and soulmate requirements updated successfully."
         );
         // Redirect to index.php after success
         header("Location: index.php");
