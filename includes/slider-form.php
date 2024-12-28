@@ -66,9 +66,7 @@
 
         <!-- Submit Button -->
         <div class="col-12 col-md-2 d-flex align-items-end mt-3">
-            <a href="<?php echo homeURL(); ?>/auth/login.php" class="btn btn-primary w-100">
-                Let's Begin
-            </a>
+            <button type="submit" class="btn btn-primary w-100" name="btnSearchProfile"> Let's Begin</button>
         </div>
     </div>
 </form>
