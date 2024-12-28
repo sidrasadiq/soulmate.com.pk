@@ -233,7 +233,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['btnSearchProfile'])) 
                     <div class="col-md-3 mb-4">
                         <a href="<?= $profileLink ?>" target="_blank" class="text-decoration-none">
                             <div class="card h-100 shadow-sm border-0">
-                                <img src="<?php htmlspecialchars($profile['profile_picture_1'];) ?>" class="card-img-top" alt="Profile Picture" style="object-fit: cover; height: 300px; width: 100%;">
+                                <img src="<?= htmlspecialchars($profile['profile_picture_1']); ?>" class="card-img-top" alt="Profile Picture" style="object-fit: cover; height: 300px; width: 100%;">
                                 <div class="card-body">
                                     <h4 class="card-title"><?= htmlspecialchars($profile['username']) ?></h4>
                                     <p class="card-text text-muted">
