@@ -8,7 +8,7 @@ $user_id = $_SESSION['user_id'];
 
 try {
     // Check if required profile fields are empty
-    $profileCheckQuery = "SELECT profile_picture, marital_status, country_id, state_id, city_id, 
+    $profileCheckQuery = "SELECT profile_picture_1, marital_status, country_id, state_id, city_id, 
                                  religion_id, cast_id, is_house_rented, house_address, my_appearance
                           FROM profiles WHERE user_id = ?";
     $stmtProfileCheck = $conn->prepare($profileCheckQuery);
@@ -24,7 +24,7 @@ try {
 
     // Check if any required field is empty
     $requiredFields = [
-        $profile['profile_picture'],
+        $profile['profile_picture_1'],
         $profile['marital_status'],
         $profile['country_id'],
         $profile['state_id'],
@@ -238,14 +238,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["saveProfileData"])) {
 
         // Update Profile Data
         $updateProfileQuery = "UPDATE profiles SET 
-            profile_picture = ?, marital_status = ?, country_id = ?, state_id = ?, city_id = ?, 
+            profile_picture_1 = ?, marital_status = ?, country_id = ?, state_id = ?, city_id = ?, 
             religion_id = ?, cast_id = ?, is_house_rented = ?, house_address = ?, 
             my_appearance = ?, body_type = ?, drinkAlcohol = ?, smoking = ?, children = ?, updated_at = NOW()
             WHERE user_id = ?";
         $updateProfileStmt = $conn->prepare($updateProfileQuery);
         $updateProfileStmt->bind_param(
             "ssiiiiiissssssi",
-            $profile_pic_1,   // profile_picture (string)
+            $profile_pic_1,   // profile_picture_1 (string)
             $maritalStatus,   // marital_status (string)
             $yourCountry,     // country_id (integer)
             $yourState,       // state_id (integer)

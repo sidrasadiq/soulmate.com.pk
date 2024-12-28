@@ -324,7 +324,133 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['btnUpdatePersonalInfo'
         }
     }
 }
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnUpdateEduInfo'])) {
+    try {
+        // Retrieve form data
+        $qualification_id = $_POST['qualification_id'] ?? null;
+        $last_university_name = $_POST['last_university_name'] ?? null;
+        $user_id = $_SESSION['user_id'] ?? null; // Assuming user ID is stored in the session
+
+        // Input validation
+        if (empty($qualification_id) || empty($last_university_name) || empty($user_id)) {
+            $_SESSION['message'][] = ["type" => "error", "content" => "All fields are required."];
+            header("Location: " . htmlspecialchars($_SERVER["PHP_SELF"]));
+            exit;
+        }
+
+        // Begin transaction
+        $conn->begin_transaction();
+
+        // Update query with prepared statement
+        $query = "UPDATE profiles SET qualification_id = ?, last_university_name = ? WHERE user_id = ?";
+        $stmt = $conn->prepare($query);
+
+        if (!$stmt) {
+            throw new Exception("Failed to prepare statement: " . $conn->error);
+        }
+
+        // Bind parameters to prevent SQL injection
+        $stmt->bind_param("isi", $qualification_id, $last_university_name, $user_id);
+
+        // Execute the query
+        if (!$stmt->execute()) {
+            throw new Exception("Failed to update profile: " . $stmt->error);
+        }
+
+        // Commit transaction
+        $conn->commit();
+
+        // Close the statement
+        $stmt->close();
+
+        // Success message
+        $_SESSION['message'][] = ["type" => "success", "content" => "Educational Record updated successfully!"];
+    } catch (Exception $e) {
+
+        $conn->rollback();
+
+        // Error message
+        $_SESSION['message'][] = ["type" => "error", "content" => "An error occurred: " . $e->getMessage()];
+    }
+
+    // Redirect to the same page to display messages
+    header("Location: " . htmlspecialchars($_SERVER["PHP_SELF"]));
+    exit;
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnUpdateEmploymentInfo'])) {
+    try {
+        // Retrieve form data
+        $is_employed = $_POST['is_employed'] ?? null;
+        $employment_type = $_POST['employment_type'] ?? null;
+        $employment_address = $_POST['employment_address'] ?? null;
+        $designation = $_POST['designation'] ?? null;
+        $company_name = $_POST['company_name'] ?? null;
+        $salary = $_POST['salary'] ?? null;
+        $annual_income = $_POST['annual_income'] ?? null;
+        $user_id = $_SESSION['user_id'] ?? null; // Assuming user ID is stored in the session
+
+        // Input validation
+        if (empty($is_employed) || empty($user_id)) {
+            $_SESSION['message'][] = ["type" => "error", "content" => "Employment status is required."];
+            header("Location: " . htmlspecialchars($_SERVER["PHP_SELF"]));
+            exit;
+        }
+
+        // Begin transaction
+        $conn->begin_transaction();
+
+        // Update query with prepared statement
+        $query = "UPDATE profiles 
+                  SET is_employed = ?, employment_type = ?, employment_address = ?, designation = ?, company_name = ?, salary = ?, annual_income = ? 
+                  WHERE user_id = ?";
+        $stmt = $conn->prepare($query);
+
+        if (!$stmt) {
+            throw new Exception("Failed to prepare statement: " . $conn->error);
+        }
+
+        // Bind parameters to prevent SQL injection
+        $stmt->bind_param(
+            "ssssssdi",
+            $is_employed,
+            $employment_type,
+            $employment_address,
+            $designation,
+            $company_name,
+            $salary,
+            $annual_income,
+            $user_id
+        );
+
+        // Execute the query
+        if (!$stmt->execute()) {
+            throw new Exception("Failed to update profile: " . $stmt->error);
+        }
+
+        // Commit transaction
+        $conn->commit();
+
+        // Close the statement
+        $stmt->close();
+
+        // Success message
+        $_SESSION['message'][] = ["type" => "success", "content" => "Employment information updated successfully!"];
+    } catch (Exception $e) {
+        // Rollback transaction in case of error
+        $conn->rollback();
+
+        // Error message
+        $_SESSION['message'][] = ["type" => "error", "content" => "An error occurred: " . $e->getMessage()];
+    }
+
+    // Redirect to the same page to display messages
+    header("Location: " . htmlspecialchars($_SERVER["PHP_SELF"]));
+    exit;
+}
 ?>
+
 
 <head>
     <meta charset="UTF-8">
@@ -639,28 +765,188 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['btnUpdatePersonalInfo'
                 </div>
             </div>
         </div>
-    </div>
+
+        <div class="row ">
+            <div class="col-12">
+                <br>
+                <h4 class="headCustom ">Your Educational Detail</h4>
+                <hr>
+                <div class="card bg-light border-0">
+                    <div class="card-body">
+                        <p class="text-muted fs-14"> </p>
+                        <div class="row">
+                            <div>
+                                <?php displaySessionMessage(); ?>
+                                <form id="educationalInformationForm" name="educationalInformationForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST" class="needs-validation">
+                                    <div class="row">
+
+                                        <!-- qualification -->
+                                        <div class="col-lg-6 mb-3">
+                                            <label for="qualification" class="form-label text-muted">Qualification:</label>
+                                            <select id="qualification" name="qualification_id" class="form-select" required>
+                                                <option value="">Select qualification</option>
+                                                <?php foreach ($qualifications as $qualification): ?>
+                                                    <option value="<?php echo $qualification['id']; ?>"
+                                                        <?php echo $profile['qualification_id'] == $qualification['id'] ? 'selected' : ''; ?>>
+                                                        <?php echo $qualification['qualification_name']; ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+
+                                        <!-- Last University Name -->
+                                        <div class="col-lg-6 mb-3">
+                                            <label for="last_university_name" class="form-label text-muted">Last University Name:</label>
+                                            <input type="text" id="last_university_name" name="last_university_name" class="form-control"
+                                                value="<?php echo $profile['last_university_name']; ?>" required>
+                                        </div>
+                                        <!-- Submit -->
+                                        <div class="col-lg-12 text-center">
+                                            <button type="submit" name="btnUpdateEduInfo" id="btnUpdateEduInfo" class="btn btn-primary">Save Educational Information</button>
+                                        </div>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row ">
+            <div class="col-12">
+                <br>
+                <h4 class="headCustom ">Your Employment and Financial Info</h4>
+                <hr>
+                <div class="card bg-light border-0">
+                    <div class="card-body">
+                        <p class="text-muted fs-14"> </p>
+                        <div class="row">
+                            <div>
+                                <?php displaySessionMessage(); ?>
+                                <form id="employmentInfo" name="employmentInfo" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST" class="needs-validation">
+                                    <div class="row">
+                                        <!-- Is Employed -->
+                                        <div class="col-lg-6 mb-3">
+                                            <label for="is_employed" class="form-label text-muted">Is Employed:</label>
+                                            <select id="is_employed" name="is_employed" class="form-select" onchange="toggleEmploymentFields()" required>
+                                                <option value="">Select</option>
+                                                <option value="1" <?php echo (strval($profile['is_employed']) === '1') ? 'selected' : ''; ?>>Yes</option>
+                                                <option value="0" <?php echo (strval($profile['is_employed']) === '0') ? 'selected' : ''; ?>>No</option>
+                                            </select>
+                                        </div>
+
+
+                                        <!-- Employment Type -->
+                                        <div class="col-lg-6 mb-3 employment-type-field">
+                                            <label for="employment_type" class="form-label text-muted">Employment Type:</label>
+                                            <select id="employment_type" name="employment_type" class="form-select" onchange="toggleEmploymentTypeFields()">
+                                                <option value="">Select</option>
+                                                <option value="Government" <?php echo $profile['employment_type'] === 'Government' ? 'selected' : ''; ?>>Government</option>
+                                                <option value="Private" <?php echo $profile['employment_type'] === 'Private' ? 'selected' : ''; ?>>Private</option>
+                                                <option value="Self-Business" <?php echo $profile['employment_type'] === 'Self-Business' ? 'selected' : ''; ?>>Self-Business</option>
+                                                <option value="Landlord" <?php echo $profile['employment_type'] === 'Landlord' ? 'selected' : ''; ?>>Landlord</option>
+                                            </select>
+                                        </div>
+
+                                        <!-- Employment Address / Work Address -->
+                                        <div class="col-lg-6 mb-3 address-field">
+                                            <label for="employment_address" class="form-label text-muted">Work Address:</label>
+                                            <input type="text" id="employment_address" name="employment_address" class="form-control" value="<?php echo $profile['employment_address']; ?>">
+                                        </div>
+
+                                        <!-- Designation -->
+                                        <div class="col-lg-6 mb-3 gov-private-field">
+                                            <label for="designation" class="form-label text-muted">Designation:</label>
+                                            <input type="text" id="designation" name="designation" class="form-control" value="<?php echo $profile['designation']; ?>">
+                                        </div>
+
+                                        <!-- Company Name -->
+                                        <div class="col-lg-6 mb-3 gov-private-field">
+                                            <label for="company_name" class="form-label text-muted">Company Name:</label>
+                                            <input type="text" id="company_name" name="company_name" class="form-control" value="<?php echo $profile['company_name']; ?>">
+                                        </div>
+
+                                        <!-- Salary -->
+                                        <div class="col-lg-6 mb-3 gov-private-field">
+                                            <label for="salary" class="form-label text-muted">Salary:</label>
+                                            <input type="number" id="salary" name="salary" class="form-control" value="<?php echo $profile['salary']; ?>">
+                                        </div>
+
+                                        <!-- Annual Income -->
+                                        <div class="col-lg-6 mb-3 annual-income">
+                                            <label for="annual_income" class="form-label text-muted">Annual Income:</label>
+                                            <input type="number" id="annual_income" name="annual_income" class="form-control" value="<?php echo $profile['annual_income']; ?>">
+                                        </div>
+
+                                        <!-- Submit -->
+                                        <div class="col-lg-12 text-center">
+                                            <button type="submit" name="btnUpdateEmploymentInfo" id="btnUpdateEmploymentInfo" class="btn btn-primary">Save Employment Information</button>
+                                        </div>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    </div><!-- row end -->
 
     <?php include 'userlayout/footer.php'; ?>
 
     <!-- Add Bootstrap JavaScript bundle with Popper.js -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script>
-        function displayImage(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const preview = document.getElementById('profilePicPreview');
-                    preview.src = e.target.result;
-                };
-                reader.readAsDataURL(input.files[0]);
+        function toggleEmploymentFields() {
+            const isEmployed = document.getElementById("is_employed").value;
+            const employmentTypeField = document.querySelector(".employment-type-field");
+            const govPrivateFields = document.querySelectorAll(".gov-private-field");
+            const addressField = document.querySelector(".address-field");
+            const annualIncome = document.querySelector(".annual-income");
+
+            // Show/hide employment type field based on is_employed value
+            if (isEmployed === "1") {
+                employmentTypeField.style.display = "block";
+            } else {
+                employmentTypeField.style.display = "none";
+                govPrivateFields.forEach(field => field.style.display = "none");
+                addressField.style.display = "none";
+                annualIncome.style.display = "none";
             }
         }
-    </script>
 
-    </html>
+        function toggleEmploymentTypeFields() {
+            const employmentType = document.getElementById("employment_type").value;
+            const govPrivateFields = document.querySelectorAll(".gov-private-field");
+            const addressField = document.querySelector(".address-field");
+            const annualIncome = document.querySelector(".annual-income");
+
+            if (employmentType === "Government" || employmentType === "Private") {
+                govPrivateFields.forEach(field => field.style.display = "block");
+                addressField.style.display = "block";
+                annualIncome.style.display = "block";
+            } else if (employmentType === "Self-Business" || employmentType === "Landlord") {
+                govPrivateFields.forEach(field => field.style.display = "none");
+                addressField.style.display = "block";
+                annualIncome.style.display = "block";
+            } else {
+                govPrivateFields.forEach(field => field.style.display = "none");
+                addressField.style.display = "none";
+                annualIncome.style.display = "none";
+            }
+        }
+
+        // Initial toggle based on current value
+        document.addEventListener("DOMContentLoaded", () => {
+            toggleEmploymentFields();
+            toggleEmploymentTypeFields();
+        });
+    </script>
 </body>
+
+</html>

@@ -4,77 +4,165 @@ include 'layouts/config.php';
 include 'layouts/main.php';
 include 'layouts/functions.php';
 
-// Initialize $profile as an empty array
-$profile = [];
-
 // Check if user is logged in by verifying session user_id
-if (isset($_SESSION['user_id'])) {
-    $userId = $_SESSION['user_id']; // Get the user ID from the session
-
-    // Initialize arrays for countries, cities, and states
-    $countries = [];
-    $cities = [];
-    $states = [];
-
-    try {
-        // Start a transaction for data fetching
-        $conn->begin_transaction();
-
-        // Fetch countries
-        $queryCountries = "SELECT id, country_name FROM countries ORDER BY id ASC;";
-        $stmtCountries = $conn->prepare($queryCountries);
-        $stmtCountries->execute();
-        $resultCountries = $stmtCountries->get_result();
-
-        while ($row = $resultCountries->fetch_assoc()) {
-            $countries[] = $row;
-        }
-
-        // Fetch cities
-        $queryCities = "SELECT id, city_name FROM cities ORDER BY id ASC;";
-        $stmtCities = $conn->prepare($queryCities);
-        $stmtCities->execute();
-        $resultCities = $stmtCities->get_result();
-
-        while ($row = $resultCities->fetch_assoc()) {
-            $cities[] = $row;
-        }
-
-        // Fetch states
-        $queryStates = "SELECT id, state_name FROM states ORDER BY id ASC;";
-        $stmtStates = $conn->prepare($queryStates);
-        $stmtStates->execute();
-        $resultStates = $stmtStates->get_result();
-
-        while ($row = $resultStates->fetch_assoc()) {
-            $states[] = $row;
-        }
-        // Fetch the is_complete value from the database for the logged-in user
-        $query = "SELECT is_complete FROM personality_profile WHERE created_by = ?";
-        $stmt = $conn->prepare($query);
-        $stmt->bind_param("i", $userId);  // Use $userId instead of $user_id
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        $is_complete = 0; // Default value if no profile exists
-        if ($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
-            $is_complete = (int)$row['is_complete']; // Ensure proper integer type for comparison
-        }
-
-        // Commit transaction
-        $conn->commit();
-    } catch (Exception $e) {
-        // Rollback the transaction on error
-        $conn->rollback();
-        $_SESSION['message'][] = array("type" => "error", "content" => "Error: " . $e->getMessage());
-        header("location: complete-profile.php");
-        exit();
-    }
-} else {
+if (!isset($_SESSION['user_id'])) {
     echo "User is not logged in.";
+    exit;
+}
+
+$userId = $_SESSION['user_id']; // Get the user ID from the session
+
+// Initialize arrays for countries, cities, and states
+$countries = [];
+$cities = [];
+$states = [];
+
+try {
+    // Start a transaction
+    $conn->begin_transaction();
+
+    // Fetch profile data and join necessary tables for countries, states, cities, and personality profile info
+    $query = "
+        SELECT
+            p.first_name, p.last_name, p.gender, p.date_of_birth, p.bio, 
+            p.profile_picture_1, p.profile_picture_2, p.profile_picture_3, 
+            p.profile_picture_4, p.profile_picture_5, p.contact_number, 
+            p.whatsapp_contact, p.cnic, p.country_id, p.state_id, p.city_id, 
+            p.nationality_id, p.religion_id, p.marital_status, p.children, 
+            p.height, p.weight, p.my_appearance, p.body_type, p.dietary_preferences, 
+            p.drinkAlcohol, p.smoking, p.mother_tongue, p.living_arrangements, 
+            p.qualification_id, p.last_university_name, p.is_employed, 
+            p.employment_type, p.designation, p.salary, p.employment_address, 
+            p.company_name, p.annual_income, 
+            c.country_name, s.state_name, ci.city_name, 
+            np.is_complete
+        FROM profiles p
+        LEFT JOIN countries c ON p.country_id = c.id
+        LEFT JOIN states s ON p.state_id = s.id
+        LEFT JOIN cities ci ON p.city_id = ci.id
+        LEFT JOIN personality_profile np ON np.created_by = p.created_by
+        WHERE p.user_id = ?";
+
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $userId); // Bind the user ID to prevent SQL injection
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $profile = $result->fetch_assoc(); // Get the profile data
+
+    if (!$profile) {
+        throw new Exception("No profile found for the user.");
+    }
+
+    // Determine if profile pictures are complete
+    $profilePicturesComplete = !empty($profile['profile_picture_1']) && !empty($profile['profile_picture_2']) && !empty($profile['profile_picture_3']) && !empty($profile['profile_picture_4']) && !empty($profile['profile_picture_5']);
+
+    // Determine if basic personal information is complete
+    $basicPersonalInfoComplete = !(
+        empty($profile['first_name']) ||
+        empty($profile['last_name']) ||
+        empty($profile['gender']) ||
+        empty($profile['date_of_birth']) ||
+        empty($profile['bio']) ||
+        empty($profile['contact_number']) ||
+        empty($profile['whatsapp_contact']) ||
+        empty($profile['cnic']) ||
+        empty($profile['country_id']) ||
+        empty($profile['state_id']) ||
+        empty($profile['city_id']) ||
+        empty($profile['religion_id']) ||
+        empty($profile['marital_status']) ||
+        empty($profile['children']) ||
+        empty($profile['height']) ||
+        empty($profile['weight']) ||
+        empty($profile['my_appearance']) ||
+        empty($profile['body_type']) ||
+        empty($profile['drinkAlcohol']) ||
+        empty($profile['smoking']) ||
+        empty($profile['mother_tongue'])
+    );
+
+    // Determine if educational profile is complete
+    $educationalProfileComplete = !(empty($profile['qualification_id']) || empty($profile['last_university_name']));
+    // Determine if employment profile is complete
+    $employmentProfileComplete = true;
+
+    // Check if the user is employed
+    if ($profile['is_employed'] == '1') {
+        // Check if employment_type is either Government or Private
+        if ($profile['employment_type'] == 'Government' || $profile['employment_type'] == 'Private') {
+            // These fields are required if employed and in Government/Private sector
+            $employmentProfileComplete = !(
+                empty($profile['employment_type']) ||
+                empty($profile['designation']) ||
+                empty($profile['company_name']) ||
+                empty($profile['salary']) ||
+                empty($profile['employment_address']) ||
+                empty($profile['annual_income'])
+            );
+        }
+        // Check if employment_type is Self-Business or Landlord
+        else if ($profile['employment_type'] == 'Self-Business' || $profile['employment_type'] == 'Landlord') {
+            // These fields are required for Self-Business and Landlord employment types
+            $employmentProfileComplete = !(
+                empty($profile['employment_address']) ||
+                empty($profile['annual_income'])
+            );
+        }
+    } else {
+        // If not employed, only employment_address and annual_income should be checked
+        $employmentProfileComplete = !(
+            empty($profile['employment_address']) ||
+            empty($profile['annual_income'])
+        );
+    }
+
+
+    // Check if personality profile is complete
+    $is_pp_complete = $profile['is_pp_complete'] ?? 0; // Default to 0 if no data
+
+    // Fetch all countries, states, and cities in one go for dropdown
+    $queryCountries = "SELECT id, country_name FROM countries ORDER BY country_name ASC";
+    $queryStates = "SELECT id, state_name FROM states ORDER BY state_name ASC";
+    $queryCities = "SELECT id, city_name FROM cities ORDER BY city_name ASC";
+
+    // Fetch countries
+    $stmtCountries = $conn->prepare($queryCountries);
+    $stmtCountries->execute();
+    $resultCountries = $stmtCountries->get_result();
+    $countries = [];
+    while ($row = $resultCountries->fetch_assoc()) {
+        $countries[] = $row;
+    }
+
+    // Fetch states
+    $stmtStates = $conn->prepare($queryStates);
+    $stmtStates->execute();
+    $resultStates = $stmtStates->get_result();
+    $states = [];
+    while ($row = $resultStates->fetch_assoc()) {
+        $states[] = $row;
+    }
+
+    // Fetch cities
+    $stmtCities = $conn->prepare($queryCities);
+    $stmtCities->execute();
+    $resultCities = $stmtCities->get_result();
+    $cities = [];
+    while ($row = $resultCities->fetch_assoc()) {
+        $cities[] = $row;
+    }
+
+    // Commit the transaction
+    $conn->commit();
+} catch (Exception $e) {
+    // Rollback the transaction in case of an error
+    $conn->rollback();
+    $_SESSION['message'][] = array("type" => "error", "content" => "Error: " . $e->getMessage());
+    header("location: complete-profile.php");
+    exit();
 }
 ?>
+
 
 <head>
     <meta charset="UTF-8">
@@ -164,8 +252,8 @@ if (isset($_SESSION['user_id'])) {
                 <a href="#" class="d-block text-decoration-none">
                     <?php
                     // Fetch profile image URL
-                    $profileImage = rowInfoByColumn($conn, "profiles", "profile_picture", "user_id", $_SESSION["user_id"]);
-                    $defaultImage = "assets/images/default-user.png"; // Default image path
+                    $profileImage = rowInfoByColumn($conn, "profiles", "profile_picture_1", "user_id", $_SESSION["user_id"]);
+                    $defaultImage = "assets/images/300x300.svg"; // Default image path
                     $imagePath = !empty($profileImage) ? $profileImage : $defaultImage;
                     ?>
                     <img src="<?php echo htmlspecialchars($imagePath); ?>"
@@ -185,12 +273,22 @@ if (isset($_SESSION['user_id'])) {
                 </h5>
 
                 <!-- Conditional Button Display -->
-                <?php if ($is_complete === 0): ?>
-                    <a href="editPersonalityInfo.php?id=<?php echo urlencode($userId); ?>"
-                        class="btn btn-comp-prof">
-                        Next Step: Complete your personality profile
-                    </a>
-                <?php endif; ?>
+                <?php
+                // Display the appropriate button or message based on profile completeness
+                if (!$profilePicturesComplete) {
+                    echo '<a href="uploadImages.php" class="btn btn-comp-prof"> Next Step: Upload Your Profile Pictures</a>';
+                } elseif (!$basicPersonalInfoComplete) {
+                    echo '<a href="editProfile.php" class="btn btn-comp-prof"> Next Step: Complete Your Basic Personal Profile</a>';
+                } elseif (!$educationalProfileComplete) {
+                    echo '<a href="editProfile.php" class="btn btn-comp-prof"> Next Step: Complete Your Educational Profile</a>';
+                } elseif (!$employmentProfileComplete) {
+                    echo '<a href="editProfile.php" class="btn btn-comp-prof"> Next Step: Complete Your Employment Profile</a>';
+                } elseif ($is_pp_complete === 0) {
+                    echo '<a href="editPersonalityInfo.php?id=' . urlencode($userId) . '" class="btn btn-comp-prof"> Next Step: Complete Your Personality Profile</a>';
+                } else {
+                    echo '<a href="premiumMembership.php" class="btn btn-comp-prof"> Finally: Get Premium Membership</a>';
+                }
+                ?>
 
                 <p class="mt-2">Learn about membership features</p>
 
@@ -331,7 +429,7 @@ if (isset($_SESSION['user_id'])) {
                         <div class="col-md-2">
                             <label for="country" class="fw-bold">Country</label>
                             <select class="form-select custom-border" id="country" name="country">
-                                <option value="any">Any</option>
+                                <option value="any">Any Country</option>
                                 <?php foreach ($countries as $country): ?>
                                     <option value="<?php echo $country['id']; ?>" <?php echo ($userPreferences['preferred_country_id'] == $country['id']) ? 'selected' : ''; ?>>
                                         <?php echo htmlspecialchars($country['name']); ?>
@@ -344,7 +442,7 @@ if (isset($_SESSION['user_id'])) {
                         <div class="col-md-2">
                             <label for="state" class="fw-bold">State</label>
                             <select class="form-select custom-border" id="state" name="state">
-                                <option value="any">Any</option>
+                                <option value="any">Any State</option>
                                 <?php foreach ($states as $state): ?>
                                     <option value="<?php echo $state['id']; ?>" <?php echo ($userPreferences['preferred_state_id'] == $state['id']) ? 'selected' : ''; ?>>
                                         <?php echo htmlspecialchars($state['name']); ?>
@@ -357,7 +455,7 @@ if (isset($_SESSION['user_id'])) {
                         <div class="col-md-2">
                             <label for="city" class="fw-bold">City</label>
                             <select class="form-select custom-border" id="city" name="city">
-                                <option value="any">Any</option>
+                                <option value="any">Any City</option>
                                 <?php foreach ($cities as $city): ?>
                                     <option value="<?php echo $city['id']; ?>" <?php echo ($userPreferences['preferred_city_id'] == $city['id']) ? 'selected' : ''; ?>>
                                         <?php echo htmlspecialchars($city['name']); ?>
@@ -368,7 +466,7 @@ if (isset($_SESSION['user_id'])) {
 
                         <!-- Search Button -->
                         <div class="col-md-2 d-flex align-items-end">
-                            <button type="submit" name="submit" value="submit" class="btn btn-search w-100 shadow">Search</button>
+                            <button type="submit" name="btnSearchProfile" value="btnSearchProfile" class="btn btn-search w-100 shadow">Search</button>
                         </div>
                     </div>
                 </div>
@@ -462,7 +560,7 @@ if (isset($_SESSION['user_id'])) {
                 <?php while ($row = $result->fetch_assoc()): ?>
                     <?php
                     $profileLink = 'showprofile.php?id=' . htmlspecialchars($row['id']);
-                    $profilePicture = htmlspecialchars($row['profile_picture'] ?: 'placeholder.jpg');
+                    $profilePicture = htmlspecialchars($row['profile_picture_1'] ?: 'placeholder.jpg');
                     $age = !empty($row['date_of_birth']) ? (new DateTime())->diff(new DateTime($row['date_of_birth']))->y : 'N/A';
                     ?>
                     <div class="col-md-3 mb-4">

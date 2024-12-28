@@ -9,7 +9,7 @@
             <!-- Navigation Links for Large Screens -->
             <ul class="header-nav nav nav-pills d-none d-sm-flex justify-content-center align-items-center mb-0">
                 <li class="nav-item">
-                    <a href="user_index.php" class="nav-link px-2 text-body-secondary">Home</a>
+                    <a href="index.php" class="nav-link px-2 text-body-secondary">Dashboard</a>
                 </li>
             </ul>
 
@@ -20,12 +20,13 @@
                     <a href="#" class="d-block text-decoration-none dropdown-toggle" data-bs-toggle="dropdown">
                         <img src="<?php
                                     if (isset($_SESSION["user_id"]) && isset($conn)) {
-                                        echo rowInfoByColumn($conn, "profiles", "profile_picture", "user_id", $_SESSION["user_id"]);
+                                        echo rowInfoByColumn($conn, "profiles", "profile_picture_1", "user_id", $_SESSION["user_id"]);
                                     } ?>"
                             alt="User" width="32" height="32" class="rounded-circle">
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end text-small">
                         <li><a class="dropdown-item" href="showprofile.php?id=<?php echo urlencode($_SESSION['user_id']); ?>">View Profile</a></li>
+                        <li><a class="dropdown-item" href="uploadImages.php">Profile Pictures</a></li>
                         <li><a class="dropdown-item" href="editprofile.php">Edit Profile</a></li>
                         <li><a class="dropdown-item" href="editPersonalityInfo.php">Personality Questions</a></li>
                         <li>
@@ -41,7 +42,7 @@
                 <a href="#" class="text-decoration-none d-flex align-items-center" data-bs-toggle="dropdown">
                     <img src="uploads/<?php
                                         if (isset($_SESSION["user_id"]) && isset($conn)) {
-                                            echo rowInfoByColumn($conn, "profiles", "profile_picture", "user_id", $_SESSION["user_id"]);
+                                            echo rowInfoByColumn($conn, "profiles", "profile_picture_1", "user_id", $_SESSION["user_id"]);
                                         } ?>"
                         alt="User" width="32" height="32" class="rounded-circle">
                     <span class="ms-2">
@@ -54,7 +55,7 @@
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end text-small">
                     <li><a class="dropdown-item" href="showprofile.php?id=<?php echo urlencode($_SESSION['user_id']); ?>">View Profile</a></li>
-                    <li><a class="dropdown-item" href="editprofile.php">Edit Profile</a></li>
+                    <li><a class="dropdown-item" href="editProfile.php">Edit Profile</a></li>
                     <li><a class="dropdown-item" href="editPersonalityInfo.php">Personality Questions</a></li>
                     <li>
                         <hr class="dropdown-divider">

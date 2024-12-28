@@ -78,6 +78,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["username"])) {
         $stmt_requirements->bind_param("iisss", $user_id, $profile_id, $userlooking, $createdAt, $updatedAt);
         $stmt_requirements->execute();
 
+        // Insert into the `personality_profile` table
+        $sql_personality_profile = "INSERT INTO personality_profile (user_id, profile_id, created_at, updated_at) VALUES (?, ?, ?, ?)";
+        $stmt_personality_profile = $conn->prepare($sql_personality_profile);
+        $stmt_personality_profile->bind_param("iiss", $user_id, $profile_id, $createdAt, $updatedAt);
+        $stmt_personality_profile->execute();
+
         // Commit the transaction
         $conn->commit();
 
