@@ -227,7 +227,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['btnSearchProfile'])) 
                 <?php foreach ($profiles as $profile): ?>
                     <?php
                     $profileLink = 'showprofile.php?id=' . htmlspecialchars($profile['user_id']);
-                    $profilePicture = htmlspecialchars($profile['profile_picture'] ?: 'assets/images/300x300.svg');
+                    $profilePicture = htmlspecialchars($profile['profile_picture_1'] ?: 'assets/images/300x300.svg');
                     $age = !empty($profile['date_of_birth']) ? (new DateTime())->diff(new DateTime($profile['date_of_birth']))->y : 'N/A';
                     ?>
                     <div class="col-md-3 mb-4">
