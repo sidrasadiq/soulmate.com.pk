@@ -559,7 +559,7 @@ try {
             <?php if ($result && $result->num_rows > 0): ?>
                 <?php while ($row = $result->fetch_assoc()): ?>
                     <?php
-                    $profileLink = 'showprofile.php?id=' . htmlspecialchars($row['id']);
+                    $profileLink = 'showprofile.php?id=' . htmlspecialchars($row['user_id']);
                     $profilePicture = htmlspecialchars($row['profile_picture_1'] ?: 'placeholder.jpg');
                     $age = !empty($row['date_of_birth']) ? (new DateTime())->diff(new DateTime($row['date_of_birth']))->y : 'N/A';
                     ?>
