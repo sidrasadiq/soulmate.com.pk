@@ -38,12 +38,13 @@
             </div>
 
             <!-- Mobile Menu -->
-            <div class="d-block d-sm-none dropdown">
+            <!-- <div class="d-block d-sm-none dropdown">
                 <a href="#" class="text-decoration-none d-flex align-items-center" data-bs-toggle="dropdown">
                     <img src="uploads/<?php
-                                        if (isset($_SESSION["user_id"]) && isset($conn)) {
-                                            echo rowInfoByColumn($conn, "profiles", "profile_picture_1", "user_id", $_SESSION["user_id"]);
-                                        } ?>"
+                                        // if (isset($_SESSION["user_id"]) && isset($conn)) {
+                                        //     echo rowInfoByColumn($conn, "profiles", "profile_picture_1", "user_id", $_SESSION["user_id"]);
+                                        // } 
+                                        ?>"
                         alt="User" width="32" height="32" class="rounded-circle">
                     <span class="ms-2">
                         <span class="hamburger-icon d-flex flex-column justify-content-center">
@@ -62,7 +63,7 @@
                     </li>
                     <li><a class="dropdown-item" href="logout.php">Log out</a></li>
                 </ul>
-            </div>
+            </div> -->
         </div>
     </div>
 </header>
