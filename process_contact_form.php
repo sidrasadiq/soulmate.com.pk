@@ -21,7 +21,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Send email using PHPMailer
     if (sendContactEmail($firstName, $lastName, $city, $email, $telephone, $subject, $message)) {
-        echo "Message sent successfully!";
+        // echo "Message sent successfully!";
+        header(
+            "Location: /"
+        );
     } else {
         echo "Failed to send message. Please try again.";
     }
