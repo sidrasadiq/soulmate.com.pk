@@ -1,25 +1,26 @@
-<form class="search-form mt-3 p-3">
+<form class="search-form mt-3 p-3" method="POST" action="auth/search-result.php">
     <div class="row">
         <!-- I'm looking for a -->
         <div class="col-12 col-md-3">
-            <label for="lookingFor" class="form-label text-start d-block mb-1">I'm looking for a</label>
-            <select id="lookingFor" name="lookingFor" class="form-select" aria-label="I'm looking for a">
+            <label for="seeking" class="form-label text-start d-block mb-1">I'm looking for a</label>
+            <select id="seeking" name="seeking" class="form-select" aria-label="I'm looking for a">
                 <!-- <option selected disabled>Choose...</option> -->
-                <option value="woman">Woman</option>
-                <option value="man">Man </option>
+                <option value="female">Woman</option>
+                <option value="male">Man </option>
+
             </select>
         </div>
 
         <!-- Aged from -->
         <div class="col-6 col-md-1">
-            <label for="ageFrom" class="form-label text-start d-block mb-1">aged</label>
-            <select id="ageFrom" name="ageFrom" class="form-select" aria-label="Age from"></select>
+            <label for="age_from" class="form-label text-start d-block mb-1">aged</label>
+            <select id="age_from" name="age_from" class="form-select" aria-label="Age from"></select>
         </div>
 
         <!-- To age -->
         <div class="col-6 col-md-1">
-            <label for="ageTo" class="form-label text-start d-block mb-1">&nbsp;</label>
-            <select id="ageTo" name="ageTo" class="form-select" aria-label="Age to"></select>
+            <label for="age_to" class="form-label text-start d-block mb-1">&nbsp;</label>
+            <select id="age_to" name="age_to" class="form-select" aria-label="Age to"></select>
         </div>
 
         <!-- Fetch religions and display them in a select box -->
@@ -39,7 +40,7 @@
                     </option>
                 <?php endforeach; ?>
                 <!-- Option for 'Other' -->
-                <option value="Other">Other</option>
+                <option value="any">Other</option>
             </select>
         </div>
 

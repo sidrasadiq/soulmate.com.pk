@@ -73,7 +73,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['btnSearchProfile'])) 
         $types .= "i";
     }
     if (!empty($religion)) {
-        $sql .= " AND profiles.religion = ?";
+        $sql .= " AND profiles.religion_id = ?";
         $params[] = $religion;
         $types .= "s";
     }

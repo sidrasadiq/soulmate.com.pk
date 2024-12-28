@@ -357,8 +357,8 @@
     $(document).ready(function() {
       // Function to populate age dropdowns dynamically
       function populateAgeDropdowns() {
-        var ageFromSelect = document.getElementById("ageFrom");
-        var ageToSelect = document.getElementById("ageTo");
+        var ageFromSelect = document.getElementById("age_from");
+        var ageToSelect = document.getElementById("age_to");
 
         // Clear previous options
         ageFromSelect.innerHTML = "";
